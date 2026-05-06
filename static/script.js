@@ -121,7 +121,6 @@
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
-        const plage_temps = document.getElementById('plage_temps').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
@@ -129,7 +128,6 @@
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
-        plage_temps: plage_temps,
         chemin_fichier: chemin_fichier
         };
         
@@ -173,7 +171,6 @@
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
-        const plage_temps = document.getElementById('plage_temps').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
         
@@ -183,7 +180,6 @@
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
-        plage_temps: plage_temps,
         typeGraphique: typeGraphique,
         chemin_fichier: chemin_fichier,
         plage_temps_graphique: plage_temps_graphique
@@ -230,7 +226,6 @@
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
-        const plage_temps = document.getElementById('plage_temps').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
@@ -238,7 +233,6 @@
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
-        plage_temps: plage_temps,
         chemin_fichier: chemin_fichier,
         typeStatistique: typeStatistique
         };

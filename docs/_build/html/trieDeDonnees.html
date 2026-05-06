@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>trieDeDonnees module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="lectureDonneFichierUnique module" href="lectureDonneFichierUnique.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-trieDeDonnees">
+<span id="triededonnees-module"></span><h1>trieDeDonnees module<a class="headerlink" href="#module-trieDeDonnees" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.Est_protocole_couche_4">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">Est_protocole_couche_4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#Est_protocole_couche_4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.Est_protocole_couche_4" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si un numéro de protocole de couche 3 correspond
+à un protocole de couche 4 (TCP, UDP, SCTP, DCCP).</p>
+<p>Cette vérification est importante pour déterminer si les
+numéros de ports source et destination peuvent être extraits
+du paquet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proto_num</strong> (<em>int</em>) – Numéro du protocole de couche 3
+extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>True si le protocole est de couche 4</dt><dd><p>(TCP, UDP, SCTP, DCCP), False sinon.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Si proto_num n’est pas un entier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.ajouter_a_table_Par_Protocole">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">ajouter_a_table_Par_Protocole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paquet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numero_paquet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtres_actives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#ajouter_a_table_Par_Protocole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.ajouter_a_table_Par_Protocole" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Construit un dictionnaire de paquets en extrayant les informations
+du parsing PCAP et en appliquant les filtres actifs.</p>
+<p>Le premier rôle est d’appeler les fonctions chargées de construire
+le dictionnaire à partir des informations du parsing PCAP,
+difficilement exploitables en l’état.
+Le deuxième rôle est d’appliquer les filtres actifs lors de
+la construction du dictionnaire.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>dict</em>) – Dictionnaire construit à partir des informations
+du parsing du fichier PCAP.</p></li>
+<li><p><strong>paquet</strong> (<em>dpkt.ethernet.Ethernet</em>) – Résultat du parsing du fichier
+PCAP à l’aide de dpkt.</p></li>
+<li><p><strong>numero_paquet</strong> (<em>int</em>) – Numéro du paquet traité.</p></li>
+<li><p><strong>filtres_actives</strong> (<em>dict</em>) – Dictionnaire des filtres activés avec
+leurs valeurs respectives.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Timestamp du paquet.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le dictionnaire mis à jour avec les informations du paquet,</dt><dd><p>ou inchangé si le paquet ne répond pas aux filtres actifs.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – Si un filtre attendu est absent de filtres_actives.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.deja_traite_proto">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">deja_traite_proto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#deja_traite_proto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.deja_traite_proto" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Optimise le traitement des paquets en mettant en cache les protocoles
+déjà identifiés pour éviter de relire /etc/protocols à chaque itération.</p>
+<p>Si le numéro de protocole est supérieur à 262, il est directement
+considéré comme inconnu sans lecture du fichier.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sur un fichier PCAP de 20 Mo, cette optimisation réduit le temps
+de traitement de 3 minutes à 55 secondes.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proto_num</strong> (<em>int</em>) – Numéro du protocole extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le nom du protocole s’il est déjà en cache ou supérieur à 262</dt><dd><p>(retourne « Unknown » dans ce dernier cas).</p>
+</dd>
+</dl>
+<p>None: Si le protocole doit être recherché dans /etc/protocols.</p>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Si proto_num n’est pas un entier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.deja_traite_service">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">deja_traite_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#deja_traite_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.deja_traite_service" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Optimise le traitement des paquets en mettant en cache les services
+déjà identifiés pour éviter de relire /etc/services à chaque itération.</p>
+<p>Si le numéro de service est supérieur à 65535, il est directement
+considéré comme inconnu sans lecture du fichier.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sur un fichier PCAP de 20 Mo, cette optimisation réduit le temps
+de traitement de 3 minutes à 55 secondes.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>port_num</strong> (<em>int</em>) – Numéro du service extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le nom du service s’il est déjà en cache ou supérieur à 65535</dt><dd><p>(retourne « Unknown » dans ce dernier cas).</p>
+</dd>
+</dl>
+<p>None: Si le service doit être recherché dans /etc/services.</p>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Si port_num n’est pas un entier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.extraire_info">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">extraire_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paquet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_paquet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#extraire_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.extraire_info" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Fonction principale de construction d’un dictionnaire exploitable
+depuis un objet dpkt.ethernet.Ethernet.</p>
+<p>Utilise les outils dpkt pour transformer l’objet en informations
+lisibles (noms de couches, ports, adresses IP, etc.).
+Le contenu du dictionnaire retourné varie selon le type de paquet
+(IP, ARP, IPv6, ou payload non reconnu).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Fait appel à presque toutes les autres fonctions du fichier
+pour extraire les informations (get_proto_name,
+get_service_name, Est_protocole_couche_4, etc.).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paquet</strong> (<em>dpkt.ethernet.Ethernet</em>) – Paquet duquel extraire
+les informations.</p></li>
+<li><p><strong>num_paquet</strong> (<em>int</em>) – Numéro du paquet traité.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Timestamp Unix du paquet extrait par dpkt.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant selon le type de paquet :</dt><dd><ul class="simple">
+<li><p>id, type_payload, time, mac_src, mac_dst
+(toujours présents)</p></li>
+<li><p>source, destination (si IP, ARP ou IPv6)</p></li>
+<li><p>protocole_3 ou protocole_4 (si protocole identifié)</p></li>
+<li><p>ttl (si IP ou IPv6)</p></li>
+<li><p>port_src, port_dst (si TCP, UDP ou SCTP)</p></li>
+<li><p>ni IP ni ARP (bool) : True si payload non reconnu</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AttributeError</strong> – Si le paquet ne possède pas les attributs
+    attendus.</p></li>
+<li><p><strong>socket.error</strong> – Si la conversion d’adresse IP échoue.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.get_arp_proto_name">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">get_arp_proto_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arp_ptype_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#get_arp_proto_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.get_arp_proto_name" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Convertit un numéro de protocole de couche 3 issu d’un paquet ARP
+en son nom lisible, via un dictionnaire statique.</p>
+<p>Dans la couche ARP, les protocoles sont identifiés par des entiers
+spécifiques (EtherType), différents des numéros de protocoles
+classiques de couche 4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arp_ptype_num</strong> (<em>int</em>) – Numéro du protocole ARP (EtherType)
+extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le nom du protocole correspondant (IPv4, ARP, IPv6),</dt><dd><p>ou « Unknown » si le numéro n’est pas répertorié.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Si arp_ptype_num n’est pas un entier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.get_proto_name">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">get_proto_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#get_proto_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.get_proto_name" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Lit le fichier système des protocoles pour faire correspondre
+un numéro de protocole avec son nom.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Fonctionne sur Linux (/etc/protocols) et Windows
+(C:WindowsSystem32driversetcprotocol).</p></li>
+<li><p>Fait appel à deja_traite_proto() pour éviter de relire
+le fichier à chaque appel.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proto_num</strong> (<em>int</em>) – Numéro du protocole extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le nom du protocole correspondant au numéro,</dt><dd><p>ou « Unknown » si le protocole n’est pas répertorié.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Si aucun fichier de protocoles n’est trouvé.</p></li>
+<li><p><strong>TypeError</strong> – Si proto_num n’est pas un entier.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="trieDeDonnees.get_service_name">
+<span class="sig-prename descclassname"><span class="pre">trieDeDonnees.</span></span><span class="sig-name descname"><span class="pre">get_service_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trieDeDonnees.html#get_service_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trieDeDonnees.get_service_name" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Lit le fichier système des services pour faire correspondre
+un numéro de service avec son nom.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Fonctionne sur Linux (/etc/protocols) et Windows
+(C:WindowsSystem32driversetcprotocol).</p></li>
+<li><p>Fait appel à deja_traite_service() pour éviter de relire
+le fichier à chaque appel.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>port_num</strong> (<em>int</em>) – Numéro du service extrait du paquet.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Le nom du service correspondant au numéro,</dt><dd><p>ou « Unknown » si le service n’est pas répertorié.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Si aucun fichier de protocoles n’est trouvé.</p></li>
+<li><p><strong>TypeError</strong> – Si port_num n’est pas un entier.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">filtrageDonnee</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creationCSV.html">creationCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectureDonneFichierUnique.html">lectureDonneFichierUnique module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">trieDeDonnees module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">filtrageDonnee</a><ul>
+      <li>Previous: <a href="lectureDonneFichierUnique.html" title="Chapitre précédent">lectureDonneFichierUnique module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/trieDeDonnees.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

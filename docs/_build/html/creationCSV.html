@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>creationCSV module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="lectureDonneFichierUnique module" href="lectureDonneFichierUnique.html" />
+    <link rel="prev" title="listeFiltre module" href="listeFiltre.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-creationCSV">
+<span id="creationcsv-module"></span><h1>creationCSV module<a class="headerlink" href="#module-creationCSV" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="creationCSV.creationCSVtoutesInfos">
+<span class="sig-prename descclassname"><span class="pre">creationCSV.</span></span><span class="sig-name descname"><span class="pre">creationCSVtoutesInfos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_par_protocole</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationCSV.html#creationCSVtoutesInfos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationCSV.creationCSVtoutesInfos" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Exporte toutes les informations extraites d’un fichier PCAP dans un fichier CSV.</p>
+<p>Construit une liste de listes à partir du dictionnaire contenant
+toutes les informations du fichier PCAP, puis l’écrit dans
+scriptPy/DataOutput/data.csv.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>table_par_protocole</strong> (<em>dict</em>) – Dictionnaire des paquets extraits
+du fichier PCAP.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – Si le dossier DataOutput n’existe pas.</p></li>
+<li><p><strong>PermissionError</strong> – Si l’écriture dans le dossier est refusée.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">filtrageDonnee</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">creationCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectureDonneFichierUnique.html">lectureDonneFichierUnique module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trieDeDonnees.html">trieDeDonnees module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">filtrageDonnee</a><ul>
+      <li>Previous: <a href="listeFiltre.html" title="Chapitre précédent">listeFiltre module</a></li>
+      <li>Next: <a href="lectureDonneFichierUnique.html" title="Chapitre suivant">lectureDonneFichierUnique module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/creationCSV.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

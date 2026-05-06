@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>creationRapportStats module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="creationGraphiques module" href="creationGraphiques.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-creationRapportStats">
+<span id="creationrapportstats-module"></span><h1>creationRapportStats module<a class="headerlink" href="#module-creationRapportStats" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.creationRapport">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">creationRapport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#creationRapport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.creationRapport" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Génère un rapport textuel des statistiques du dictionnaire
+de paquets selon le mode sélectionné.</p>
+<p>Appelle la fonction de statistiques correspondant au mode,
+puis formate les résultats en une chaîne lisible indiquant
+le nombre total de paquets et le pourcentage de chaque
+protocole ou service.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Le mode « TempsVoyageMoyen » est disponible mais non
+recommandé pour le moment. Il est conservé pour de
+futures analyses plus poussées.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em>) – <p>Mode du rapport à générer. Valeurs acceptées :</p>
+<ul>
+<li><p> »CoucheDeux » : statistiques des EtherTypes</p></li>
+<li><dl class="simple">
+<dt> »CoucheTrois »<span class="classifier">statistiques des protocoles</span></dt><dd><p>de couche 3</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt> »CoucheQuatre »<span class="classifier">statistiques des protocoles</span></dt><dd><p>de couche 4</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt> »CoucheServiceSource »<span class="classifier">statistiques des</span></dt><dd><p>services source</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt> »CoucheServiceDestination »<span class="classifier">statistiques des</span></dt><dd><p>services destination</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt> »TempsVoyageMoyen »<span class="classifier">temps moyen aller-retour</span></dt><dd><p>(non recommandé)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p></li>
+<li><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
+extraites du fichier PCAP.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Rapport textuel résumant les statistiques du mode</dt><dd><p>sélectionné, ou chaîne vide si le mode est inconnu.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – Si table ne contient pas les clés attendues
+    par la fonction de statistiques appelée.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.dicoTempsParConversation">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">dicoTempsParConversation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#dicoTempsParConversation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.dicoTempsParConversation" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.liste_difference_src_dst_adjacente">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">liste_différence_src_dst_adjacente</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plage_temps_graphique</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#liste_différence_src_dst_adjacente"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.liste_difference_src_dst_adjacente" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée un dictionnaire répertoriant les couples src-dst avec les
+différences de temps entre leurs paquets adjacents pairs.</p>
+<p>Pour chaque couple src-dst, les timestamps sont triés puis les
+différences de temps entre paquets adjacents pairs (i et i+1)
+sont calculées en millisecondes et arrondies au multiple de
+plage_temps_graphique le plus proche.
+Ce dictionnaire est utilisé pour générer les graphiques
+d’intra-espacement.</p>
+<dl class="simple">
+<dt>Note :</dt><dd><p>Ce dictionnaire représente les intra espacement
+(temps entre deux paquets du même flot)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p></li>
+<li><p><strong>plage_temps_graphique</strong> (<em>int</em>) – Intervalle de regroupement en
+millisecondes pour l’arrondi des
+différences de temps entre paquets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire dont les clés sont des tuples (src, dst)</dt><dd><p>et les valeurs des listes de différences de temps
+en millisecondes, arrondies à plage_temps_graphique.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – Si plage_temps_graphique est égal à zéro.</p></li>
+<li><p><strong>KeyError</strong> – Si les clés « source » ou « destination » sont absentes
+    des paquets.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsCoucheDeux">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsCoucheDeux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsCoucheDeux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsCoucheDeux" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calcule les statistiques des EtherTypes rencontrés dans les
+paquets analysés et les convertit en pourcentages.</p>
+<p>Compte le nombre de paquets par EtherType, puis calcule
+le pourcentage de chacun par rapport au total des paquets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant :</dt><dd><ul class="simple">
+<li><p>total_paquet (int) : nombre total de paquets analysés</p></li>
+<li><dl class="simple">
+<dt>&lt;EtherType&gt; (float)<span class="classifier">pourcentage de chaque EtherType</span></dt><dd><p>sur le total des paquets</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total_paquet = 0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsCoucheQuatre">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsCoucheQuatre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsCoucheQuatre"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsCoucheQuatre" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calcule les statistiques des protocoles de couche 4 rencontrés
+dans les paquets analysés et les convertit en pourcentages.</p>
+<p>Parcourt tous les paquets du dictionnaire et compte les occurrences
+de chaque protocole de couche 4, puis calcule le pourcentage
+de chacun par rapport au total des paquets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant :</dt><dd><ul class="simple">
+<li><p>total_paquet (int) : nombre total de paquets analysés</p></li>
+<li><dl class="simple">
+<dt>&lt;protocole_4&gt; (float)<span class="classifier">pourcentage de chaque protocole</span></dt><dd><p>de couche 4 sur le total des paquets</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total_paquet = 0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsCoucheServiceDestination">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsCoucheServiceDestination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsCoucheServiceDestination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsCoucheServiceDestination" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calcule les statistiques des services destination rencontrés
+dans les paquets analysés et les convertit en pourcentages.</p>
+<p>Parcourt tous les paquets du dictionnaire et compte les occurrences
+de chaque port destination, puis calcule le pourcentage de chacun
+par rapport au total des paquets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant :</dt><dd><ul class="simple">
+<li><p>total_paquet (int) : nombre total de paquets analysés</p></li>
+<li><dl class="simple">
+<dt>&lt;port_dst&gt; (float)<span class="classifier">pourcentage de chaque service</span></dt><dd><p>destination sur le total des paquets</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total_paquet = 0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsCoucheServiceSource">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsCoucheServiceSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsCoucheServiceSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsCoucheServiceSource" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calcule les statistiques des services source rencontrés
+dans les paquets analysés et les convertit en pourcentages.</p>
+<p>Parcourt tous les paquets du dictionnaire et compte les occurrences
+de chaque port source, puis calcule le pourcentage de chacun
+par rapport au total des paquets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant :</dt><dd><ul class="simple">
+<li><p>total_paquet (int) : nombre total de paquets analysés</p></li>
+<li><dl class="simple">
+<dt>&lt;port_src&gt; (float)<span class="classifier">pourcentage de chaque service</span></dt><dd><p>source sur le total des paquets</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total_paquet = 0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsCoucheTrois">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsCoucheTrois</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsCoucheTrois"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsCoucheTrois" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Calcule les statistiques des protocoles de couche 3 rencontrés
+dans les paquets analysés et les convertit en pourcentages.</p>
+<p>Parcourt tous les paquets du dictionnaire et compte les occurrences
+de chaque protocole de couche 3, puis calcule le pourcentage
+de chacun par rapport au total des paquets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant toutes les
+informations extraites du fichier PCAP,
+avec les EtherTypes comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionnaire contenant :</dt><dd><ul class="simple">
+<li><p>total_paquet (int) : nombre total de paquets analysés</p></li>
+<li><dl class="simple">
+<dt>&lt;protocole_3&gt; (float)<span class="classifier">pourcentage de chaque protocole</span></dt><dd><p>de couche 3 sur le total des paquets</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total_paquet = 0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsTempsVoyageMoyen">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsTempsVoyageMoyen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsTempsVoyageMoyen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsTempsVoyageMoyen" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.statsTempsVoyageUnitaire">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">statsTempsVoyageUnitaire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#statsTempsVoyageUnitaire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.statsTempsVoyageUnitaire" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">filtrageDonnee</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creationCSV.html">creationCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectureDonneFichierUnique.html">lectureDonneFichierUnique module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optionsArgParse.html">optionsArgParse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trieDeDonnees.html">trieDeDonnees module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creationGraphiques.html">creationGraphiques module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">creationRapportStats module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">filtrageDonnee</a><ul>
+      <li>Previous: <a href="creationGraphiques.html" title="Chapitre précédent">creationGraphiques module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/creationRapportStats.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

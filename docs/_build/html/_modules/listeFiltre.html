@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>listeFiltre &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Code source de listeFiltre</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Remonte d&#39;un niveau pour atteindre la racine du projet</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">)))</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">LectureDonne</span><span class="w"> </span><span class="kn">import</span> <span class="n">optionsArgParse</span> <span class="k">as</span> <span class="n">options</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ipaddress</span>
+
+<div class="viewcode-block" id="filtre_Selectionner"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_Selectionner">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_Selectionner</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Récupère les données des champs de filtres sélectionnés par l&#39;utilisateur.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Un dictionnaire contenant les filtres à appliquer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filtre</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get_filtre</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">filtre</span></div>
+
+<div class="viewcode-block" id="filtre_ipOnly_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_ipOnly_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_ipOnly_EstActive</span><span class="p">()</span> <span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si le filtre &quot;ip_only&quot; est actif. Et vérifie si le filtre est au bon format (un str spécifique).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True si le filtre &quot;ip_only&quot; est actif et au bon format, False sinon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;proto_filtre&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;proto_filtre&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ip_only&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="filtre_arpOnly_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_arpOnly_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_arpOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si le filtre &quot;arp_only&quot; est actif. Et vérifie si le filtre est au bon format(un str spécifique).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True si le filtre &quot;arp_only&quot; est actif et au bon format, False sinon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="s2">&quot;proto_filtre&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;proto_filtre&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;arp_only&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="filtre_ipSpecifique_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_ipSpecifique_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_ipSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si le filtre &quot;ip_specifique&quot; est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True si le filtre &quot;ip_specifique&quot; est actif et au bon format, False sinon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;ip_specifique&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">filtre</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span>
+        <span class="n">estUneip</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1">#Si on ne peut pas utiliser ip_address, c&#39;est que le filtre n&#39;est pas une adresse IP</span>
+            <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">filtre</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+
+            <span class="n">estUneip</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">filtre</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">estUneip</span><span class="p">:</span> <span class="c1">#Vérifie que le filtre ressemble à une adresse IP</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="filtre_portSpecifique_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_portSpecifique_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_portSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot; </span>
+<span class="sd">    Vérifie si le filtre &quot;port_specifique&quot; est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True si le filtre &quot;port_specifique&quot; est actif et au bon format, False sinon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;port_specifique&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">filtre</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">estUnPort</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">filtre</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1">#Si on ne peut pas convertir le filtre en int, ce n&#39;est pas un port</span>
+        <span class="n">filtre</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">filtre</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+
+        <span class="n">estUnPort</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">estUnPort</span><span class="p">:</span> <span class="c1">#Vérifie que le filtre ressemble à un port</span>
+        <span class="k">if</span> <span class="n">filtre</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">filtre</span> <span class="o">&lt;=</span> <span class="mi">65535</span> <span class="p">:</span> <span class="c1">#Vérifie que le port est dans la plage valide</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="filtre_protocoleSpecifique_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_protocoleSpecifique_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_protocoleSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si le filtre &quot;protocole_specifique&quot; est actif. Et vérifie si le filtre est au bon format (un protocole valide </span>
+<span class="sd">    parmis la liste [&#39;TCP&#39;, &#39;UDP&#39;, &#39;SCTP&#39;, &#39;ICMP&#39;, &#39;ICMPv6&#39;]).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        True si le filtre &quot;protocole_specifique&quot; est actif et au bon format, False sinon.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;protocole_specifique&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">filtre</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span>
+        <span class="n">protocoles_ip</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TCP&#39;</span><span class="p">,</span> <span class="s1">&#39;UDP&#39;</span><span class="p">,</span> <span class="s1">&#39;SCTP&#39;</span><span class="p">,</span> <span class="s1">&#39;ICMP&#39;</span><span class="p">,</span> <span class="s1">&#39;ICMPv6&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">filtre</span> <span class="ow">in</span> <span class="n">protocoles_ip</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="liste_filtre_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.liste_filtre_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">liste_filtre_EstActive</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Récupère la liste des filtres actifs et leurs valeurs.</span>
+<span class="sd">    Donc si un filtre est vide ou invalide, le dictionnaire contiendra None ou false à l&#39;emplacement de la valeur du filtre.</span>
+<span class="sd">    Mais si un filtre est non vide et valide, alors le dictionnaire contiendra la valeur du filtre</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Un dictionnaire contenant les filtres actifs et leurs valeurs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">filtres</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">filtre_ipOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">filtre_arpOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">filtre_ipSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">filtre_portSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">])</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">filtre_protocoleSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">return</span> <span class="n">filtres</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Code du module</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>creationGraphiques module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="trieDeDonnees module" href="trieDeDonnees.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-creationGraphiques">
+<span id="creationgraphiques-module"></span><h1>creationGraphiques module<a class="headerlink" href="#module-creationGraphiques" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.courbeRepartitionIntraEspacement">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">courbeRepartitionIntraEspacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plage_temps_graphique</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#courbeRepartitionIntraEspacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.courbeRepartitionIntraEspacement" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée une courbe de répartition cumulative des intra-espacements
+pour tous les couples d’IP mélangés.</p>
+<p>Les temps sont extraits de toutes les conversations, triés,
+puis regroupés par intervalles de plage_temps_graphique
+millisecondes. Les occurrences sont ensuite converties en
+pourcentages cumulatifs pour former la courbe de répartition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire dont les clés sont des tuples
+(src, dst) et les valeurs des listes de
+timestamps représentant les espacements
+entre paquets.</p></li>
+<li><p><strong>plage_temps_graphique</strong> (<em>int</em>) – Taille des intervalles en
+millisecondes pour le regroupement
+des résultats.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Chaîne JSON contenant le graphique Plotly,</dt><dd><p>réutilisable côté JavaScript via plotly.js.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – Si dicoReseau est vide (total = 0).</p></li>
+<li><p><strong>ValueError</strong> – Si plage_temps_graphique est égal à zéro.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.histogrammeIntraEspacement">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">histogrammeIntraEspacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plage_temps_graphique</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#histogrammeIntraEspacement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.histogrammeIntraEspacement" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée un histogramme représentant les intra-espacements entre
+les paquets pour chaque conversation (src, dst).</p>
+<p>Chaque conversation génère une trace distincte superposée
+sur le même graphique (barmode overlay) avec une opacité
+de 0.6 pour améliorer la lisibilité.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire dont les clés sont des tuples
+(src, dst) et les valeurs des listes de
+timestamps représentant les espacements
+entre paquets.</p></li>
+<li><p><strong>plage_temps_graphique</strong> (<em>int</em>) – Taille des intervalles en
+millisecondes pour le regroupement
+des paquets ayant le même src/dst
+et espacés de plage_temps.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Chaîne JSON contenant le graphique Plotly,</dt><dd><p>réutilisable côté JavaScript via plotly.js.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Si dicoReseau est vide ou ne contient
+    que des listes vides.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.statistiqueSousgraphique">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">statistiqueSousgraphique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#statistiqueSousgraphique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.statistiqueSousgraphique" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée un graphique en camembert représentant la composition
+des paquets traités, à partir d’une table de statistiques.</p>
+<p>Les valeurs inférieures à 0.5% sont regroupées dans une
+catégorie « Other » pour améliorer la lisibilité. La clé
+total_paquet est supprimée avant la construction du graphique.
+Le graphique est généré avec Plotly et retourné en JSON
+pour une réutilisation côté JavaScript.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stats_table</strong> (<em>dict</em>) – Dictionnaire contenant les informations
+à représenter graphiquement.</p></li>
+<li><p><strong>graph_type</strong> (<em>str</em>) – Type de graphique à afficher, détermine
+quelles informations extraire de stats_table
+(ex: « CoucheServiceDestination »,
+« CoucheServiceSource », « CoucheDeux », etc.).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Chaîne JSON contenant le graphique Plotly,</dt><dd><p>réutilisable côté JavaScript via plotly.js.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – Si stats_table ne contient pas les clés attendues.</p></li>
+<li><p><strong>ValueError</strong> – Si stats_table est vide après filtrage.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.statistiqueTempsVoyageMoyenSousgraphique">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">statistiqueTempsVoyageMoyenSousgraphique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#statistiqueTempsVoyageMoyenSousgraphique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.statistiqueTempsVoyageMoyenSousgraphique" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.statistiqueTempsVoyageRepartitionSousgraphique">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">statistiqueTempsVoyageRepartitionSousgraphique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_temps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#statistiqueTempsVoyageRepartitionSousgraphique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.statistiqueTempsVoyageRepartitionSousgraphique" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationGraphiques.statistiqueTempsVoyageUnitaireSousgraphique">
+<span class="sig-prename descclassname"><span class="pre">creationGraphiques.</span></span><span class="sig-name descname"><span class="pre">statistiqueTempsVoyageUnitaireSousgraphique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_temps</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationGraphiques.html#statistiqueTempsVoyageUnitaireSousgraphique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationGraphiques.statistiqueTempsVoyageUnitaireSousgraphique" title="Lien permanent vers cette définition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">filtrageDonnee</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creationCSV.html">creationCSV module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectureDonneFichierUnique.html">lectureDonneFichierUnique module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optionsArgParse.html">optionsArgParse module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trieDeDonnees.html">trieDeDonnees module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">creationGraphiques module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">filtrageDonnee</a><ul>
+      <li>Previous: <a href="trieDeDonnees.html" title="Chapitre précédent">trieDeDonnees module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/creationGraphiques.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -4,7 +4,25 @@ import csv
 
 #Récupération du dictionnaire contenant les données extraites du fichier pcapng
 def creationCSVtoutesInfos(table_par_protocole):
-   
+    """
+    Exporte toutes les informations extraites d'un fichier PCAP dans un fichier CSV.
+
+    Construit une liste de listes à partir du dictionnaire contenant
+    toutes les informations du fichier PCAP, puis l'écrit dans
+    scriptPy/DataOutput/data.csv.
+
+    Args:
+        table_par_protocole (dict): Dictionnaire des paquets extraits
+                                    du fichier PCAP.
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: Si le dossier DataOutput n'existe pas.
+        PermissionError: Si l'écriture dans le dossier est refusée.
+    
+    """
 
 
     #Création du fichier csv avec les données extraites du fichier pcapng

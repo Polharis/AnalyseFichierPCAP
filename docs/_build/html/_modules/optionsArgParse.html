@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>optionsArgParse &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Code source de optionsArgParse</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Chemin par défaut relatif à la location de ce fichier</span>
+<span class="n">FICHIER_PCAP_DEFAUT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+    <span class="s2">&quot;..&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DataEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;exempleCaptureWireshark.pcapng&quot;</span>
+<span class="p">)</span>
+<span class="n">filtres_à_appliquer</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="appliquer_filtres"><a class="viewcode-back" href="../optionsArgParse.html#optionsArgParse.appliquer_filtres">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">appliquer_filtres</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stocke les filtres reçus depuis l&#39;application web dans le</span>
+<span class="sd">    dictionnaire global filtres_à_appliquer.</span>
+
+<span class="sd">    Ce dictionnaire sera ensuite utilisé par les autres fonctions</span>
+<span class="sd">    du fichier pour filtrer les paquets à analyser.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        params (dict): Paramètres de filtrage reçus depuis</span>
+<span class="sd">                       l&#39;application web.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si params n&#39;est pas un dictionnaire.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#Ici on applique les filtres en fonction des paramètres reçus</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+
+
+<div class="viewcode-block" id="get_emplacement_fichier"><a class="viewcode-back" href="../optionsArgParse.html#optionsArgParse.get_emplacement_fichier">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_emplacement_fichier</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Récupère l&#39;emplacement du fichier PCAP à analyser et en attribue</span>
+<span class="sd">    un par défaut si le chemin est absent, incorrect ou ne correspond</span>
+<span class="sd">    pas à un fichier PCAP ou PCAPng valide.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        La validité du fichier est vérifiée par lecture des magic bytes :</span>
+<span class="sd">        - PCAPng : 0x0a0d0d0a</span>
+<span class="sd">        - PCAP    : 0xd4c3b2a1 ou 0xa1b2c3d4</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Chemin vers un fichier PCAP ou PCAPng valide,</span>
+<span class="sd">             ou chemin par défaut si le fichier est invalide.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Si le fichier par défaut est introuvable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;chemin_fichier&quot;</span> <span class="ow">in</span> <span class="n">filtres_à_appliquer</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;chemin_fichier&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;chemin_fichier&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+
+        <span class="n">chemin</span> <span class="o">=</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;chemin_fichier&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Vérification que le fichier existe</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">chemin</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier introuvable : </span><span class="si">{</span><span class="n">chemin</span><span class="si">}</span><span class="s2">, utilisation du fichier par défaut&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">FICHIER_PCAP_DEFAUT</span>
+
+        <span class="c1"># Vérification que c&#39;est bien un fichier PCAP ou PCAPng par magic bytes</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">chemin</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">magic</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">MAGIC_PCAPNG</span>  <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x0a\x0d\x0d\x0a</span><span class="s1">&#39;</span>
+            <span class="n">MAGIC_PCAP_LE</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xa1\xb2\xc3\xd4</span><span class="s1">&#39;</span>  <span class="c1"># little-endian</span>
+            <span class="n">MAGIC_PCAP_NS</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xa1\xb2\x3c\x4d</span><span class="s1">&#39;</span>  <span class="c1"># little-endian nanosecondes</span>
+            <span class="n">MAGIC_PCAP_BE</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xd4\xc3\xb2\xa1</span><span class="s1">&#39;</span>  <span class="c1"># big-endian</span>
+            <span class="n">MAGIC_PCAP_BE_NS</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x4d\x3c\xb2\xa1</span><span class="s1">&#39;</span>  <span class="c1"># big-endian nanosecondes</span>
+
+            <span class="k">if</span> <span class="n">magic</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">MAGIC_PCAPNG</span><span class="p">,</span> <span class="n">MAGIC_PCAP_LE</span><span class="p">,</span> <span class="n">MAGIC_PCAP_NS</span><span class="p">,</span> 
+                            <span class="n">MAGIC_PCAP_BE</span><span class="p">,</span> <span class="n">MAGIC_PCAP_BE_NS</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Format invalide : </span><span class="si">{</span><span class="n">chemin</span><span class="si">}</span><span class="s2">, utilisation du fichier par défaut&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">FICHIER_PCAP_DEFAUT</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Impossible de lire : </span><span class="si">{</span><span class="n">chemin</span><span class="si">}</span><span class="s2">, utilisation du fichier par défaut&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">FICHIER_PCAP_DEFAUT</span>
+
+        <span class="k">return</span> <span class="n">chemin</span>
+
+    <span class="k">return</span> <span class="n">FICHIER_PCAP_DEFAUT</span></div>
+   
+    
+<div class="viewcode-block" id="get_filtre"><a class="viewcode-back" href="../optionsArgParse.html#optionsArgParse.get_filtre">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_filtre</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Accesseur pour le dictionnaire global filtres_à_appliquer.</span>
+
+<span class="sd">    Permet aux fonctions extérieures à ce fichier d&#39;accéder</span>
+<span class="sd">    aux filtres actifs sans modifier directement la variable globale.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dictionnaire des filtres actifs et leurs valeurs.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NameError: Si filtres_à_appliquer n&#39;a pas été initialisé.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">filtres_à_appliquer</span>
+    
+    <span class="k">return</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="get_plage_temps_graphique"><a class="viewcode-back" href="../optionsArgParse.html#optionsArgParse.get_plage_temps_graphique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_plage_temps_graphique</span><span class="p">()</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Accesseur pour le paramètre de regroupement temporel utilisé</span>
+<span class="sd">    dans les graphiques d&#39;inter-intra espacement.</span>
+
+<span class="sd">    Récupère la valeur depuis le dictionnaire global</span>
+<span class="sd">    filtres_à_appliquer si elle est définie et non vide.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Plage de temps en millisecondes à appliquer</span>
+<span class="sd">               sur les graphiques.</span>
+<span class="sd">        None: Si le paramètre est absent ou vide.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si la valeur récupérée n&#39;est pas convertible</span>
+<span class="sd">                   en nombre.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;plage_temps_graphique&quot;</span> <span class="ow">in</span> <span class="n">filtres_à_appliquer</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;plage_temps_graphique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;plage_temps_graphique&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">filtres_à_appliquer</span><span class="p">[</span><span class="s2">&quot;plage_temps_graphique&quot;</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Code du module</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -2,11 +2,9 @@ from flask import Flask, render_template, request, jsonify
 import matplotlib
 matplotlib.use('Agg')  # Important : mode sans affichage
 import matplotlib.pyplot as plt
-import io, base64
-import subprocess
 
 import scriptPy.graphiques.creationGraphiques as graphiques
-import scriptPy.LectureDonne.optionsArgParse as options
+from scriptPy.LectureDonne import optionsArgParse as options
 import  scriptPy.LectureDonne.lectureDonneFichierUnique as recupDico  
 import scriptPy.main as main
 
@@ -23,9 +21,10 @@ def index():
 
 @app.route('/generer', methods=['POST'])
 def generer():
+    
     #Application des filtres
     params = request.get_json(force=True, silent=True) or {}
-    options.appliquer_filtres(params)
+    main.configurerParams(params)
     #-------------------------------------
 
     typeGraphique = params.get('typeGraphique', None)
@@ -41,6 +40,7 @@ def generer():
             plage_temps_graphique = 30 # valeur par défaut de la plage de temps pour les graphiques de temps
     elif plage_temps_graphique <= 0 or plage_temps_graphique > 700 :
         plage_temps_graphique = 30 # valeur par défaut de la plage de temps pour les graphiques de temps
+ 
 
     fig = main.genererGraphique(typeGraphique,plage_temps_graphique)
 
@@ -56,7 +56,7 @@ def generer():
 def generer_csv():
     #Application des filtres
     params = request.get_json(force=True, silent=True) or {}
-    options.appliquer_filtres(params)
+    main.configurerParams(params)
     #-------------------------------------
     typeGraphique = params.get('typeGraphique', None)
 
@@ -71,11 +71,11 @@ def generer_csv():
 def genererRapportStatistique():
     #Application des filtres
     params = request.get_json(force=True, silent=True) or {}
-    options.appliquer_filtres(params)
+    main.configurerParams(params)
     #-------------------------------------
     mode = params.get('typeStatistique', None)
     
-
+    
     fig = main.genererRapportStatistique(mode)
 
     if fig is None:

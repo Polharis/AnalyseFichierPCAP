@@ -1,17 +1,42 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import base64
-import io
+
 
 #pour plotly
 import plotly.graph_objects as go
-import plotly.express as px
-import json
+
 
 
 def statistiqueSousgraphique(stats_table, graph_type) : 
     #Cette fonction prend en entrée une table de statistiques et retourne un graphique 
     # Réaliser avec plotly pour retourner du JSON
+
+    """
+    Crée un graphique en camembert représentant la composition
+    des paquets traités, à partir d'une table de statistiques.
+
+    Les valeurs inférieures à 0.5% sont regroupées dans une
+    catégorie "Other" pour améliorer la lisibilité. La clé
+    total_paquet est supprimée avant la construction du graphique.
+    Le graphique est généré avec Plotly et retourné en JSON
+    pour une réutilisation côté JavaScript.
+
+    Args:
+        stats_table (dict): Dictionnaire contenant les informations
+                            à représenter graphiquement.
+        graph_type (str): Type de graphique à afficher, détermine
+                          quelles informations extraire de stats_table
+                          (ex: "CoucheServiceDestination",
+                          "CoucheServiceSource", "CoucheDeux", etc.).
+
+    Returns:
+        str: Chaîne JSON contenant le graphique Plotly,
+             réutilisable côté JavaScript via plotly.js.
+
+    Raises:
+        KeyError: Si stats_table ne contient pas les clés attendues.
+        ValueError: Si stats_table est vide après filtrage.
+    """
     stats_table.pop("total_paquet", None)
     liste_cle_a_supprimer = []
     for key in stats_table.keys() :
@@ -46,6 +71,33 @@ def statistiqueSousgraphique(stats_table, graph_type) :
 
 #Créer un histogramme de l'inter-espacement entre les paquets pour chaque conversation (src, dst)
 def histogrammeIntraEspacement(dicoReseau,plage_temps_graphique) :
+    """
+    Crée un histogramme représentant les intra-espacements entre
+    les paquets pour chaque conversation (src, dst).
+
+    Chaque conversation génère une trace distincte superposée
+    sur le même graphique (barmode overlay) avec une opacité
+    de 0.6 pour améliorer la lisibilité.
+
+    Args:
+        dicoReseau (dict): Dictionnaire dont les clés sont des tuples
+                           (src, dst) et les valeurs des listes de
+                           timestamps représentant les espacements
+                           entre paquets.
+        plage_temps_graphique (int): Taille des intervalles en
+                                     millisecondes pour le regroupement
+                                     des paquets ayant le même src/dst
+                                     et espacés de plage_temps.
+
+    Returns:
+        str: Chaîne JSON contenant le graphique Plotly,
+             réutilisable côté JavaScript via plotly.js.
+
+    Raises:
+        ValueError: Si dicoReseau est vide ou ne contient
+                    que des listes vides.
+    """
+
     fig = go.Figure()
 
     for (src, dst), times in dicoReseau.items():
@@ -68,6 +120,33 @@ def histogrammeIntraEspacement(dicoReseau,plage_temps_graphique) :
     return fig.to_json()
 
 def courbeRepartitionIntraEspacement(dicoReseau,plage_temps_graphique) :
+    """
+    Crée une courbe de répartition cumulative des intra-espacements
+    pour tous les couples d'IP mélangés.
+
+    Les temps sont extraits de toutes les conversations, triés,
+    puis regroupés par intervalles de plage_temps_graphique
+    millisecondes. Les occurrences sont ensuite converties en
+    pourcentages cumulatifs pour former la courbe de répartition.
+
+    Args:
+        dicoReseau (dict): Dictionnaire dont les clés sont des tuples
+                           (src, dst) et les valeurs des listes de
+                           timestamps représentant les espacements
+                           entre paquets.
+        plage_temps_graphique (int): Taille des intervalles en
+                                     millisecondes pour le regroupement
+                                     des résultats.
+
+    Returns:
+        str: Chaîne JSON contenant le graphique Plotly,
+             réutilisable côté JavaScript via plotly.js.
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total = 0).
+        ValueError: Si plage_temps_graphique est égal à zéro.
+    """
+
     fig = go.Figure()
 
     liste_temps = []
@@ -116,15 +195,6 @@ def courbeRepartitionIntraEspacement(dicoReseau,plage_temps_graphique) :
     )
 
     return fig.to_json()
-
-
-def choisirGraphique(stats_table, typeGraphique) :
-    if typeGraphique == "CoucheDeux" or typeGraphique == "CoucheTrois" or typeGraphique == "CoucheServiceSource" or typeGraphique == "CoucheServiceDestination" :
-        return statistiqueSousgraphique(stats_table, typeGraphique)
-    elif typeGraphique == "InterEspacement" :
-        return histogrammeIntraEspacement(stats_table)
-    else : 
-        return None
 
 
 

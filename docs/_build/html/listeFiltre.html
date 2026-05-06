@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>listeFiltre module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="prev" title="main module" href="main.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-listeFiltre">
+<span id="listefiltre-module"></span><h1>listeFiltre module<a class="headerlink" href="#module-listeFiltre" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_Selectionner">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_Selectionner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_Selectionner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_Selectionner" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Récupère les données des champs de filtres sélectionnés par l’utilisateur.
+:returns: Un dictionnaire contenant les filtres à appliquer</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_arpOnly_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_arpOnly_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_arpOnly_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_arpOnly_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si le filtre « arp_only » est actif. Et vérifie si le filtre est au bon format(un str spécifique).
+:returns: True si le filtre « arp_only » est actif et au bon format, False sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_ipOnly_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_ipOnly_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_ipOnly_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_ipOnly_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si le filtre « ip_only » est actif. Et vérifie si le filtre est au bon format (un str spécifique).
+:returns: True si le filtre « ip_only » est actif et au bon format, False sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_ipSpecifique_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_ipSpecifique_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_ipSpecifique_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_ipSpecifique_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si le filtre « ip_specifique » est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
+:returns: True si le filtre « ip_specifique » est actif et au bon format, False sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_portSpecifique_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_portSpecifique_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_portSpecifique_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_portSpecifique_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p> »
+Vérifie si le filtre « port_specifique » est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
+:returns: True si le filtre « port_specifique » est actif et au bon format, False sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.filtre_protocoleSpecifique_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">filtre_protocoleSpecifique_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#filtre_protocoleSpecifique_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.filtre_protocoleSpecifique_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Vérifie si le filtre « protocole_specifique » est actif. Et vérifie si le filtre est au bon format (un protocole valide
+parmis la liste [“TCP”, “UDP”, “SCTP”, “ICMP”, “ICMPv6”]).
+:returns: True si le filtre « protocole_specifique » est actif et au bon format, False sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="listeFiltre.liste_filtre_EstActive">
+<span class="sig-prename descclassname"><span class="pre">listeFiltre.</span></span><span class="sig-name descname"><span class="pre">liste_filtre_EstActive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/listeFiltre.html#liste_filtre_EstActive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#listeFiltre.liste_filtre_EstActive" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Récupère la liste des filtres actifs et leurs valeurs.
+Donc si un filtre est vide ou invalide, le dictionnaire contiendra None ou false à l’emplacement de la valeur du filtre.
+Mais si un filtre est non vide et valide, alors le dictionnaire contiendra la valeur du filtre
+:returns: Un dictionnaire contenant les filtres actifs et leurs valeurs.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">listeFiltre module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_Selectionner"><code class="docutils literal notranslate"><span class="pre">filtre_Selectionner()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_arpOnly_EstActive"><code class="docutils literal notranslate"><span class="pre">filtre_arpOnly_EstActive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_ipOnly_EstActive"><code class="docutils literal notranslate"><span class="pre">filtre_ipOnly_EstActive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_ipSpecifique_EstActive"><code class="docutils literal notranslate"><span class="pre">filtre_ipSpecifique_EstActive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_portSpecifique_EstActive"><code class="docutils literal notranslate"><span class="pre">filtre_portSpecifique_EstActive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.filtre_protocoleSpecifique_EstActive"><code class="docutils literal notranslate"><span class="pre">filtre_protocoleSpecifique_EstActive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listeFiltre.liste_filtre_EstActive"><code class="docutils literal notranslate"><span class="pre">liste_filtre_EstActive()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">filtrageDonnee</a><ul>
+      <li>Previous: <a href="main.html" title="Chapitre précédent">main module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/listeFiltre.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>trieDeDonnees &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Code source de trieDeDonnees</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scapy.all</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>  
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>  
+<span class="kn">import</span><span class="w"> </span><span class="nn">dpkt</span>
+
+<span class="c1">#Cette fonction permet d&#39;ajouter les informations d&#39;un paquet ARP dans la liste PCAPARP</span>
+
+
+
+<span class="c1">#Créer des couples clé-valeur : type de payload Ethernet, paquets associés</span>
+
+<div class="viewcode-block" id="ajouter_a_table_Par_Protocole"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.ajouter_a_table_Par_Protocole">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ajouter_a_table_Par_Protocole</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">paquet</span><span class="p">,</span><span class="n">numero_paquet</span><span class="p">,</span><span class="n">filtres_actives</span><span class="p">,</span><span class="n">time</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construit un dictionnaire de paquets en extrayant les informations</span>
+<span class="sd">    du parsing PCAP et en appliquant les filtres actifs.</span>
+
+<span class="sd">    Le premier rôle est d&#39;appeler les fonctions chargées de construire</span>
+<span class="sd">    le dictionnaire à partir des informations du parsing PCAP,</span>
+<span class="sd">    difficilement exploitables en l&#39;état.</span>
+<span class="sd">    Le deuxième rôle est d&#39;appliquer les filtres actifs lors de</span>
+<span class="sd">    la construction du dictionnaire.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (dict): Dictionnaire construit à partir des informations</span>
+<span class="sd">                      du parsing du fichier PCAP.</span>
+<span class="sd">        paquet (dpkt.ethernet.Ethernet): Résultat du parsing du fichier</span>
+<span class="sd">                                         PCAP à l&#39;aide de dpkt.</span>
+<span class="sd">        numero_paquet (int): Numéro du paquet traité.</span>
+<span class="sd">        filtres_actives (dict): Dictionnaire des filtres activés avec</span>
+<span class="sd">                                leurs valeurs respectives.</span>
+<span class="sd">        time (float): Timestamp du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Le dictionnaire mis à jour avec les informations du paquet,</span>
+<span class="sd">              ou inchangé si le paquet ne répond pas aux filtres actifs.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: Si un filtre attendu est absent de filtres_actives.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">EtherType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="c1">#Si le payload en question n&#39;a jamais été trouvé alors on le crée</span>
+    <span class="k">if</span> <span class="n">EtherType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">EtherType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#On ajoute un dictionnaire par paquet</span>
+
+    <span class="c1">#--------------- FILTRES ---------------</span>
+    <span class="c1">#Si l&#39;option ip_only est activée, on n&#39;ajoute que les paquets de type IP ou IPv6</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IPv6&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">table</span>
+        
+    <span class="c1">#Si l&#39;option arp_only est activée, on n&#39;ajoute que les paquets de type ARP</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;ARP&#39;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">table</span>
+    
+    <span class="c1">#Si l&#39;option ip_specifique est activée, on n&#39;ajoute que les paquets provenant ou étant déstiné à l&#39;adresse IP spécifiée</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;ARP&#39;</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">table</span>
+        <span class="k">if</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;IP&#39;</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">src</span><span class="p">)</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dst</span><span class="p">)</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">table</span>
+        <span class="k">elif</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;ARP&#39;</span> <span class="p">:</span>
+            <span class="k">if</span>  <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">spa</span><span class="p">)</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tpa</span><span class="p">)</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">table</span>
+            
+    <span class="c1">#Si l&#39;option port_specifique est activée, on n&#39;ajoute que les paquets provenant ou étant déstiné au port spécifié</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">table</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">tcp</span><span class="o">.</span><span class="n">TCP</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">udp</span><span class="o">.</span><span class="n">UDP</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">sctp</span><span class="o">.</span><span class="n">SCTP</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">table</span>
+        <span class="k">if</span> <span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sport</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dport</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">table</span>
+        
+    <span class="c1">#Si l&#39;option protocole_specifique est activée, on n&#39;ajoute que les paquets de type IP avec le protocole de couche 4 spécifié</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IPv6&#39;</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">table</span>
+        <span class="k">if</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;IP&#39;</span> <span class="p">:</span>
+            <span class="n">proto_name</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proto_name</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="n">table</span>
+        <span class="k">elif</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;IPv6&#39;</span> <span class="p">:</span>
+            <span class="n">proto_name</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nxt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">proto_name</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="n">table</span>
+    <span class="c1">#---------------- FIN DES FILTRES ---------------</span>
+   
+    <span class="n">table</span><span class="p">[</span><span class="n">EtherType</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">extraire_info</span><span class="p">(</span><span class="n">paquet</span><span class="p">,</span> <span class="n">numero_paquet</span><span class="p">,</span><span class="n">time</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">table</span></div>
+
+<span class="n">dico_proto_deja_traites</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">dico_services_deja_traites</span> <span class="o">=</span> <span class="p">{}</span> 
+
+<span class="c1">#fonction pour l&#39;optimisation du temps de traitement</span>
+<span class="c1">#On évite de lire les fichiers tout le temps </span>
+<div class="viewcode-block" id="deja_traite_proto"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.deja_traite_proto">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">deja_traite_proto</span><span class="p">(</span><span class="n">proto_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimise le traitement des paquets en mettant en cache les protocoles</span>
+<span class="sd">    déjà identifiés pour éviter de relire /etc/protocols à chaque itération.</span>
+
+<span class="sd">    Si le numéro de protocole est supérieur à 262, il est directement</span>
+<span class="sd">    considéré comme inconnu sans lecture du fichier.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Sur un fichier PCAP de 20 Mo, cette optimisation réduit le temps</span>
+<span class="sd">        de traitement de 3 minutes à 55 secondes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto_num (int): Numéro du protocole extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Le nom du protocole s&#39;il est déjà en cache ou supérieur à 262</span>
+<span class="sd">             (retourne &quot;Unknown&quot; dans ce dernier cas).</span>
+<span class="sd">        None: Si le protocole doit être recherché dans /etc/protocols.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si proto_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">proto_num</span> <span class="ow">in</span> <span class="n">dico_proto_deja_traites</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">dico_proto_deja_traites</span><span class="p">[</span><span class="n">proto_num</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">proto_num</span> <span class="o">&gt;</span> <span class="mi">262</span> <span class="p">:</span>
+        <span class="c1">#Pour éviter de faire des recherches dans le fichier /etc/protocols pour les numéros de protocoles qui sont très élevés et qui sont souvent inconnus, on considère que tous les numéros de protocoles supérieurs à 262 sont inconnus</span>
+        <span class="k">return</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="deja_traite_service"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.deja_traite_service">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">deja_traite_service</span><span class="p">(</span><span class="n">port_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimise le traitement des paquets en mettant en cache les services</span>
+<span class="sd">    déjà identifiés pour éviter de relire /etc/services à chaque itération.</span>
+
+<span class="sd">    Si le numéro de service est supérieur à 65535, il est directement</span>
+<span class="sd">    considéré comme inconnu sans lecture du fichier.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Sur un fichier PCAP de 20 Mo, cette optimisation réduit le temps</span>
+<span class="sd">        de traitement de 3 minutes à 55 secondes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        port_num (int): Numéro du service extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Le nom du service s&#39;il est déjà en cache ou supérieur à 65535</span>
+<span class="sd">             (retourne &quot;Unknown&quot; dans ce dernier cas).</span>
+<span class="sd">        None: Si le service doit être recherché dans /etc/services.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si port_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">port_num</span> <span class="ow">in</span> <span class="n">dico_services_deja_traites</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">dico_services_deja_traites</span><span class="p">[</span><span class="n">port_num</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">port_num</span> <span class="o">&gt;</span> <span class="mi">65535</span> <span class="p">:</span>
+        <span class="c1">#Pour éviter de faire des recherches dans le fichier /etc/services pour les numéros de ports qui sont très élevés et qui sont souvent inconnus, on considère que tous les numéros de ports supérieurs à 65535 sont inconnus</span>
+        <span class="k">return</span> <span class="s2">&quot;Unknown (souvent un port éphémère)&quot;</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+    
+
+<span class="c1">#L&#39;appel paquet.proto renvoie un int qui est lié à un protocole de la couche 4,</span>
+<span class="c1"># cette fonction permet de faire le lien entre ce numéro et le nom du protocole</span>
+<span class="c1">#Lire le fichier /etc/protocols pour faire le lien entre les numéros et les protocoles</span>
+<div class="viewcode-block" id="get_proto_name"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.get_proto_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_proto_name</span><span class="p">(</span><span class="n">proto_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lit le fichier système des protocoles pour faire correspondre</span>
+<span class="sd">    un numéro de protocole avec son nom.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - Fonctionne sur Linux (/etc/protocols) et Windows</span>
+<span class="sd">          (C:\\Windows\\System32\\drivers\\etc\\protocol).</span>
+<span class="sd">        - Fait appel à deja_traite_proto() pour éviter de relire</span>
+<span class="sd">          le fichier à chaque appel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto_num (int): Numéro du protocole extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Le nom du protocole correspondant au numéro,</span>
+<span class="sd">             ou &quot;Unknown&quot; si le protocole n&#39;est pas répertorié.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Si aucun fichier de protocoles n&#39;est trouvé.</span>
+<span class="sd">        TypeError: Si proto_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">est_deja_traite</span> <span class="o">=</span> <span class="n">deja_traite_proto</span><span class="p">(</span><span class="n">proto_num</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">est_deja_traite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">est_deja_traite</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/etc/protocol&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/etc/protocols&quot;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/etc/protocols&quot;</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="c1">#Chemin alternatif si on est sur windows</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/usr/share/protocol&quot;</span>
+        
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ligne</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">ligne</span> <span class="o">=</span> <span class="n">ligne</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ligne</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">champs</span> <span class="o">=</span> <span class="n">ligne</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">champs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">proto_num</span><span class="p">:</span>
+                    <span class="n">dico_proto_deja_traites</span><span class="p">[</span><span class="n">proto_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">champs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">return</span> <span class="n">champs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+    <span class="n">dico_proto_deja_traites</span><span class="p">[</span><span class="n">proto_num</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Unknown&quot;</span></div>
+
+<div class="viewcode-block" id="get_service_name"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.get_service_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_service_name</span><span class="p">(</span><span class="n">port_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lit le fichier système des services pour faire correspondre</span>
+<span class="sd">    un numéro de service avec son nom.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - Fonctionne sur Linux (/etc/protocols) et Windows</span>
+<span class="sd">          (C:\\Windows\\System32\\drivers\\etc\\protocol).</span>
+<span class="sd">        - Fait appel à deja_traite_service() pour éviter de relire</span>
+<span class="sd">          le fichier à chaque appel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        port_num (int): Numéro du service extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Le nom du service correspondant au numéro,</span>
+<span class="sd">             ou &quot;Unknown&quot; si le service n&#39;est pas répertorié.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Si aucun fichier de protocoles n&#39;est trouvé.</span>
+<span class="sd">        TypeError: Si port_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">est_deja_traite</span> <span class="o">=</span> <span class="n">deja_traite_service</span><span class="p">(</span><span class="n">port_num</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">est_deja_traite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">est_deja_traite</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/etc/services&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ligne</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">ligne</span> <span class="o">=</span> <span class="n">ligne</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ligne</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">champs</span> <span class="o">=</span> <span class="n">ligne</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">champs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">champs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">port_proto</span> <span class="o">=</span> <span class="n">champs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">port_proto</span><span class="p">:</span>
+                <span class="n">port_str</span><span class="p">,</span> <span class="n">protocol</span> <span class="o">=</span> <span class="n">port_proto</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">port_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">port</span> <span class="o">==</span> <span class="n">port_num</span> <span class="p">:</span>
+                        <span class="n">dico_services_deja_traites</span><span class="p">[</span><span class="n">port_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                        <span class="k">return</span> <span class="n">name</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">continue</span>
+    <span class="n">dico_services_deja_traites</span><span class="p">[</span><span class="n">port_num</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Unknown (souvent un port éphémère)&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;Unknown (souvent un port éphémère)&quot;</span></div>
+
+
+<span class="c1">#L&#39;appel paquet.ptype renvoie un int qui est lié à un protocole de la couche 3,</span>
+<span class="c1"># cette fonction permet de faire le lien entre ce numéro et le nom du protocole</span>
+<div class="viewcode-block" id="get_arp_proto_name"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.get_arp_proto_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_arp_proto_name</span><span class="p">(</span><span class="n">arp_ptype_num</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convertit un numéro de protocole de couche 3 issu d&#39;un paquet ARP</span>
+<span class="sd">    en son nom lisible, via un dictionnaire statique.</span>
+
+<span class="sd">    Dans la couche ARP, les protocoles sont identifiés par des entiers</span>
+<span class="sd">    spécifiques (EtherType), différents des numéros de protocoles</span>
+<span class="sd">    classiques de couche 4.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arp_ptype_num (int): Numéro du protocole ARP (EtherType)</span>
+<span class="sd">                             extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Le nom du protocole correspondant (IPv4, ARP, IPv6),</span>
+<span class="sd">             ou &quot;Unknown&quot; si le numéro n&#39;est pas répertorié.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si arp_ptype_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">arp_proto_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">2048</span><span class="p">:</span> <span class="s1">&#39;IPv4&#39;</span><span class="p">,</span>
+        <span class="mi">2054</span><span class="p">:</span> <span class="s1">&#39;ARP&#39;</span><span class="p">,</span>
+        <span class="mi">34525</span><span class="p">:</span> <span class="s1">&#39;IPv6&#39;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">arp_proto_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">arp_ptype_num</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">arp_proto_map</span><span class="p">[</span><span class="n">arp_ptype_num</span><span class="p">]</span> 
+    <span class="k">return</span> <span class="s1">&#39;Unknown&#39;</span></div>
+
+
+<div class="viewcode-block" id="Est_protocole_couche_4"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.Est_protocole_couche_4">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">Est_protocole_couche_4</span><span class="p">(</span><span class="n">proto_num</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vérifie si un numéro de protocole de couche 3 correspond</span>
+<span class="sd">    à un protocole de couche 4 (TCP, UDP, SCTP, DCCP).</span>
+
+<span class="sd">    Cette vérification est importante pour déterminer si les</span>
+<span class="sd">    numéros de ports source et destination peuvent être extraits</span>
+<span class="sd">    du paquet.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        proto_num (int): Numéro du protocole de couche 3</span>
+<span class="sd">                         extrait du paquet.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True si le protocole est de couche 4</span>
+<span class="sd">              (TCP, UDP, SCTP, DCCP), False sinon.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si proto_num n&#39;est pas un entier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">proto_couche_4</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="s2">&quot;udp&quot;</span><span class="p">,</span> <span class="s2">&quot;sctp&quot;</span><span class="p">,</span><span class="s2">&quot;dccp&quot;</span><span class="p">]</span>
+    <span class="n">proto_name</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">proto_num</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">proto_name</span> <span class="ow">in</span> <span class="n">proto_couche_4</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="extraire_info"><a class="viewcode-back" href="../trieDeDonnees.html#trieDeDonnees.extraire_info">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">extraire_info</span><span class="p">(</span><span class="n">paquet</span><span class="p">,</span><span class="n">num_paquet</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fonction principale de construction d&#39;un dictionnaire exploitable</span>
+<span class="sd">    depuis un objet dpkt.ethernet.Ethernet.</span>
+
+<span class="sd">    Utilise les outils dpkt pour transformer l&#39;objet en informations</span>
+<span class="sd">    lisibles (noms de couches, ports, adresses IP, etc.).</span>
+<span class="sd">    Le contenu du dictionnaire retourné varie selon le type de paquet</span>
+<span class="sd">    (IP, ARP, IPv6, ou payload non reconnu).</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Fait appel à presque toutes les autres fonctions du fichier</span>
+<span class="sd">        pour extraire les informations (get_proto_name,</span>
+<span class="sd">        get_service_name, Est_protocole_couche_4, etc.).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        paquet (dpkt.ethernet.Ethernet): Paquet duquel extraire</span>
+<span class="sd">                                         les informations.</span>
+<span class="sd">        num_paquet (int): Numéro du paquet traité.</span>
+<span class="sd">        time (float): Timestamp Unix du paquet extrait par dpkt.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dictionnaire contenant selon le type de paquet :</span>
+<span class="sd">            - id, type_payload, time, mac_src, mac_dst</span>
+<span class="sd">              (toujours présents)</span>
+<span class="sd">            - source, destination (si IP, ARP ou IPv6)</span>
+<span class="sd">            - protocole_3 ou protocole_4 (si protocole identifié)</span>
+<span class="sd">            - ttl (si IP ou IPv6)</span>
+<span class="sd">            - port_src, port_dst (si TCP, UDP ou SCTP)</span>
+<span class="sd">            - ni IP ni ARP (bool) : True si payload non reconnu</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AttributeError: Si le paquet ne possède pas les attributs</span>
+<span class="sd">                        attendus.</span>
+<span class="sd">        socket.error: Si la conversion d&#39;adresse IP échoue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">couche_trois</span> <span class="o">=</span> <span class="n">paquet</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span>
+    <span class="c1">#On ajoute d&#39;abord les informations communes à tous les paquets</span>
+    <span class="n">Infos</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="n">num_paquet</span><span class="p">,</span>
+        <span class="c1">#Date sous format AAAA-MM-JJ HH:MM:SS millisecondes</span>
+        
+        <span class="s1">&#39;type_payload&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">couche_trois</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">time</span><span class="p">)),</span>
+        <span class="s1">&#39;mac_src&#39;</span><span class="p">:</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">ethernet</span><span class="o">.</span><span class="n">mac_to_str</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">src</span><span class="p">),</span>
+        <span class="s1">&#39;mac_dst&#39;</span><span class="p">:</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">ethernet</span><span class="o">.</span><span class="n">mac_to_str</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">dst</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">#Dans cette section on va avoir des types d&#39;informations différents selon le type de payload du paquet Ethernet</span>
+    <span class="c1">#On vérifie que le layer ip existe</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">ip</span><span class="o">.</span><span class="n">IP</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">Est_protocole_couche_4</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span> 
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ttl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">ttl</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">src</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">dst</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ni IP ni ARP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">dpkt</span><span class="o">.</span><span class="n">tcp</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">udp</span><span class="o">.</span><span class="n">UDP</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">sctp</span><span class="o">.</span><span class="n">SCTP</span><span class="p">)):</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sport</span><span class="p">)</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_dst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dport</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">arp</span><span class="o">.</span><span class="n">ARP</span><span class="p">)</span> <span class="p">:</span> 
+        <span class="k">if</span> <span class="n">Est_protocole_couche_4</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">pro</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">pro</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span> 
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">pro</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">spa</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">tpa</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ni IP ni ARP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">ip6</span><span class="o">.</span><span class="n">IP6</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">Est_protocole_couche_4</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">nxt</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">nxt</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span> 
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;protocole_3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">nxt</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ttl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">hlim</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">src</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">inet_ntoa</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">dst</span><span class="p">)</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ni IP ni ARP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">dpkt</span><span class="o">.</span><span class="n">tcp</span><span class="o">.</span><span class="n">TCP</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">udp</span><span class="o">.</span><span class="n">UDP</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">sctp</span><span class="o">.</span><span class="n">SCTP</span><span class="p">)):</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">sport</span><span class="p">)</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_dst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dport</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="c1">#Pour repérer les paquets avec des payloads particuliers</span>
+        <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;ni IP ni ARP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#On recherche tout de même une source et une destination dans les couches supérieures</span>
+        <span class="c1">#  pour pouvoir faire des statistiques plus précises sur les temps de voyage entre les conversations</span>
+        <span class="c1">#Même si ce cas n&#39;est pas censé arriver souvent, il peut arriver que des paquets aient des payloads Ethernet particuliers </span>
+        <span class="c1"># mais contiennent quand même des informations de source et destination dans les couches supérieures</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">tcp</span><span class="o">.</span><span class="n">TCP</span><span class="p">):</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">udp</span><span class="o">.</span><span class="n">UDP</span><span class="p">):</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dpkt</span><span class="o">.</span><span class="n">sctp</span><span class="o">.</span><span class="n">SCTP</span><span class="p">):</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="n">couche_trois</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transport</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">transport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">transport</span><span class="o">.</span><span class="n">sport</span><span class="p">)</span>
+            <span class="n">Infos</span><span class="p">[</span><span class="s1">&#39;port_dst&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_service_name</span><span class="p">(</span><span class="n">transport</span><span class="o">.</span><span class="n">dport</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Infos</span></div>
+
+
+
+                      
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Code du module</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

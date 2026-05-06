@@ -1,4 +1,4 @@
-import LectureDonne.optionsArgParse as options
+from LectureDonne import optionsArgParse as options
 from scapy.all import *
 import  LectureDonne.lectureDonneFichierUnique as recupDico  
 import LectureDonne.creationCSV as creationCSV
@@ -9,9 +9,21 @@ import graphiques.creationGraphiques as graphiques
 
 
 
-
+#Cette fonctions doit être postionner ici et non pas dans app
+#Cela est dû au principe identification de module par chemin d'import de python
+def configurerParams (params) : 
+    options.appliquer_filtres(params)
 
 def genererGraphique(TypeGraphique,plage_temps_graphique) :
+
+    """
+    Génère un graphique en fonction du type et de la plage de temps spécifiés.
+    Args:
+        TypeGraphique (str): Le type de graphique à générer (ex: "CoucheDeux", "CoucheTrois", "CoucheQuatre", "CoucheServiceSource", "CoucheServiceDestination", "IntraEspacement", "IntraEspacementRepartition").
+        plage_temps_graphique (tuple): La plage de temps pour laquelle générer le graphique (ex: (start_time, end_time)).
+    Returns:
+        Un graphique généré en fonction du type et de la plage de temps spécifiés.
+    """
     table_par_protocole = recupDico.get_table_par_protocole()
     
     if TypeGraphique == "CoucheDeux" :
@@ -32,10 +44,22 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
         return None
 
 def genererRapportCsv() :
+    """
+    Génère un rapport CSV contenant toutes les informations extraites du fichier PCAP.
+    Returns:
+        Un rapport CSV généré avec toutes les informations extraites du fichier PCAP.
+    """
     table_par_protocole = recupDico.get_table_par_protocole()
     creationCSV.creationCSVtoutesInfos(table_par_protocole)
 
 def genererRapportStatistique(mode) :
+    """
+    Génère un rapport statistique en fonction du mode spécifié.
+    Args:
+        mode (str): Le mode pour lequel générer le rapport statistique (ex: "CoucheDeux", "CoucheTrois", "CoucheServiceSource", "CoucheServiceDestination").
+    Returns:
+        Un rapport statistique généré en fonction du mode spécifié.
+    """
     table_par_protocole = recupDico.get_table_par_protocole()
     if mode == "CoucheDeux" :
         return stats.creationRapport(mode,table_par_protocole)

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>creationGraphiques &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Code source de creationGraphiques</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<span class="c1">#pour plotly</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
+
+
+
+<div class="viewcode-block" id="statistiqueSousgraphique"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.statistiqueSousgraphique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">statistiqueSousgraphique</span><span class="p">(</span><span class="n">stats_table</span><span class="p">,</span> <span class="n">graph_type</span><span class="p">)</span> <span class="p">:</span> 
+    <span class="c1">#Cette fonction prend en entrée une table de statistiques et retourne un graphique </span>
+    <span class="c1"># Réaliser avec plotly pour retourner du JSON</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crée un graphique en camembert représentant la composition</span>
+<span class="sd">    des paquets traités, à partir d&#39;une table de statistiques.</span>
+
+<span class="sd">    Les valeurs inférieures à 0.5% sont regroupées dans une</span>
+<span class="sd">    catégorie &quot;Other&quot; pour améliorer la lisibilité. La clé</span>
+<span class="sd">    total_paquet est supprimée avant la construction du graphique.</span>
+<span class="sd">    Le graphique est généré avec Plotly et retourné en JSON</span>
+<span class="sd">    pour une réutilisation côté JavaScript.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stats_table (dict): Dictionnaire contenant les informations</span>
+<span class="sd">                            à représenter graphiquement.</span>
+<span class="sd">        graph_type (str): Type de graphique à afficher, détermine</span>
+<span class="sd">                          quelles informations extraire de stats_table</span>
+<span class="sd">                          (ex: &quot;CoucheServiceDestination&quot;,</span>
+<span class="sd">                          &quot;CoucheServiceSource&quot;, &quot;CoucheDeux&quot;, etc.).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Chaîne JSON contenant le graphique Plotly,</span>
+<span class="sd">             réutilisable côté JavaScript via plotly.js.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: Si stats_table ne contient pas les clés attendues.</span>
+<span class="sd">        ValueError: Si stats_table est vide après filtrage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">stats_table</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">liste_cle_a_supprimer</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">stats_table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">stats_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="p">:</span>
+            <span class="n">liste_cle_a_supprimer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">liste_cle_a_supprimer</span> <span class="p">:</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;Other&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">stats_table</span><span class="p">[</span><span class="s2">&quot;Other&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">stats_table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">stats_table</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Déterminer le type d&#39;information</span>
+    <span class="k">if</span> <span class="n">graph_type</span> <span class="o">==</span> <span class="s2">&quot;CoucheServiceDestination&quot;</span> <span class="ow">or</span> <span class="n">graph_type</span> <span class="o">==</span> <span class="s2">&quot;CoucheServiceSource&quot;</span> <span class="p">:</span>
+        <span class="n">information</span> <span class="o">=</span> <span class="s2">&quot;services&quot;</span>
+    <span class="k">else</span> <span class="p">:</span> 
+        <span class="n">information</span> <span class="o">=</span> <span class="s2">&quot;protocoles&quot;</span>
+
+    <span class="c1"># Créer le graphique en camembert avec Plotly</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">go</span><span class="o">.</span><span class="n">Pie</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">stats_table</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+        <span class="n">values</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">stats_table</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+        <span class="n">textposition</span><span class="o">=</span><span class="s1">&#39;inside&#39;</span><span class="p">,</span>
+        <span class="n">textinfo</span><span class="o">=</span><span class="s1">&#39;percent+label&#39;</span>
+    <span class="p">)])</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Graphique des statistiques de la </span><span class="si">{</span><span class="n">graph_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Pourcentage de </span><span class="si">{</span><span class="n">information</span><span class="si">}</span><span class="s2"> sur l&#39;ensemble des paquets&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span></div>
+
+
+<span class="c1">#Créer un histogramme de l&#39;inter-espacement entre les paquets pour chaque conversation (src, dst)</span>
+<div class="viewcode-block" id="histogrammeIntraEspacement"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.histogrammeIntraEspacement">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">histogrammeIntraEspacement</span><span class="p">(</span><span class="n">dicoReseau</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crée un histogramme représentant les intra-espacements entre</span>
+<span class="sd">    les paquets pour chaque conversation (src, dst).</span>
+
+<span class="sd">    Chaque conversation génère une trace distincte superposée</span>
+<span class="sd">    sur le même graphique (barmode overlay) avec une opacité</span>
+<span class="sd">    de 0.6 pour améliorer la lisibilité.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dicoReseau (dict): Dictionnaire dont les clés sont des tuples</span>
+<span class="sd">                           (src, dst) et les valeurs des listes de</span>
+<span class="sd">                           timestamps représentant les espacements</span>
+<span class="sd">                           entre paquets.</span>
+<span class="sd">        plage_temps_graphique (int): Taille des intervalles en</span>
+<span class="sd">                                     millisecondes pour le regroupement</span>
+<span class="sd">                                     des paquets ayant le même src/dst</span>
+<span class="sd">                                     et espacés de plage_temps.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Chaîne JSON contenant le graphique Plotly,</span>
+<span class="sd">             réutilisable côté JavaScript via plotly.js.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: Si dicoReseau est vide ou ne contient</span>
+<span class="sd">                    que des listes vides.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">),</span> <span class="n">times</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">times</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">xbins</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">plage_temps_graphique</span><span class="p">)</span>  
+        <span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Histogramme des inter-espacements par conversation&quot;</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Inter-espacement (millisecondes)&quot;</span><span class="p">,</span>
+        <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Nombre d&#39;intervalles&quot;</span><span class="p">,</span>
+        <span class="n">barmode</span><span class="o">=</span><span class="s1">&#39;overlay&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="courbeRepartitionIntraEspacement"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.courbeRepartitionIntraEspacement">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">courbeRepartitionIntraEspacement</span><span class="p">(</span><span class="n">dicoReseau</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crée une courbe de répartition cumulative des intra-espacements</span>
+<span class="sd">    pour tous les couples d&#39;IP mélangés.</span>
+
+<span class="sd">    Les temps sont extraits de toutes les conversations, triés,</span>
+<span class="sd">    puis regroupés par intervalles de plage_temps_graphique</span>
+<span class="sd">    millisecondes. Les occurrences sont ensuite converties en</span>
+<span class="sd">    pourcentages cumulatifs pour former la courbe de répartition.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dicoReseau (dict): Dictionnaire dont les clés sont des tuples</span>
+<span class="sd">                           (src, dst) et les valeurs des listes de</span>
+<span class="sd">                           timestamps représentant les espacements</span>
+<span class="sd">                           entre paquets.</span>
+<span class="sd">        plage_temps_graphique (int): Taille des intervalles en</span>
+<span class="sd">                                     millisecondes pour le regroupement</span>
+<span class="sd">                                     des résultats.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Chaîne JSON contenant le graphique Plotly,</span>
+<span class="sd">             réutilisable côté JavaScript via plotly.js.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ZeroDivisionError: Si dicoReseau est vide (total = 0).</span>
+<span class="sd">        ValueError: Si plage_temps_graphique est égal à zéro.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+
+    <span class="n">liste_temps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dico_temps_pourcent</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">valeures</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">temps</span> <span class="ow">in</span> <span class="n">valeures</span> <span class="p">:</span> 
+            <span class="n">liste_temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temps</span><span class="p">)</span>
+    <span class="n">liste_temps</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    
+    <span class="c1"># Regrouper les temps par plage_temps_graphique et compter les occurrences</span>
+    <span class="k">for</span> <span class="n">temps</span> <span class="ow">in</span> <span class="n">liste_temps</span> <span class="p">:</span>
+        <span class="n">temps_arrondi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">temps</span> <span class="o">/</span> <span class="n">plage_temps_graphique</span><span class="p">)</span> <span class="o">*</span> <span class="n">plage_temps_graphique</span>
+        <span class="n">dico_temps_pourcent</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">temps_arrondi</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">dico_temps_pourcent</span><span class="p">[</span><span class="n">temps_arrondi</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="c1"># Calculer les pourcentages</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">liste_temps</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">temps_arrondi</span> <span class="ow">in</span> <span class="n">dico_temps_pourcent</span> <span class="p">:</span>
+        <span class="n">dico_temps_pourcent</span><span class="p">[</span><span class="n">temps_arrondi</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dico_temps_pourcent</span><span class="p">[</span><span class="n">temps_arrondi</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    
+    <span class="c1"># Trier le dictionnaire par temps</span>
+    <span class="n">temps_tries</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dico_temps_pourcent</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">pourcentages</span> <span class="o">=</span> <span class="p">[</span><span class="n">dico_temps_pourcent</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">temps_tries</span><span class="p">]</span>
+    
+    <span class="c1"># Calculer les pourcentages cumulatifs</span>
+    <span class="n">cumulative</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cumul</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">pourcent</span> <span class="ow">in</span> <span class="n">pourcentages</span> <span class="p">:</span>
+        <span class="n">cumul</span> <span class="o">+=</span> <span class="n">pourcent</span>
+        <span class="n">cumulative</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cumul</span><span class="p">)</span>
+    
+    <span class="c1"># Ajouter la courbe de répartition cumulative</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">temps_tries</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">cumulative</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines+markers&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Répartition cumulative&#39;</span><span class="p">,</span>
+        <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">))</span>
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Courbe de répartition cumulative des inter-espacements&quot;</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Inter-espacement (millisecondes)&quot;</span><span class="p">,</span>
+        <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Pourcentage cumulatif (%)&quot;</span><span class="p">,</span>
+        <span class="n">hovermode</span><span class="o">=</span><span class="s1">&#39;x unified&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span></div>
+
+
+
+
+
+
+
+
+
+
+<span class="c1">#----------------------------------------------------------------------------------------------------</span>
+<span class="c1"># ----------------------- A mettre entre parenthèse car je n&#39;ai pas tout les outils -----------------</span>
+
+<div class="viewcode-block" id="statistiqueTempsVoyageMoyenSousgraphique"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.statistiqueTempsVoyageMoyenSousgraphique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">statistiqueTempsVoyageMoyenSousgraphique</span><span class="p">(</span><span class="n">stats_table</span><span class="p">)</span> <span class="p">:</span> 
+    <span class="c1">#Cette fonction prend en entrée une table de statistiques et retourne un graphique </span>
+    <span class="c1"># Réaliser avec panda se servant de matplotlib pour faire le graphique</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">stats_table</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Graphique moyenne de temps pris pour les aller-retour entre les différentes conversations&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Conversations&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Moyenne du temps de voyage (en secondes)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="statistiqueTempsVoyageUnitaireSousgraphique"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.statistiqueTempsVoyageUnitaireSousgraphique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">statistiqueTempsVoyageUnitaireSousgraphique</span><span class="p">(</span><span class="n">table_temps</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># table_temps : {(src, dst): [temps]}</span>
+    <span class="c1"># Pour chaque couple source/destination, on trace la courbe cumulative des temps de voyage unitaire.</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">liste_temps</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">),</span> <span class="n">times</span> <span class="ow">in</span> <span class="n">table_temps</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">liste_temps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+        <span class="n">max_progressif</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">liste_temps</span><span class="p">)</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">max_progressif</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">max_progressif</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Graphique du temps maximum progressif par conversation&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Nombre de paquets&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Temps maximum trouvé (secondes)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="statistiqueTempsVoyageRepartitionSousgraphique"><a class="viewcode-back" href="../creationGraphiques.html#creationGraphiques.statistiqueTempsVoyageRepartitionSousgraphique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">statistiqueTempsVoyageRepartitionSousgraphique</span><span class="p">(</span><span class="n">table_temps</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># table_temps : {(src, dst): [temps]}</span>
+    <span class="c1"># On trace la répartition des temps de voyage unitaire pour chaque conversation.</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">),</span> <span class="n">times</span> <span class="ow">in</span> <span class="n">table_temps</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">times</span> <span class="p">:</span> 
+            <span class="k">continue</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">times</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Graphique de la répartition des temps de voyage unitaire par conversation&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Nombre de paquets&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Temps de voyage unitaire (secondes)&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Code du module</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -46,7 +46,6 @@
 
             <input type="text" id = "port_specifique" name = "port_specifique" placeholder="Port à analyser"> <br>
 
-            <input type="text" id = "plage_temps" name = "plage_temps" placeholder="Plage de temps en secondes"> <br>
             
         </form>
  </div>

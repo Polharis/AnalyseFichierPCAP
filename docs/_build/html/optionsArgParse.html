@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>optionsArgParse module &#8212; Documentation AnalyseFichierPCAP </title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3b36ad44"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/translations.js?v=d99ca74e"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-optionsArgParse">
+<span id="optionsargparse-module"></span><h1>optionsArgParse module<a class="headerlink" href="#module-optionsArgParse" title="Lien permanent vers cette rubrique">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="optionsArgParse.appliquer_filtres">
+<span class="sig-prename descclassname"><span class="pre">optionsArgParse.</span></span><span class="sig-name descname"><span class="pre">appliquer_filtres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/optionsArgParse.html#appliquer_filtres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optionsArgParse.appliquer_filtres" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Stocke les filtres reçus depuis l’application web dans le
+dictionnaire global filtres_à_appliquer.</p>
+<p>Ce dictionnaire sera ensuite utilisé par les autres fonctions
+du fichier pour filtrer les paquets à analyser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>dict</em>) – Paramètres de filtrage reçus depuis
+l’application web.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – Si params n’est pas un dictionnaire.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optionsArgParse.get_emplacement_fichier">
+<span class="sig-prename descclassname"><span class="pre">optionsArgParse.</span></span><span class="sig-name descname"><span class="pre">get_emplacement_fichier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optionsArgParse.html#get_emplacement_fichier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optionsArgParse.get_emplacement_fichier" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Récupère l’emplacement du fichier PCAP à analyser et en attribue
+un par défaut si le chemin est absent, incorrect ou ne correspond
+pas à un fichier PCAP ou PCAPng valide.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>La validité du fichier est vérifiée par lecture des magic bytes :
+- PCAPng : 0x0a0d0d0a
+- PCAP    : 0xd4c3b2a1 ou 0xa1b2c3d4</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Chemin vers un fichier PCAP ou PCAPng valide,</dt><dd><p>ou chemin par défaut si le fichier est invalide.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>FileNotFoundError</strong> – Si le fichier par défaut est introuvable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optionsArgParse.get_filtre">
+<span class="sig-prename descclassname"><span class="pre">optionsArgParse.</span></span><span class="sig-name descname"><span class="pre">get_filtre</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optionsArgParse.html#get_filtre"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optionsArgParse.get_filtre" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Accesseur pour le dictionnaire global filtres_à_appliquer.</p>
+<p>Permet aux fonctions extérieures à ce fichier d’accéder
+aux filtres actifs sans modifier directement la variable globale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionnaire des filtres actifs et leurs valeurs.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NameError</strong> – Si filtres_à_appliquer n’a pas été initialisé.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="optionsArgParse.get_plage_temps_graphique">
+<span class="sig-prename descclassname"><span class="pre">optionsArgParse.</span></span><span class="sig-name descname"><span class="pre">get_plage_temps_graphique</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/optionsArgParse.html#get_plage_temps_graphique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#optionsArgParse.get_plage_temps_graphique" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Accesseur pour le paramètre de regroupement temporel utilisé
+dans les graphiques d’inter-intra espacement.</p>
+<p>Récupère la valeur depuis le dictionnaire global
+filtres_à_appliquer si elle est définie et non vide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Plage de temps en millisecondes à appliquer</dt><dd><p>sur les graphiques.</p>
+</dd>
+</dl>
+<p>None: Si le paramètre est absent ou vide.</p>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – Si la valeur récupérée n’est pas convertible
+    en nombre.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">AnalyseFichierPCAP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2026, Robin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/optionsArgParse.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

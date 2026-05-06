@@ -1,14 +1,25 @@
-import sys
-import os
-
-# Remonte d'un niveau pour atteindre la racine du projet
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import scriptPy.LectureDonne.optionsArgParse as options
-from scapy.all import *
-import  scriptPy.LectureDonne.lectureDonneFichierUnique as recupDico  
-
 def statsCoucheDeux(dicoReseau):
+    """
+    Calcule les statistiques des EtherTypes rencontrés dans les
+    paquets analysés et les convertit en pourcentages.
+
+    Compte le nombre de paquets par EtherType, puis calcule
+    le pourcentage de chacun par rapport au total des paquets.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+
+    Returns:
+        dict: Dictionnaire contenant :
+            - total_paquet (int) : nombre total de paquets analysés
+            - <EtherType> (float) : pourcentage de chaque EtherType
+                                    sur le total des paquets
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total_paquet = 0).
+    """
     #On compte le nombre de paquets de chaque type de protocole de couche 2
     stats = {}
     for protocols_couches_1 in dicoReseau.keys() : 
@@ -24,6 +35,28 @@ def statsCoucheDeux(dicoReseau):
     return stats_pourcentage
 
 def statsCoucheTrois(dicoReseau) :
+    """
+    Calcule les statistiques des protocoles de couche 3 rencontrés
+    dans les paquets analysés et les convertit en pourcentages.
+
+    Parcourt tous les paquets du dictionnaire et compte les occurrences
+    de chaque protocole de couche 3, puis calcule le pourcentage
+    de chacun par rapport au total des paquets.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+
+    Returns:
+        dict: Dictionnaire contenant :
+            - total_paquet (int) : nombre total de paquets analysés
+            - <protocole_3> (float) : pourcentage de chaque protocole
+                                      de couche 3 sur le total des paquets
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total_paquet = 0).
+    """
     #On compte le nombre de paquets de chaque type de protocole de couche 3
     stats = {}
     for protocols_couches_1 in dicoReseau.keys() : 
@@ -45,6 +78,28 @@ def statsCoucheTrois(dicoReseau) :
     return stats_pourcentage
 
 def statsCoucheQuatre(dicoReseau) :
+    """
+    Calcule les statistiques des protocoles de couche 4 rencontrés
+    dans les paquets analysés et les convertit en pourcentages.
+
+    Parcourt tous les paquets du dictionnaire et compte les occurrences
+    de chaque protocole de couche 4, puis calcule le pourcentage
+    de chacun par rapport au total des paquets.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+
+    Returns:
+        dict: Dictionnaire contenant :
+            - total_paquet (int) : nombre total de paquets analysés
+            - <protocole_4> (float) : pourcentage de chaque protocole
+                                      de couche 4 sur le total des paquets
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total_paquet = 0).
+    """
     #On compte le nombre de paquets de chaque type de protocole de couche 3
     stats = {}
     for protocols_couches_1 in dicoReseau.keys() : 
@@ -66,6 +121,29 @@ def statsCoucheQuatre(dicoReseau) :
     return stats_pourcentage
 
 def statsCoucheServiceSource(dicoReseau) :
+    """
+    Calcule les statistiques des services source rencontrés
+    dans les paquets analysés et les convertit en pourcentages.
+
+    Parcourt tous les paquets du dictionnaire et compte les occurrences
+    de chaque port source, puis calcule le pourcentage de chacun
+    par rapport au total des paquets.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+
+    Returns:
+        dict: Dictionnaire contenant :
+            - total_paquet (int) : nombre total de paquets analysés
+            - <port_src> (float) : pourcentage de chaque service
+                                   source sur le total des paquets
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total_paquet = 0).
+    """
+
     stats = {}
     for protocols_couches_1 in dicoReseau.keys() : 
         for paquet in dicoReseau[protocols_couches_1] :
@@ -85,6 +163,29 @@ def statsCoucheServiceSource(dicoReseau) :
     return stats_pourcentage    
 
 def statsCoucheServiceDestination(dicoReseau) :
+    """
+    Calcule les statistiques des services destination rencontrés
+    dans les paquets analysés et les convertit en pourcentages.
+
+    Parcourt tous les paquets du dictionnaire et compte les occurrences
+    de chaque port destination, puis calcule le pourcentage de chacun
+    par rapport au total des paquets.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+
+    Returns:
+        dict: Dictionnaire contenant :
+            - total_paquet (int) : nombre total de paquets analysés
+            - <port_dst> (float) : pourcentage de chaque service
+                                   destination sur le total des paquets
+
+    Raises:
+        ZeroDivisionError: Si dicoReseau est vide (total_paquet = 0).
+    """
+
     stats = {}
     for protocols_couches_1 in dicoReseau.keys() : 
         for paquet in dicoReseau[protocols_couches_1] :
@@ -104,6 +205,39 @@ def statsCoucheServiceDestination(dicoReseau) :
     return stats_pourcentage    
 
 def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
+    """
+    Crée un dictionnaire répertoriant les couples src-dst avec les
+    différences de temps entre leurs paquets adjacents pairs.
+
+    Pour chaque couple src-dst, les timestamps sont triés puis les
+    différences de temps entre paquets adjacents pairs (i et i+1)
+    sont calculées en millisecondes et arrondies au multiple de
+    plage_temps_graphique le plus proche.
+    Ce dictionnaire est utilisé pour générer les graphiques
+    d'intra-espacement.
+    
+    Note : 
+        Ce dictionnaire représente les intra espacement
+        (temps entre deux paquets du même flot)
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant toutes les
+                           informations extraites du fichier PCAP,
+                           avec les EtherTypes comme clés.
+        plage_temps_graphique (int): Intervalle de regroupement en
+                                     millisecondes pour l'arrondi des
+                                     différences de temps entre paquets.
+
+    Returns:
+        dict: Dictionnaire dont les clés sont des tuples (src, dst)
+              et les valeurs des listes de différences de temps
+              en millisecondes, arrondies à plage_temps_graphique.
+
+    Raises:
+        ZeroDivisionError: Si plage_temps_graphique est égal à zéro.
+        KeyError: Si les clés "source" ou "destination" sont absentes
+                  des paquets.
+    """
     src_dst = {}
     src_dst_diff = {}
     for key in dicoReseau.keys() :
@@ -116,18 +250,58 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
         for i in range (len(src_dst[couple])) :
             if i == len(src_dst[couple]) -1 :
                 break
-            if i % 2 == 0 :
-                n = src_dst[couple][i].timestamp() * 1000 #en millisecondes
-                n_plus_un = src_dst[couple][i+1].timestamp() * 1000 #en millisecondes
-                diff = n_plus_un - n
-                # Arrondir au multiple de plage_temps_graphique le plus proche
-                diff_arrondi = round(diff / plage_temps_graphique) * plage_temps_graphique
-                liste_difference.append(diff_arrondi)
+
+            n = src_dst[couple][i].timestamp() * 1000 #en millisecondes
+            n_plus_un = src_dst[couple][i+1].timestamp() * 1000 #en millisecondes
+            diff = n_plus_un - n
+            # Arrondir au multiple de plage_temps_graphique le plus proche
+            diff_arrondi = round(diff / plage_temps_graphique) * plage_temps_graphique
+            liste_difference.append(diff_arrondi)
         src_dst_diff.setdefault(couple,liste_difference)
 
     return src_dst_diff
 
 def creationRapport(mode,table) :
+    """
+    Génère un rapport textuel des statistiques du dictionnaire
+    de paquets selon le mode sélectionné.
+
+    Appelle la fonction de statistiques correspondant au mode,
+    puis formate les résultats en une chaîne lisible indiquant
+    le nombre total de paquets et le pourcentage de chaque
+    protocole ou service.
+
+    Note:
+        Le mode "TempsVoyageMoyen" est disponible mais non
+        recommandé pour le moment. Il est conservé pour de
+        futures analyses plus poussées.
+
+    Args:
+        mode (str): Mode du rapport à générer. Valeurs acceptées :
+        
+                        - "CoucheDeux" : statistiques des EtherTypes
+                        - "CoucheTrois" : statistiques des protocoles
+                                          de couche 3
+                        - "CoucheQuatre" : statistiques des protocoles
+                                           de couche 4
+                        - "CoucheServiceSource" : statistiques des
+                                                  services source
+                        - "CoucheServiceDestination" : statistiques des
+                                                       services destination
+                        - "TempsVoyageMoyen" : temps moyen aller-retour
+                                               (non recommandé)
+        table (dict): Dictionnaire contenant toutes les informations
+                      extraites du fichier PCAP.
+
+    Returns:
+        str: Rapport textuel résumant les statistiques du mode
+             sélectionné, ou chaîne vide si le mode est inconnu.
+
+    Raises:
+        KeyError: Si table ne contient pas les clés attendues
+                  par la fonction de statistiques appelée.
+    """
+
     rapport = ""
     if mode == "CoucheDeux" : 
         rapport += "Statistque sur la deuxième couche\n"
