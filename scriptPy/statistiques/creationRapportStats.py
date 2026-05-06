@@ -67,6 +67,11 @@ def statsCoucheTrois(dicoReseau) :
                     stats[proto_couche_3] = 1
                 else :
                     stats[proto_couche_3] += 1
+            else :
+                if "PasDeProto" not in stats.keys() :
+                    stats["PasDeProto"] = 1
+                else : 
+                    stats["PasDeProto"] += 1
     stats_pourcentage = {}
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
@@ -110,6 +115,12 @@ def statsCoucheQuatre(dicoReseau) :
                     stats[proto_couche_4] = 1
                 else :
                     stats[proto_couche_4] += 1
+            else :
+                if "PasDeProto" not in stats.keys() :
+                    stats["PasDeProto"] = 1
+                else : 
+                    stats["PasDeProto"] += 1
+
     stats_pourcentage = {}
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
@@ -153,6 +164,12 @@ def statsCoucheServiceSource(dicoReseau) :
                     stats[service] = 1
                 else :
                     stats[service] += 1
+            else :
+                if "PasDePort" not in stats.keys() :
+                    stats["PasDePort"] = 1
+                else : 
+                    stats["PasDePort"] += 1
+
     stats_pourcentage = {}
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
@@ -195,6 +212,12 @@ def statsCoucheServiceDestination(dicoReseau) :
                     stats[service] = 1
                 else :
                     stats[service] += 1
+            else :
+                if "PasDePort" not in stats.keys() :
+                    stats["PasDePort"] = 1
+                else : 
+                    stats["PasDePort"] += 1
+                    
     stats_pourcentage = {}
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
@@ -278,7 +301,7 @@ def creationRapport(mode,table) :
 
     Args:
         mode (str): Mode du rapport à générer. Valeurs acceptées :
-        
+
                         - "CoucheDeux" : statistiques des EtherTypes
                         - "CoucheTrois" : statistiques des protocoles
                                           de couche 3
