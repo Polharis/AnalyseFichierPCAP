@@ -69,6 +69,10 @@ def genererRapportStatistique(mode) :
         return stats.creationRapport(mode,table_par_protocole)
     elif mode == "CoucheServiceDestination" :
         return stats.creationRapport(mode,table_par_protocole)
+    elif mode == "flux" :
+        return stats.creationRapport(mode, table_par_protocole)
+    elif mode == "nbPaquet" :
+        return stats.creationRapport(mode, table_par_protocole)
     else :
         return None
 

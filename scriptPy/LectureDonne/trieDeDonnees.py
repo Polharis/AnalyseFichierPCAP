@@ -44,13 +44,6 @@ def ajouter_a_table_Par_Protocole(table, paquet,numero_paquet,filtres_actives,ti
     #On ajoute un dictionnaire par paquet
 
     #--------------- FILTRES ---------------
-    #Si l'option ip_only est activée, on n'ajoute que les paquets de type IP ou IPv6
-    if filtres_actives["ip_only"] and EtherType != 'IP' and EtherType != 'IPv6':
-        return table
-        
-    #Si l'option arp_only est activée, on n'ajoute que les paquets de type ARP
-    if filtres_actives["arp_only"] and EtherType != 'ARP' :
-        return table
     
     #Si l'option ip_specifique est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
     if filtres_actives["ip_specifique"] is not None:
@@ -73,16 +66,16 @@ def ajouter_a_table_Par_Protocole(table, paquet,numero_paquet,filtres_actives,ti
             return table
         
     #Si l'option protocole_specifique est activée, on n'ajoute que les paquets de type IP avec le protocole de couche 4 spécifié
-    if filtres_actives["protocole_specifique"] is not None:
+    if filtres_actives["protocol_specifique"] is not None:
         if EtherType != 'IP' and EtherType != 'IPv6' :
             return table
         if EtherType == 'IP' :
             proto_name = get_proto_name(paquet.data.p)
-            if proto_name != filtres_actives["protocole_specifique"] :
+            if proto_name.lower() != filtres_actives["protocol_specifique"].lower() :
                 return table
         elif EtherType == 'IPv6' :
             proto_name = get_proto_name(paquet.data.nxt)
-            if proto_name != filtres_actives["protocole_specifique"] :
+            if proto_name.lower() != filtres_actives["protocol_specifique"].lower() :
                 return table
     #---------------- FIN DES FILTRES ---------------
    

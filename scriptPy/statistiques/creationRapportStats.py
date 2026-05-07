@@ -28,6 +28,9 @@ def statsCoucheDeux(dicoReseau):
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
         total_paquet += len(listes_paquets)
+    #si le dico est vide et pour éviter une divison par zéro
+    if total_paquet == 0 :
+        return {}
     stats_pourcentage["total_paquet"] = total_paquet
     for protos in stats.keys() :
         stats_pourcentage[protos] = (stats[protos] / total_paquet) * 100
@@ -76,6 +79,10 @@ def statsCoucheTrois(dicoReseau) :
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
         total_paquet += len(listes_paquets)
+
+    #si le dico est vide et pour éviter une divison par zéro
+    if total_paquet == 0 :
+        return {}
     stats_pourcentage["total_paquet"] = total_paquet
     for protos in stats.keys() :
         stats_pourcentage[protos] = (stats[protos] / total_paquet) * 100
@@ -125,6 +132,10 @@ def statsCoucheQuatre(dicoReseau) :
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
         total_paquet += len(listes_paquets)
+
+    #si le dico est vide et pour éviter une divison par zéro
+    if total_paquet == 0 :
+        return {}
     stats_pourcentage["total_paquet"] = total_paquet
     for protos in stats.keys() :
         stats_pourcentage[protos] = (stats[protos] / total_paquet) * 100
@@ -174,6 +185,10 @@ def statsCoucheServiceSource(dicoReseau) :
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
         total_paquet += len(listes_paquets)
+
+    #si le dico est vide et pour éviter une divison par zéro
+    if total_paquet == 0 :
+        return {}
     stats_pourcentage["total_paquet"] = total_paquet
     for protos in stats.keys() :
         stats_pourcentage[protos] = (stats[protos] / total_paquet) * 100
@@ -222,6 +237,10 @@ def statsCoucheServiceDestination(dicoReseau) :
     total_paquet = 0
     for listes_paquets in dicoReseau.values() :
         total_paquet += len(listes_paquets)
+
+    #si le dico est vide et pour éviter une divison par zéro
+    if total_paquet == 0 :
+        return {}
     stats_pourcentage["total_paquet"] = total_paquet
     for protos in stats.keys() :
         stats_pourcentage[protos] = (stats[protos] / total_paquet) * 100
@@ -283,6 +302,27 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
         src_dst_diff.setdefault(couple,liste_difference)
 
     return src_dst_diff
+
+def obtenirListeFlux (table) :
+    liste_flux = []
+    liste_source_parcourues = []
+    liste_destination_parcourues = []
+    for key in table.keys() :
+        for paquet in table[key] :
+            if "source" in paquet.keys() :
+                if paquet["source"] not in liste_source_parcourues or paquet["destination"] not in liste_destination_parcourues :
+                    liste_flux.append((paquet["source"],paquet["destination"]))
+                    liste_source_parcourues.append(paquet["source"])
+                    liste_destination_parcourues.append(paquet["destination"])
+        
+    return liste_flux
+
+def obtenirNbPaquet (table) : 
+    nbPaquet = 0
+    for key in table.keys() :
+        for paquet in table[key] :
+            nbPaquet += 1
+    return nbPaquet
 
 def creationRapport(mode,table) :
     """
@@ -383,6 +423,16 @@ def creationRapport(mode,table) :
                     " : TAR moyen de " + str(tars_moyens[conversation]) + " secondes, basé sur " +
                     str(nb_tars[conversation]) + " paires aller-retour\n"
                 )
+    if mode == "flux" :
+        stats = obtenirListeFlux(table)
+
+        for flux in stats : 
+            rapport += (flux[0] + " ---> " + flux[1] + " \n")
+
+    if mode == "nbPaquet" :
+        rapport += "nombre de paquet traité : "
+        stats = obtenirNbPaquet(table)
+        rapport += str(stats)
 
     return rapport
 

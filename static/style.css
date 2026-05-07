@@ -1,8 +1,5 @@
 body {
       font-family: Arial, sans-serif;
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
       background-color: #f5f5f5;
     }
     h1 {
@@ -63,11 +60,11 @@ body {
     }
 
     #casePourFiltre {
-        display:none; 
-        border:2px solid #333; 
+
+      
         padding:20px; 
-        margin:20px 0; 
-        background-color:#f9f9f9;
+        border-right: 1px solid #333;
+
     }
 
     #casePourGraphique {
@@ -107,3 +104,53 @@ body {
         margin:20px 0; 
         background-color:#f9f9f9;
     }
+
+    #caseCheminFichier{
+      padding : 70px;
+    }
+
+    #caseElementEtParametre{
+      margin : 10 px;
+      grid-column: 1; 
+      grid-row: 1 / span 3; 
+      display: grid; 
+      grid-template-columns: 1fr 1fr 1fr;
+      
+    }
+
+    #caseGeneral {
+      display: grid;
+      grid-template-columns: 5fr 5fr;
+      grid-template-rows: 800px; /* une seule ligne maintenant */
+    }
+
+    #listeFlux{
+      border-right: 1px solid #333;
+      padding:20px; 
+     
+    }
+
+    #listeTypeGraphique{
+      padding: 20px;
+      border-right: 3px solid #333
+    }
+
+    #choixBouttons{
+      padding : 20px;
+      
+    }
+
+  #nombrePaquet{
+    padding : 5px;
+    border: 2px solid #333
+  }
+
+  .cache{
+    display : none !important; 
+  }
+
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+  filter: invert(1);
+  }

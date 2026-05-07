@@ -17,27 +17,6 @@ def filtre_Selectionner() :
     filtre = options.get_filtre()
     return filtre
 
-def filtre_ipOnly_EstActive() : 
-    """
-    Vérifie si le filtre "ip_only" est actif. Et vérifie si le filtre est au bon format (un str spécifique).
-    Returns:
-        True si le filtre "ip_only" est actif et au bon format, False sinon.
-    """
-    
-    if "proto_filtre" in filtre_Selectionner().keys() and filtre_Selectionner()["proto_filtre"] == "ip_only" :
-        return True
-    return False
-
-def filtre_arpOnly_EstActive() :
-    """
-    Vérifie si le filtre "arp_only" est actif. Et vérifie si le filtre est au bon format(un str spécifique).
-    Returns:
-        True si le filtre "arp_only" est actif et au bon format, False sinon.
-    """
-    
-    if "proto_filtre" in filtre_Selectionner().keys() and filtre_Selectionner()["proto_filtre"] == "arp_only" :
-        return True
-    return False
 
 def filtre_ipSpecifique_EstActive() :
     """
@@ -99,9 +78,8 @@ def filtre_protocoleSpecifique_EstActive() :
     Returns:
         True si le filtre "protocole_specifique" est actif et au bon format, False sinon.
     """
-
-    if "protocole_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["protocole_specifique"] is not None :
-        filtre = filtre_Selectionner()["protocole_specifique"]
+    if "protocol_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["protocol_specifique"] is not None :
+        filtre = filtre_Selectionner()["protocol_specifique"]
         protocoles_ip = ['TCP', 'UDP', 'SCTP', 'ICMP', 'ICMPv6']
         if filtre in protocoles_ip :
             return True
@@ -117,16 +95,6 @@ def liste_filtre_EstActive() :
     """
 
     filtres = {}
-    if filtre_ipOnly_EstActive() :
-        filtres["ip_only"] = True
-    else : 
-        filtres["ip_only"] = False
-
-    if filtre_arpOnly_EstActive() :
-        filtres["arp_only"] = True
-    else :
-        filtres["arp_only"] = False
-
     if filtre_ipSpecifique_EstActive() :
         filtres["ip_specifique"] = filtre_Selectionner()["ip_specifique"]
     else :
@@ -138,8 +106,8 @@ def liste_filtre_EstActive() :
         filtres["port_specifique"] = None
 
     if filtre_protocoleSpecifique_EstActive() :
-        filtres["protocole_specifique"] = filtre_Selectionner()["protocole_specifique"]
+        filtres["protocol_specifique"] = filtre_Selectionner()["protocol_specifique"]
     else :
-        filtres["protocole_specifique"] = None
+        filtres["protocol_specifique"] = None
         
     return filtres

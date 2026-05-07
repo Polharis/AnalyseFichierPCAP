@@ -1,113 +1,60 @@
-    est_formulaire_filtre_ouvert = false;
-    est_options_graphique_ouvert = false;
-    est_options_statistique_ouvert = false;
-    est_options_rapport_CSV_ouvert = false;
 
-    function changer_etat_formulaire(){
-        if (est_formulaire_filtre_ouvert) {
-            fermerFormulaire();
-           
-        } else {
-            cacherToutElement()
-            afficherFormulaire();
-            
+document.addEventListener("DOMContentLoaded", async function() {
+    document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
+    document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
+
+    icon = document.getElementById('chargementIcon')
+    texte = document.getElementById('chargementTexte')
+    icon.classList.remove('cache');
+    texte.classList.remove('cache');
+
+    texte.textContent = "Chargement... du fichier PCAP"
+    await generer('CoucheDeux',"graphiqueEtherType");
+    texte.textContent = "Chargement... du graphique CoucheTrois"
+    await generer('CoucheTrois',"graphiqueCoucheTrois");
+    texte.textContent = "Chargement... du graphique CoucheQuatre"
+    await generer('CoucheQuatre',"graphiqueCoucheQuatre");
+    texte.textContent = "Chargement... du graphique graphiqueServiceSource"
+    await generer('CoucheServiceSource',"graphiqueServiceSource");
+    texte.textContent = "Chargement... du graphique graphiqueServiceDestination"
+    await generer('CoucheServiceDestination',"graphiqueServiceDestination");
+    texte.textContent = "Chargement... de la liste de flux"
+    await genererRapportStatistique('flux',"conteneurFlux");
+    texte.textContent = "Chargement... du nombre de paquet"
+    await genererRapportStatistique('nbPaquet',"afficherNombrePaquet");
+
+    icon.classList.add('cache');
+    texte.classList.add('cache');
+});
+
+    async function appliquerGraphs(){
+
+        await regenererGraphiques();
+        histogrammeIntra = document.getElementById('graphiqueHistogrammeIntra');
+        cumulatifIntra = document.getElementById('graphiqueCumulatifIntra');
+
+        icon = document.getElementById('chargementIcon')
+        texte = document.getElementById('chargementTexte')
+
+        icon.classList.remove('cache');
+        texte.classList.remove('cache');
+
+        if(histogrammeIntra.checked){
+            texte.textContent = "Chargement... du graphique HistogrammeIntra"
+            await generer('IntraEspacement',"afficherGraphiqueHistogrammeIntra");
+        }else{
+            document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
         }
-    }
-
-    function changer_etat_option_graphique(){
-        if (est_options_graphique_ouvert) {
-            cacherOptionGraphique();
-            
-
-        } else {
-            cacherToutElement()
-            afficherOptionGraphique();
-            
+        if(cumulatifIntra.checked){
+            texte.textContent = "Chargement... du graphique répartition cumulative"
+            await generer('IntraEspacementRepartition',"afficherGraphiqueCumulatife");
+        }else{
+            document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
         }
-    }
 
-    function changer_etat_option_statistique(){
-        
-        if (est_options_statistique_ouvert) {
-            cacherOptionStatistique();
-            
-        } else {
-            cacherToutElement()
-            afficherOptionStatistique();
-            
-        }
-    }
-
-    function changer_etat_option_rapport_CSV() {
-        if (est_options_rapport_CSV_ouvert) {
-            cacherOptionRapportCSV();
-            
-        } else {
-            cacherToutElement()
-            afficherOptionRapportCSV();
-            
-        }
-    }
-    
-
-    function afficherFormulaire() {
-      document.getElementById('casePourFiltre').style.display = 'block';
-      document.getElementById('bouton_options').textContent = 'Fermer les options';
-      est_formulaire_filtre_ouvert = true;
-    }
-
-    function fermerFormulaire() {
-      document.getElementById('casePourFiltre').style.display = 'none';
-      document.getElementById('bouton_options').textContent = 'Ouvrir les options';
-      est_formulaire_filtre_ouvert = false;
-    }
-
-    function afficherOptionGraphique() {
-        document.getElementById('casePourGraphique').style.display = 'block';
-        document.getElementById('buttonGraphics').textContent = 'Fermer les options graphiques';
-        est_options_graphique_ouvert = true;
-    }
-
-    function cacherOptionGraphique() {
-        document.getElementById('casePourGraphique').style.display = 'none';
-        document.getElementById('buttonGraphics').textContent = 'Ouvrir les options graphiques';
-        document.getElementById('graphique').style.display = 'none';
-        est_options_graphique_ouvert = false;
-    }
-
-    function afficherOptionStatistique() {
-        document.getElementById('casePourStatstique').style.display = 'block';
-        document.getElementById('buttonStatistics').textContent = 'Fermer les options statistiques';
-        est_options_statistique_ouvert = true;
-    }
-
-    function cacherOptionStatistique() {
-        document.getElementById('casePourStatstique').style.display = 'none';
-        document.getElementById('buttonStatistics').textContent = 'Ouvrir les options statistiques';
-        document.getElementById('statistique').style.display = 'none';
-        est_options_statistique_ouvert = false;
-    }
-
-    function afficherOptionRapportCSV() {
-        document.getElementById('casePourRapportCSV').style.display = 'block';
-        document.getElementById('genererRapportCsv').textContent = 'Fermer les options rapport CSV';
-        est_options_rapport_CSV_ouvert = true;
-    }
-
-    function cacherOptionRapportCSV() {
-        document.getElementById('casePourRapportCSV').style.display = 'none';
-        document.getElementById('genererRapportCsv').textContent = 'Générer rapport CSV';
-        document.getElementById('succesCSV').style.display = 'none';
-        est_options_rapport_CSV_ouvert = false;
-    }
-
-    function cacherToutElement() {
-      fermerFormulaire();
-      cacherOptionGraphique();
-      cacherOptionStatistique();
-      cacherOptionRapportCSV();
-      document.getElementById('erreur').textContent = '';
-    }
+        icon.classList.add('cache');
+        texte.classList.add('cache');
+    } 
 
 
     async function genererRapportCsv() {
@@ -117,14 +64,12 @@
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const proto_filtre = document.querySelector('input[name="proto_filtre"]:checked').value;
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
-        proto_filtre: proto_filtre,
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
@@ -159,15 +104,13 @@
 
 
 
-    async function generer(typeGraphique) {
+    async function generer(typeGraphique, elementPhp) {
       try {
         // Affiche le message de chargement
-        document.getElementById('chargement').style.display = 'block';
-        document.getElementById('graphique').style.display = 'none';
+
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const proto_filtre = document.querySelector('input[name="proto_filtre"]:checked').value;
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
@@ -176,7 +119,6 @@
         
 
       const filtres = {
-        proto_filtre: proto_filtre,
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
@@ -198,38 +140,37 @@
 
 
 
-      document.getElementById('chargement').style.display = 'none';
 
       if (data.success) {
+
+
           const fig = JSON.parse(data.graphique);
-          const div = document.getElementById('graphique');
+          const div = document.getElementById(elementPhp);
           div.style.display = 'block';  // ← réaffiche le div
-          Plotly.newPlot('graphique', fig.data, fig.layout);
+          Plotly.newPlot(elementPhp, fig.data, fig.layout);
+          
       } else {
           document.getElementById('erreur').textContent = 'Erreur : ' + data.error;
       }
       } catch (error) {
+        console.log("erreur")
         console.error('Erreur:', error);
         document.getElementById('erreur').textContent = 'Erreur: ' + error.message;
-        document.getElementById('chargement').style.display = 'none';
       }
     }
 
-    async function genererRapportStatistique(typeStatistique) {
+    async function genererRapportStatistique(typeStatistique,elementPhp) {
       try {
         // Affiche le message de chargement
-        document.getElementById('chargement').style.display = 'block';
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const proto_filtre = document.querySelector('input[name="proto_filtre"]:checked').value;
         const ip_specifique = document.getElementById('ip_specifique').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
         const port_specifique = document.getElementById('port_specifique').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
-        proto_filtre: proto_filtre,
         ip_specifique: ip_specifique,
         protocol_specifique: protocol_specifique,
         port_specifique: port_specifique,
@@ -247,17 +188,62 @@
         const responseText = await res.text();
         const data = JSON.parse(responseText);
 
-        document.getElementById('chargement').style.display = 'none';
         
         if (data.success) {
-          document.getElementById('statistique').textContent = data.statistique;
-          document.getElementById('statistique').style.display = 'block';
+          document.getElementById(elementPhp).textContent = data.statistique;
+          document.getElementById(elementPhp).style.display = 'block';
         } else {
             document.getElementById('erreur').textContent = 'Erreur : ' + data.error;
         }
         } catch (error) {
           console.error('Erreur:', error);
           document.getElementById('erreur').textContent = 'Erreur: ' + error.message;
-          document.getElementById('chargement').style.display = 'none';
         }
     }
+
+    async function regenererGraphiques(){
+        document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
+        document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
+
+        icon = document.getElementById('chargementIcon')
+        texte = document.getElementById('chargementTexte')
+        icon.classList.remove('cache');
+        texte.classList.remove('cache');
+        texte.textContent = "Chargement... du fichier PCAP"
+
+        await generer('CoucheDeux',"graphiqueEtherType");
+        texte.textContent = "Chargement... du graphique CoucheTrois"
+        await generer('CoucheTrois',"graphiqueCoucheTrois");
+        texte.textContent = "Chargement... du graphique CoucheQuatre"
+        await generer('CoucheQuatre',"graphiqueCoucheQuatre");
+        texte.textContent = "Chargement... du graphique graphiqueServiceSource"
+        await generer('CoucheServiceSource',"graphiqueServiceSource");
+        texte.textContent = "Chargement... du graphique graphiqueServiceDestination"
+        await generer('CoucheServiceDestination',"graphiqueServiceDestination");
+        texte.textContent = "Chargement... de la liste de flux"
+        await genererRapportStatistique('flux',"conteneurFlux");
+        texte.textContent = "Chargement... du nombre de paquet"
+        await genererRapportStatistique('nbPaquet',"afficherNombrePaquet");
+
+        icon.classList.add('cache');
+        texte.classList.add('cache');
+    }
+
+
+// pour recadrer les graphiques dans le carousel 
+document.addEventListener('DOMContentLoaded', function (){
+  document.getElementById('carouselGraphiques').addEventListener('click', function (e){
+    console.log("ok");
+    const ids = [
+      'graphiqueEtherType',
+      'graphiqueCoucheTrois',
+      'graphiqueCoucheQuatre',
+      'graphiqueServiceSource',
+      'graphiqueServiceDestination'
+    ];
+
+    setTimeout(() => {
+    ids.forEach(id => Plotly.relayout(id, { autosize: true }));
+    },400)
+  });
+});
