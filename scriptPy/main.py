@@ -39,7 +39,9 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
     elif TypeGraphique == "IntraEspacement" :
         return graphiques.histogrammeIntraEspacement(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique)
     elif TypeGraphique == "IntraEspacementRepartition" :
-        return graphiques.courbeRepartitionIntraEspacement(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique)
+        return graphiques.courbeRepartitionIntraInterEspacement(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"intra")
+    elif TypeGraphique == "InterEspacementRepartition" :
+        return graphiques.courbeRepartitionIntraInterEspacement(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"inter")
     else :
         return None
 

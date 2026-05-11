@@ -100,12 +100,12 @@ def histogrammeIntraEspacement(dicoReseau,plage_temps_graphique) :
 
     fig = go.Figure()
 
-    for (src, dst), times in dicoReseau.items():
+    for (src, dst, port_src, port_dst, proto), times in dicoReseau.items():
         if not times:
             continue
         fig.add_trace(go.Histogram(
             x=times,
-            name=f"{src} → {dst}",
+            name=f"{src} → {dst} + {port_src} → {port_dst} + {proto}",
             opacity=0.6,
             xbins=dict(size=plage_temps_graphique)  
         ))
@@ -119,7 +119,7 @@ def histogrammeIntraEspacement(dicoReseau,plage_temps_graphique) :
 
     return fig.to_json()
 
-def courbeRepartitionIntraEspacement(dicoReseau,plage_temps_graphique) :
+def courbeRepartitionIntraInterEspacement(dicoReseau,plage_temps_graphique,inter_ou_intra) :
     """
     Crée une courbe de répartition cumulative des intra-espacements
     pour tous les couples d'IP mélangés.
@@ -151,10 +151,15 @@ def courbeRepartitionIntraEspacement(dicoReseau,plage_temps_graphique) :
 
     liste_temps = []
     dico_temps_pourcent = {}
-    for valeures in dicoReseau.values():
-        for temps in valeures : 
-            liste_temps.append(temps)
-    liste_temps.sort()
+
+    if inter_ou_intra == "intra" :
+        for valeures in dicoReseau.values():
+            for temps in valeures : 
+                liste_temps.append(temps)
+        liste_temps.sort()
+    else :
+        liste_temps = dicoReseau
+        liste_temps.sort()
     
     # Regrouper les temps par plage_temps_graphique et compter les occurrences
     for temps in liste_temps :

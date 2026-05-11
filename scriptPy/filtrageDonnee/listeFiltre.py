@@ -74,14 +74,14 @@ def filtre_portSpecifique_EstActive() :
 def filtre_protocoleSpecifique_EstActive() :
     """
     Vérifie si le filtre "protocole_specifique" est actif. Et vérifie si le filtre est au bon format (un protocole valide 
-    parmis la liste ['TCP', 'UDP', 'SCTP', 'ICMP', 'ICMPv6']).
+    parmis la liste ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']).
     Returns:
         True si le filtre "protocole_specifique" est actif et au bon format, False sinon.
     """
     if "protocol_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["protocol_specifique"] is not None :
         filtre = filtre_Selectionner()["protocol_specifique"]
-        protocoles_ip = ['TCP', 'UDP', 'SCTP', 'ICMP', 'ICMPv6']
-        if filtre in protocoles_ip :
+        protocoles_ip = ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']
+        if filtre.lower() in protocoles_ip :
             return True
     return False
 

@@ -1,7 +1,8 @@
 
 document.addEventListener("DOMContentLoaded", async function() {
     document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
-    document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
+    document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
+    document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         await regenererGraphiques();
         histogrammeIntra = document.getElementById('graphiqueHistogrammeIntra');
         cumulatifIntra = document.getElementById('graphiqueCumulatifIntra');
+        cumulatifInter = document.getElementById('graphiqueCumulatifInter');
 
         icon = document.getElementById('chargementIcon')
         texte = document.getElementById('chargementTexte')
@@ -46,10 +48,16 @@ document.addEventListener("DOMContentLoaded", async function() {
             document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
         }
         if(cumulatifIntra.checked){
-            texte.textContent = "Chargement... du graphique répartition cumulative"
-            await generer('IntraEspacementRepartition',"afficherGraphiqueCumulatife");
+            texte.textContent = "Chargement... du graphique répartition cumulative intra"
+            await generer('IntraEspacementRepartition',"afficherGraphiqueCumulatifeIntra");
         }else{
-            document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
+            document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
+        }
+        if(cumulatifInter.checked){
+            texte.textContent = "Chargement... du graphique répartition cumulative inter"
+            await generer('InterEspacementRepartition',"afficherGraphiqueCumulatifeInter");
+        }else{
+            document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
         }
 
         icon.classList.add('cache');
@@ -203,7 +211,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     async function regenererGraphiques(){
         document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
-        document.getElementById('afficherGraphiqueCumulatife').style.display = 'none'
+        document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
+        document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
 
         icon = document.getElementById('chargementIcon')
         texte = document.getElementById('chargementTexte')

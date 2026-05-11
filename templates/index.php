@@ -32,12 +32,6 @@
   <div class="container-fluid ">
 
     <div class="d-flex align-items-center gap-3">
-      <div id="choixBouttons" class="btn-group" role="group" aria-label="Basic example">
-        <p>pour ne garder que un seul type de trace à analyser : _ _</p>
-        <button type="button" class="btn btn-primary">UDP</button>
-        <button type="button" class="btn btn-primary">TCP</button>
-        <button type="button" class="btn btn-primary">ICMP</button>
-      </div>
       <div id="nombrePaquet">
         <div id="afficherNombrePaquet"></div>
       </div>
@@ -71,7 +65,7 @@
 
         <div id="listeFlux">
           <h2>Liste des flux</h2>
-          <div id="conteneurFlux" style="width:100%; height:550px; overflow-y: auto;"></div>
+          <div id="conteneurFlux" style="white-space: pre-wrap; width:100%; height:550px; overflow-y: auto;"></div>
         </div>
 
         <div id="listeTypeGraphique">
@@ -82,6 +76,9 @@
 
             <label for="graphiqueCumulatifIntra"> Courbe cumultive des intra-espacements </label>
             <input type="checkbox" id="graphiqueCumulatifIntra" name="graphiqueCumulatifIntra"><br>
+
+            <label for="graphiqueCumulatifInter"> Courbe cumultive des inter-espacements </label>
+            <input type="checkbox" id="graphiqueCumulatifInter" name="graphiqueCumulatifInter"><br>
           </form>
         </div>
       </div>
@@ -141,7 +138,8 @@
     </div>
     <button id="appliquerParams" onclick='appliquerGraphs()'>Appliquer</button>
     <div id="afficherGraphiqueHistogrammeIntra" style="width:100%; height:100%;"></div>
-    <div id="afficherGraphiqueCumulatife" style="width:100%; height:100%;"></div>
+    <div id="afficherGraphiqueCumulatifeIntra" style="width:100%; height:100%;"></div>
+    <div id="afficherGraphiqueCumulatifeInter" style="width:100%; height:100%;"></div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

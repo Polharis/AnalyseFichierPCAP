@@ -284,8 +284,11 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
     src_dst_diff = {}
     for key in dicoReseau.keys() :
         for paquet in dicoReseau[key] :
-            if "source" in paquet.keys() and "destination" in paquet.keys() :
-                src_dst.setdefault((paquet["source"],paquet["destination"]),[]).append(paquet["time"])
+            if "source" in paquet.keys() and "destination" in paquet.keys()\
+            and "port_src" in paquet.keys() and "port_dst" in paquet.keys() and "protocole_4" in paquet.keys():
+                src_dst.setdefault((paquet["source"],paquet["destination"],
+                                    paquet["port_src"],paquet["port_dst"],
+                                    paquet["protocole_4"]),[]).append(paquet["time"])
     for couple in src_dst.keys() :
         liste_difference = []
         src_dst[couple].sort()
@@ -301,20 +304,49 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
             liste_difference.append(diff_arrondi)
         src_dst_diff.setdefault(couple,liste_difference)
 
+    print (liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique))
     return src_dst_diff
+
+
+def liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique) :
+    print("dejasça")
+    liste_temps_par_flux = []
+    liste_temps_entre_flux = []
+    paquet_precedent = (None,None,None,None,None,None)
+    for key in dicoReseau.keys() :
+        for paquet in dicoReseau[key] :
+            if "source" in paquet.keys() and "destination" in paquet.keys()\
+            and "port_src" in paquet.keys() and "port_dst" in paquet.keys() and "protocole_4" in paquet.keys():
+                element = (paquet["source"],paquet["destination"],
+                                        paquet["port_src"],paquet["port_dst"],
+                                        paquet["protocole_4"],paquet["time"].timestamp() * 1000)
+                liste_temps_par_flux.append(element)
+    liste_temps_par_flux.sort(key=lambda x: x[5])
+    for paquet in liste_temps_par_flux :
+        if paquet_precedent[0] == None : 
+            paquet_precedent = paquet
+        elif not (paquet[0] == paquet_precedent[0] and  paquet[1] == paquet_precedent[1]
+                and paquet[2] == paquet_precedent[2] and paquet[3] == paquet_precedent[3]
+                and paquet[4] == paquet_precedent[4]):
+            diff_temp = abs(paquet_precedent[5] - paquet[5])
+            diff_temp_arrondie = round(diff_temp/plage_temps_graphique)*plage_temps_graphique
+            liste_temps_entre_flux.append(diff_temp_arrondie)
+            paquet_precedent = paquet
+
+    return liste_temps_entre_flux
 
 def obtenirListeFlux (table) :
     liste_flux = []
-    liste_source_parcourues = []
-    liste_destination_parcourues = []
+
     for key in table.keys() :
         for paquet in table[key] :
-            if "source" in paquet.keys() :
-                if paquet["source"] not in liste_source_parcourues or paquet["destination"] not in liste_destination_parcourues :
-                    liste_flux.append((paquet["source"],paquet["destination"]))
-                    liste_source_parcourues.append(paquet["source"])
-                    liste_destination_parcourues.append(paquet["destination"])
-        
+            if "source" in paquet.keys() and "port_src" in paquet.keys() and "protocole_4" in paquet.keys():
+                if (paquet["source"],paquet["destination"],paquet["port_src"],paquet["port_dst"],
+                    paquet["protocole_4"]) not in liste_flux :
+                
+                    liste_flux.append((paquet["source"],paquet["destination"],
+                                       paquet["port_src"],paquet["port_dst"],paquet["protocole_4"]))
+
     return liste_flux
 
 def obtenirNbPaquet (table) : 
@@ -427,7 +459,9 @@ def creationRapport(mode,table) :
         stats = obtenirListeFlux(table)
 
         for flux in stats : 
-            rapport += (flux[0] + " ---> " + flux[1] + " \n")
+            rapport += (flux[0] + " ---> " + flux[1] + " \n" +
+                        flux[2] + "--->" + flux[3] + " \n" +
+                        flux[4] + "\n \n")
 
     if mode == "nbPaquet" :
         rapport += "nombre de paquet traité : "
