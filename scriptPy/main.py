@@ -62,6 +62,7 @@ def genererRapportStatistique(mode) :
     Returns:
         Un rapport statistique généré en fonction du mode spécifié.
     """
+
     table_par_protocole = recupDico.get_table_par_protocole()
     if mode == "CoucheDeux" :
         return stats.creationRapport(mode,table_par_protocole)
@@ -74,6 +75,10 @@ def genererRapportStatistique(mode) :
     elif mode == "flux" :
         return stats.creationRapport(mode, table_par_protocole)
     elif mode == "nbPaquet" :
+        return stats.creationRapport(mode, table_par_protocole)
+    elif mode == "ipPlusActiveSrc" :
+        return stats.creationRapport(mode, table_par_protocole)
+    elif mode == "ipPlusActiveDst" :
         return stats.creationRapport(mode, table_par_protocole)
     else :
         return None

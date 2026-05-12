@@ -32,9 +32,20 @@
   <div class="container-fluid ">
 
     <div class="d-flex align-items-center gap-3">
+      <div id = "topTalker"> 
+        <div id = "topIpDst"> </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+
+      <div id = "topTalker"> 
+        <div id = "topIpSrc"> </div>
+      </div>
+
       <div id="nombrePaquet">
         <div id="afficherNombrePaquet"></div>
       </div>
+
     </div>
 
     <div id= "caseGeneral">

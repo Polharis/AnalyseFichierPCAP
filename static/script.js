@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", async function() {
     await generer('CoucheServiceDestination',"graphiqueServiceDestination");
     texte.textContent = "Chargement... de la liste de flux"
     await genererRapportStatistique('flux',"conteneurFlux");
+    texte.textContent = "Chargement... de l'ip src la plus active"
+    await genererRapportStatistique('ipPlusActiveSrc',"topIpSrc");
+    texte.textContent = "Chargement... de l'ip dst la plus active"
+    await genererRapportStatistique('ipPlusActiveDst',"topIpDst");
     texte.textContent = "Chargement... du nombre de paquet"
     await genererRapportStatistique('nbPaquet',"afficherNombrePaquet");
 
@@ -200,6 +204,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         if (data.success) {
           document.getElementById(elementPhp).textContent = data.statistique;
           document.getElementById(elementPhp).style.display = 'block';
+
         } else {
             document.getElementById('erreur').textContent = 'Erreur : ' + data.error;
         }
@@ -231,6 +236,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         await generer('CoucheServiceDestination',"graphiqueServiceDestination");
         texte.textContent = "Chargement... de la liste de flux"
         await genererRapportStatistique('flux',"conteneurFlux");
+        texte.textContent = "Chargement... de l'ip src la plus active"
+        await genererRapportStatistique('ipPlusActiveSrc',"topIpSrc");
+        texte.textContent = "Chargement... de l'ip dst la plus active"
+        await genererRapportStatistique('ipPlusActiveDst',"topIpDst");
         texte.textContent = "Chargement... du nombre de paquet"
         await genererRapportStatistique('nbPaquet',"afficherNombrePaquet");
 

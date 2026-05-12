@@ -304,12 +304,10 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
             liste_difference.append(diff_arrondi)
         src_dst_diff.setdefault(couple,liste_difference)
 
-    print (liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique))
     return src_dst_diff
 
 
 def liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique) :
-    print("dejasça")
     liste_temps_par_flux = []
     liste_temps_entre_flux = []
     paquet_precedent = (None,None,None,None,None,None)
@@ -337,6 +335,8 @@ def liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique) :
 
 def obtenirListeFlux (table) :
     liste_flux = []
+    nbPassageIpSource = {}
+    nbPaquet = obtenirNbPaquet(table)
 
     for key in table.keys() :
         for paquet in table[key] :
@@ -346,6 +346,18 @@ def obtenirListeFlux (table) :
                 
                     liste_flux.append((paquet["source"],paquet["destination"],
                                        paquet["port_src"],paquet["port_dst"],paquet["protocole_4"]))
+                    
+            if "source" in paquet.keys() : 
+                if paquet["source"] in nbPassageIpSource.keys() : 
+                    nbPassageIpSource[paquet["source"]] += 1
+                else :
+                    nbPassageIpSource[paquet["source"]] = 1
+
+    for i in range(len(liste_flux)) :
+        pourcentage = (nbPassageIpSource[liste_flux[i][0]] / nbPaquet) * 100
+        pourcentage = round(pourcentage, 1)
+        liste_flux[i] = liste_flux[i] + (pourcentage,)
+    liste_flux.sort(key=lambda x: x[5], reverse=True)
 
     return liste_flux
 
@@ -355,6 +367,46 @@ def obtenirNbPaquet (table) :
         for paquet in table[key] :
             nbPaquet += 1
     return nbPaquet
+
+def obtenirMeilleurPaquetSrc(table) : 
+    nbPassageIpSource = {}
+    nbPaquet = obtenirNbPaquet(table)
+
+    for key in table.keys() :
+        for paquet in table[key] :
+
+            if "source" in paquet.keys() : 
+                if paquet["source"] in nbPassageIpSource.keys() : 
+                    nbPassageIpSource[paquet["source"]] += 1
+                else :
+                    nbPassageIpSource[paquet["source"]] = 1
+
+    maxKey = max(nbPassageIpSource, key=lambda k: nbPassageIpSource[k])
+    maxValeur = nbPassageIpSource[maxKey]
+    maxValeurPourcentage = (maxValeur / nbPaquet) * 100
+    maxValeurPourcentage = round(maxValeurPourcentage,1)
+
+    return maxValeurPourcentage,maxKey
+
+def obtenirMeilleurPaquetDst (table) :
+    nbPassageIpSource = {}
+    nbPaquet = obtenirNbPaquet(table)
+
+    for key in table.keys() :
+        for paquet in table[key] :
+
+            if "destination" in paquet.keys() : 
+                if paquet["destination"] in nbPassageIpSource.keys() : 
+                    nbPassageIpSource[paquet["destination"]] += 1
+                else :
+                    nbPassageIpSource[paquet["destination"]] = 1
+
+    maxKey = max(nbPassageIpSource, key=lambda k: nbPassageIpSource[k])
+    maxValeur = nbPassageIpSource[maxKey]
+    maxValeurPourcentage = (maxValeur / nbPaquet) * 100
+    maxValeurPourcentage = round(maxValeurPourcentage,1)
+
+    return maxValeurPourcentage,maxKey
 
 def creationRapport(mode,table) :
     """
@@ -459,7 +511,7 @@ def creationRapport(mode,table) :
         stats = obtenirListeFlux(table)
 
         for flux in stats : 
-            rapport += (flux[0] + " ---> " + flux[1] + " \n" +
+            rapport += (flux[0] + " ---> " + flux[1] + "  " + str(flux[5])+"% \n" +
                         flux[2] + "--->" + flux[3] + " \n" +
                         flux[4] + "\n \n")
 
@@ -467,6 +519,18 @@ def creationRapport(mode,table) :
         rapport += "nombre de paquet traité : "
         stats = obtenirNbPaquet(table)
         rapport += str(stats)
+
+    if mode == "ipPlusActiveSrc" :
+        rapport += "L'ip ayant envoyé le plus de paquets est "
+        stats = obtenirMeilleurPaquetSrc(table)
+
+        rapport += str(stats[1]) + " à " + str(stats[0]) + " %"
+
+    if mode == "ipPlusActiveDst" :
+        rapport += "L'ip ayant reçue le plus de paquets est "
+        stats = obtenirMeilleurPaquetDst(table)
+
+        rapport += str(stats[1]) + " à " + str(stats[0]) + " %"
 
     return rapport
 

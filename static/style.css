@@ -89,22 +89,6 @@ body {
         margin-top: 15px;
     }
 
-    #casePourStatstique {
-        display:none; 
-        border:2px solid #333; 
-        padding:20px; 
-        margin:20px 0; 
-        background-color:#f9f9f9;
-    }
-
-    #casePourRapportCSV {
-        display:none; 
-        border:2px solid #333; 
-        padding:20px; 
-        margin:20px 0; 
-        background-color:#f9f9f9;
-    }
-
     #caseCheminFichier{
       padding : 70px;
     }
@@ -143,6 +127,12 @@ body {
   #nombrePaquet{
     padding : 5px;
     border: 2px solid #333
+  }
+
+  #topTalker{
+    margin : 20px;
+    padding : 5px;
+    border : 2px solid #EFBF04
   }
 
   .cache{
