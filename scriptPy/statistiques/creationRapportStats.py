@@ -251,6 +251,10 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
     Crée un dictionnaire répertoriant les couples src-dst avec les
     différences de temps entre leurs paquets adjacents pairs.
 
+    Par "couple src-dst", on entend un flux chacun composé d'une
+    ip source, ip destination, port source,port destination et d'un
+    protocole
+
     Pour chaque couple src-dst, les timestamps sont triés puis les
     différences de temps entre paquets adjacents pairs (i et i+1)
     sont calculées en millisecondes et arrondies au multiple de
@@ -308,6 +312,35 @@ def liste_différence_src_dst_adjacente(dicoReseau,plage_temps_graphique) :
 
 
 def liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique) :
+    """
+    Crée une liste des inter-espacements entre deux flux adjacents
+    différents.
+
+    Un flux est identifié par le tuple (src, dst, port_src, port_dst,
+    protocole_4). Les paquets sont triés par timestamp, puis pour
+    chaque changement de flux, la différence de temps absolue avec
+    le paquet précédent est calculée en millisecondes et arrondie
+    au multiple de plage_temps_graphique le plus proche.
+    Les paquets appartenant au même flux que le précédent sont ignorés.
+
+    Args:
+        dicoReseau (dict): Dictionnaire contenant les informations
+                           des paquets issus du fichier PCAP,
+                           avec les EtherTypes comme clés.
+        plage_temps_graphique (int): Intervalle en millisecondes
+                                     pour l'arrondi des différences
+                                     de temps, afin d'épurer
+                                     les graphiques.
+
+    Returns:
+        list: Liste des différences de temps en millisecondes,
+              arrondies à plage_temps_graphique, entre deux
+              flux adjacents différents.
+
+    Raises:
+        ZeroDivisionError: Si plage_temps_graphique est égal à zéro.
+    """
+
     liste_temps_par_flux = []
     liste_temps_entre_flux = []
     paquet_precedent = (None,None,None,None,None,None)
@@ -334,6 +367,33 @@ def liste_différence_src_dst_inter(dicoReseau,plage_temps_graphique) :
     return liste_temps_entre_flux
 
 def obtenirListeFlux (table) :
+    """
+    Récupère la liste des flux uniques à partir des informations
+    extraites du fichier PCAP.
+
+    Chaque flux est identifié par le tuple (src, dst, port_src,
+    port_dst, protocole_4). Les doublons sont ignorés. Un pourcentage
+    de présence basé sur le nombre de paquets de l'IP source est
+    ensuite ajouté à chaque flux, arrondi à 1 décimale. La liste
+    est enfin triée par pourcentage décroissant.
+
+    Args:
+        table (dict): Dictionnaire contenant toutes les informations
+                      extraites du fichier PCAP, avec les EtherTypes
+                      comme clés.
+
+    Returns:
+        list[tuple]: Liste de tuples triés par pourcentage de présence
+                     décroissant, chaque tuple contenant :
+                     (src, dst, port_src, port_dst, protocole_4,
+                     pourcentage)
+
+    Raises:
+        ZeroDivisionError: Si nbPaquet est égal à zéro.
+        KeyError: Si la clé "destination" ou "port_dst" est absente
+                  alors que "source" est présente dans le paquet.
+    """
+
     liste_flux = []
     nbPassageIpSource = {}
     nbPaquet = obtenirNbPaquet(table)
@@ -362,6 +422,23 @@ def obtenirListeFlux (table) :
     return liste_flux
 
 def obtenirNbPaquet (table) : 
+    """
+    Compte le nombre total de paquets contenus dans le dictionnaire.
+
+    Parcourt toutes les listes de paquets associées à chaque
+    EtherType et additionne leurs tailles.
+
+    Args:
+        table (dict): Dictionnaire contenant toutes les informations
+                      extraites du fichier PCAP, avec les EtherTypes
+                      comme clés.
+
+    Returns:
+        int: Nombre total de paquets dans le dictionnaire.
+
+    Raises:
+        TypeError: Si table n'est pas un dictionnaire.
+    """
     nbPaquet = 0
     for key in table.keys() :
         for paquet in table[key] :
@@ -369,6 +446,30 @@ def obtenirNbPaquet (table) :
     return nbPaquet
 
 def obtenirMeilleurPaquetSrc(table) : 
+    """
+    Identifie l'adresse IP source apparaissant le plus souvent
+    dans les paquets analysés et calcule son pourcentage de présence.
+
+    Compte les occurrences de chaque IP source, puis récupère
+    celle qui apparaît le plus de fois et calcule son pourcentage
+    sur la totalité des paquets, arrondi à 1 décimale.
+
+    Args:
+        table (dict): Dictionnaire contenant toutes les informations
+                      extraites du fichier PCAP, avec les EtherTypes
+                      comme clés.
+
+    Returns:
+        tuple: Contenant :
+            - float : pourcentage arrondi à 1 décimale de l'IP
+                      source la plus fréquente.
+            - str : adresse IP source apparaissant le plus souvent.
+
+    Raises:
+        ZeroDivisionError: Si nbPaquet est égal à zéro.
+        ValueError: Si aucun paquet ne contient de clé "source"
+                    (nbPassageIpSource vide, max() échoue).
+    """
     nbPassageIpSource = {}
     nbPaquet = obtenirNbPaquet(table)
 
@@ -389,20 +490,44 @@ def obtenirMeilleurPaquetSrc(table) :
     return maxValeurPourcentage,maxKey
 
 def obtenirMeilleurPaquetDst (table) :
-    nbPassageIpSource = {}
+    """
+    Identifie l'adresse IP destination apparaissant le plus souvent
+    dans les paquets analysés et calcule son pourcentage de présence.
+
+    Compte les occurrences de chaque IP destination, puis récupère
+    celle qui apparaît le plus de fois et calcule son pourcentage
+    sur la totalité des paquets, arrondi à 1 décimale.
+
+    Args:
+        table (dict): Dictionnaire contenant toutes les informations
+                      extraites du fichier PCAP, avec les EtherTypes
+                      comme clés.
+
+    Returns:
+        tuple: Contenant :
+            - float : pourcentage arrondi à 1 décimale de l'IP
+                      destination la plus fréquente.
+            - str : adresse IP destination apparaissant le plus souvent.
+
+    Raises:
+        ZeroDivisionError: Si nbPaquet est égal à zéro.
+        ValueError: Si aucun paquet ne contient de clé "destination"
+                    (nbPassageIpDestination vide, max() échoue).
+    """
+    nbPassageIpDestination = {}
     nbPaquet = obtenirNbPaquet(table)
 
     for key in table.keys() :
         for paquet in table[key] :
 
             if "destination" in paquet.keys() : 
-                if paquet["destination"] in nbPassageIpSource.keys() : 
-                    nbPassageIpSource[paquet["destination"]] += 1
+                if paquet["destination"] in nbPassageIpDestination.keys() : 
+                    nbPassageIpDestination[paquet["destination"]] += 1
                 else :
-                    nbPassageIpSource[paquet["destination"]] = 1
+                    nbPassageIpDestination[paquet["destination"]] = 1
 
-    maxKey = max(nbPassageIpSource, key=lambda k: nbPassageIpSource[k])
-    maxValeur = nbPassageIpSource[maxKey]
+    maxKey = max(nbPassageIpDestination, key=lambda k: nbPassageIpDestination[k])
+    maxValeur = nbPassageIpDestination[maxKey]
     maxValeurPourcentage = (maxValeur / nbPaquet) * 100
     maxValeurPourcentage = round(maxValeurPourcentage,1)
 
@@ -425,20 +550,27 @@ def creationRapport(mode,table) :
 
     Args:
         mode (str): Mode du rapport à générer. Valeurs acceptées :
-
-                        - "CoucheDeux" : statistiques des EtherTypes
-                        - "CoucheTrois" : statistiques des protocoles
-                                          de couche 3
-                        - "CoucheQuatre" : statistiques des protocoles
-                                           de couche 4
-                        - "CoucheServiceSource" : statistiques des
-                                                  services source
-                        - "CoucheServiceDestination" : statistiques des
-                                                       services destination
-                        - "TempsVoyageMoyen" : temps moyen aller-retour
-                                               (non recommandé)
+                    - "CoucheDeux" : statistiques des EtherTypes
+                    - "CoucheTrois" : statistiques des protocoles
+                                      de couche 3
+                    - "CoucheQuatre" : statistiques des protocoles
+                                       de couche 4
+                    - "CoucheServiceSource" : statistiques des
+                                              services source
+                    - "CoucheServiceDestination" : statistiques des
+                                                   services destination
+                    - "TempsVoyageMoyen" : temps moyen aller-retour
+                                           (non recommandé)
+                    - "flux" : liste des flux triés par pourcentage
+                               de présence décroissant
+                    - "nbPaquet" : nombre total de paquets traités
+                    - "ipPlusActiveSrc" : IP source ayant envoyé
+                                          le plus de paquets
+                    - "ipPlusActiveDst" : IP destination ayant reçu
+                                          le plus de paquets
         table (dict): Dictionnaire contenant toutes les informations
-                      extraites du fichier PCAP.
+                      extraites du fichier PCAP, avec les EtherTypes
+                      comme clés.
 
     Returns:
         str: Rapport textuel résumant les statistiques du mode
@@ -447,6 +579,9 @@ def creationRapport(mode,table) :
     Raises:
         KeyError: Si table ne contient pas les clés attendues
                   par la fonction de statistiques appelée.
+        ValueError: Si aucun paquet ne contient de clé "source"
+                    ou "destination" pour les modes ipPlusActiveSrc
+                    et ipPlusActiveDst.
     """
 
     rapport = ""

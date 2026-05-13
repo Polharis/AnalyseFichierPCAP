@@ -49,27 +49,6 @@
     <span class="n">filtre</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get_filtre</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">filtre</span></div>
 
-<div class="viewcode-block" id="filtre_ipOnly_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_ipOnly_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_ipOnly_EstActive</span><span class="p">()</span> <span class="p">:</span> 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Vérifie si le filtre &quot;ip_only&quot; est actif. Et vérifie si le filtre est au bon format (un str spécifique).</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        True si le filtre &quot;ip_only&quot; est actif et au bon format, False sinon.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">if</span> <span class="s2">&quot;proto_filtre&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;proto_filtre&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ip_only&quot;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
-
-<div class="viewcode-block" id="filtre_arpOnly_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_arpOnly_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_arpOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Vérifie si le filtre &quot;arp_only&quot; est actif. Et vérifie si le filtre est au bon format(un str spécifique).</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        True si le filtre &quot;arp_only&quot; est actif et au bon format, False sinon.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="k">if</span> <span class="s2">&quot;proto_filtre&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;proto_filtre&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;arp_only&quot;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="filtre_ipSpecifique_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_ipSpecifique_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_ipSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -127,15 +106,14 @@
 <div class="viewcode-block" id="filtre_protocoleSpecifique_EstActive"><a class="viewcode-back" href="../listeFiltre.html#listeFiltre.filtre_protocoleSpecifique_EstActive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filtre_protocoleSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Vérifie si le filtre &quot;protocole_specifique&quot; est actif. Et vérifie si le filtre est au bon format (un protocole valide </span>
-<span class="sd">    parmis la liste [&#39;TCP&#39;, &#39;UDP&#39;, &#39;SCTP&#39;, &#39;ICMP&#39;, &#39;ICMPv6&#39;]).</span>
+<span class="sd">    parmis la liste [&#39;tcp&#39;, &#39;udp&#39;, &#39;sctp&#39;, &#39;icmp&#39;, &#39;icmpv6&#39;]).</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        True si le filtre &quot;protocole_specifique&quot; est actif et au bon format, False sinon.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="s2">&quot;protocole_specifique&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
-        <span class="n">filtre</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span>
-        <span class="n">protocoles_ip</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TCP&#39;</span><span class="p">,</span> <span class="s1">&#39;UDP&#39;</span><span class="p">,</span> <span class="s1">&#39;SCTP&#39;</span><span class="p">,</span> <span class="s1">&#39;ICMP&#39;</span><span class="p">,</span> <span class="s1">&#39;ICMPv6&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">filtre</span> <span class="ow">in</span> <span class="n">protocoles_ip</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;protocol_specifique&quot;</span> <span class="ow">in</span> <span class="n">filtre_Selectionner</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+        <span class="n">filtre</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span>
+        <span class="n">protocoles_ip</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tcp&#39;</span><span class="p">,</span> <span class="s1">&#39;udp&#39;</span><span class="p">,</span> <span class="s1">&#39;sctp&#39;</span><span class="p">,</span> <span class="s1">&#39;icmp&#39;</span><span class="p">,</span> <span class="s1">&#39;icmpv6&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">filtre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">protocoles_ip</span> <span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -149,16 +127,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">filtres</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">filtre_ipOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">else</span> <span class="p">:</span> 
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">if</span> <span class="n">filtre_arpOnly_EstActive</span><span class="p">()</span> <span class="p">:</span>
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">else</span> <span class="p">:</span>
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-
     <span class="k">if</span> <span class="n">filtre_ipSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span>
     <span class="k">else</span> <span class="p">:</span>
@@ -170,9 +138,9 @@
         <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;port_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">filtre_protocoleSpecifique_EstActive</span><span class="p">()</span> <span class="p">:</span>
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtre_Selectionner</span><span class="p">()[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span>
     <span class="k">else</span> <span class="p">:</span>
-        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">filtres</span><span class="p">[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         
     <span class="k">return</span> <span class="n">filtres</span></div>
 </pre></div>
@@ -194,7 +162,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">AnalyseFichierPCAP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
 </ul>

@@ -46,6 +46,10 @@
         <div id="afficherNombrePaquet"></div>
       </div>
 
+      <div id="detectionAnomalie" class ="cache">
+        <span> coucou </span>
+      </div>
+
     </div>
 
     <div id= "caseGeneral">

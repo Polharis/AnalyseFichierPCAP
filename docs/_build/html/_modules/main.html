@@ -71,7 +71,9 @@
     <span class="k">elif</span> <span class="n">TypeGraphique</span> <span class="o">==</span> <span class="s2">&quot;IntraEspacement&quot;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">graphiques</span><span class="o">.</span><span class="n">histogrammeIntraEspacement</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">liste_différence_src_dst_adjacente</span><span class="p">(</span><span class="n">table_par_protocole</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">),</span><span class="n">plage_temps_graphique</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">TypeGraphique</span> <span class="o">==</span> <span class="s2">&quot;IntraEspacementRepartition&quot;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="n">graphiques</span><span class="o">.</span><span class="n">courbeRepartitionIntraEspacement</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">liste_différence_src_dst_adjacente</span><span class="p">(</span><span class="n">table_par_protocole</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">),</span><span class="n">plage_temps_graphique</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graphiques</span><span class="o">.</span><span class="n">courbeRepartitionIntraInterEspacement</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">liste_différence_src_dst_adjacente</span><span class="p">(</span><span class="n">table_par_protocole</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">),</span><span class="n">plage_temps_graphique</span><span class="p">,</span><span class="s2">&quot;intra&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">TypeGraphique</span> <span class="o">==</span> <span class="s2">&quot;InterEspacementRepartition&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">graphiques</span><span class="o">.</span><span class="n">courbeRepartitionIntraInterEspacement</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">liste_différence_src_dst_inter</span><span class="p">(</span><span class="n">table_par_protocole</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">),</span><span class="n">plage_temps_graphique</span><span class="p">,</span><span class="s2">&quot;inter&quot;</span><span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -92,6 +94,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Un rapport statistique généré en fonction du mode spécifié.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">table_par_protocole</span> <span class="o">=</span> <span class="n">recupDico</span><span class="o">.</span><span class="n">get_table_par_protocole</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;CoucheDeux&quot;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span><span class="n">table_par_protocole</span><span class="p">)</span>
@@ -101,6 +104,14 @@
         <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span><span class="n">table_par_protocole</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;CoucheServiceDestination&quot;</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span><span class="n">table_par_protocole</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;flux&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">table_par_protocole</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;nbPaquet&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">table_par_protocole</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ipPlusActiveSrc&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">table_par_protocole</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ipPlusActiveDst&quot;</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">table_par_protocole</span><span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -126,7 +137,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">AnalyseFichierPCAP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
 </ul>

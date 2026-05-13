@@ -76,13 +76,6 @@
     <span class="c1">#On ajoute un dictionnaire par paquet</span>
 
     <span class="c1">#--------------- FILTRES ---------------</span>
-    <span class="c1">#Si l&#39;option ip_only est activée, on n&#39;ajoute que les paquets de type IP ou IPv6</span>
-    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_only&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IPv6&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">table</span>
-        
-    <span class="c1">#Si l&#39;option arp_only est activée, on n&#39;ajoute que les paquets de type ARP</span>
-    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;arp_only&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;ARP&#39;</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="n">table</span>
     
     <span class="c1">#Si l&#39;option ip_specifique est activée, on n&#39;ajoute que les paquets provenant ou étant déstiné à l&#39;adresse IP spécifiée</span>
     <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;ip_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -105,16 +98,17 @@
             <span class="k">return</span> <span class="n">table</span>
         
     <span class="c1">#Si l&#39;option protocole_specifique est activée, on n&#39;ajoute que les paquets de type IP avec le protocole de couche 4 spécifié</span>
-    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">EtherType</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IP&#39;</span> <span class="ow">and</span> <span class="n">EtherType</span> <span class="o">!=</span> <span class="s1">&#39;IPv6&#39;</span> <span class="p">:</span>
             <span class="k">return</span> <span class="n">table</span>
         <span class="k">if</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;IP&#39;</span> <span class="p">:</span>
             <span class="n">proto_name</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">proto_name</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="n">proto_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="p">:</span>
                 <span class="k">return</span> <span class="n">table</span>
         <span class="k">elif</span> <span class="n">EtherType</span> <span class="o">==</span> <span class="s1">&#39;IPv6&#39;</span> <span class="p">:</span>
             <span class="n">proto_name</span> <span class="o">=</span> <span class="n">get_proto_name</span><span class="p">(</span><span class="n">paquet</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">nxt</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">proto_name</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocole_specifique&quot;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="n">proto_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">filtres_actives</span><span class="p">[</span><span class="s2">&quot;protocol_specifique&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="p">:</span>
                 <span class="k">return</span> <span class="n">table</span>
     <span class="c1">#---------------- FIN DES FILTRES ---------------</span>
    
@@ -478,7 +472,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">AnalyseFichierPCAP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
 </ul>

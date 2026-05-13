@@ -51,14 +51,13 @@ futures analyses plus poussées.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Paramètres<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode</strong> (<em>str</em>) – <p>Mode du rapport à générer. Valeurs acceptées :</p>
+<li><p><strong>mode</strong> (<em>str</em>) – <p>Mode du rapport à générer. Valeurs acceptées :
+- « CoucheDeux » : statistiques des EtherTypes
+- « CoucheTrois » : statistiques des protocoles</p>
+<blockquote>
+<div><p>de couche 3</p>
+</div></blockquote>
 <ul>
-<li><p> »CoucheDeux » : statistiques des EtherTypes</p></li>
-<li><dl class="simple">
-<dt> »CoucheTrois »<span class="classifier">statistiques des protocoles</span></dt><dd><p>de couche 3</p>
-</dd>
-</dl>
-</li>
 <li><dl class="simple">
 <dt> »CoucheQuatre »<span class="classifier">statistiques des protocoles</span></dt><dd><p>de couche 4</p>
 </dd>
@@ -79,10 +78,27 @@ futures analyses plus poussées.</p>
 </dd>
 </dl>
 </li>
+<li><dl class="simple">
+<dt> »flux »<span class="classifier">liste des flux triés par pourcentage</span></dt><dd><p>de présence décroissant</p>
+</dd>
+</dl>
+</li>
+<li><p> »nbPaquet » : nombre total de paquets traités</p></li>
+<li><dl class="simple">
+<dt> »ipPlusActiveSrc »<span class="classifier">IP source ayant envoyé</span></dt><dd><p>le plus de paquets</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt> »ipPlusActiveDst »<span class="classifier">IP destination ayant reçu</span></dt><dd><p>le plus de paquets</p>
+</dd>
+</dl>
+</li>
 </ul>
 </p></li>
 <li><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
-extraites du fichier PCAP.</p></li>
+extraites du fichier PCAP, avec les EtherTypes
+comme clés.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Renvoie<span class="colon">:</span></dt>
@@ -96,8 +112,13 @@ extraites du fichier PCAP.</p></li>
 <dd class="field-odd"><p>str</p>
 </dd>
 <dt class="field-even">Lève<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>KeyError</strong> – Si table ne contient pas les clés attendues
-    par la fonction de statistiques appelée.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – Si table ne contient pas les clés attendues
+    par la fonction de statistiques appelée.</p></li>
+<li><p><strong>ValueError</strong> – Si aucun paquet ne contient de clé « source »
+    ou « destination » pour les modes ipPlusActiveSrc
+    et ipPlusActiveDst.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -112,6 +133,9 @@ extraites du fichier PCAP.</p></li>
 <span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">liste_différence_src_dst_adjacente</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plage_temps_graphique</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#liste_différence_src_dst_adjacente"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.liste_difference_src_dst_adjacente" title="Lien permanent vers cette définition">¶</a></dt>
 <dd><p>Crée un dictionnaire répertoriant les couples src-dst avec les
 différences de temps entre leurs paquets adjacents pairs.</p>
+<p>Par « couple src-dst », on entend un flux chacun composé d’une
+ip source, ip destination, port source,port destination et d’un
+protocole</p>
 <p>Pour chaque couple src-dst, les timestamps sont triés puis les
 différences de temps entre paquets adjacents pairs (i et i+1)
 sont calculées en millisecondes et arrondies au multiple de
@@ -151,6 +175,190 @@ en millisecondes, arrondies à plage_temps_graphique.</p>
 <li><p><strong>KeyError</strong> – Si les clés « source » ou « destination » sont absentes
     des paquets.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.liste_difference_src_dst_inter">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">liste_différence_src_dst_inter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicoReseau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plage_temps_graphique</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#liste_différence_src_dst_inter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.liste_difference_src_dst_inter" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Crée une liste des inter-espacements entre deux flux adjacents
+différents.</p>
+<p>Un flux est identifié par le tuple (src, dst, port_src, port_dst,
+protocole_4). Les paquets sont triés par timestamp, puis pour
+chaque changement de flux, la différence de temps absolue avec
+le paquet précédent est calculée en millisecondes et arrondie
+au multiple de plage_temps_graphique le plus proche.
+Les paquets appartenant au même flux que le précédent sont ignorés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dicoReseau</strong> (<em>dict</em>) – Dictionnaire contenant les informations
+des paquets issus du fichier PCAP,
+avec les EtherTypes comme clés.</p></li>
+<li><p><strong>plage_temps_graphique</strong> (<em>int</em>) – Intervalle en millisecondes
+pour l’arrondi des différences
+de temps, afin d’épurer
+les graphiques.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Liste des différences de temps en millisecondes,</dt><dd><p>arrondies à plage_temps_graphique, entre deux
+flux adjacents différents.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – Si plage_temps_graphique est égal à zéro.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.obtenirListeFlux">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">obtenirListeFlux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#obtenirListeFlux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.obtenirListeFlux" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Récupère la liste des flux uniques à partir des informations
+extraites du fichier PCAP.</p>
+<p>Chaque flux est identifié par le tuple (src, dst, port_src,
+port_dst, protocole_4). Les doublons sont ignorés. Un pourcentage
+de présence basé sur le nombre de paquets de l’IP source est
+ensuite ajouté à chaque flux, arrondi à 1 décimale. La liste
+est enfin triée par pourcentage décroissant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
+extraites du fichier PCAP, avec les EtherTypes
+comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Liste de tuples triés par pourcentage de présence</dt><dd><p>décroissant, chaque tuple contenant :
+(src, dst, port_src, port_dst, protocole_4,
+pourcentage)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple]</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – Si nbPaquet est égal à zéro.</p></li>
+<li><p><strong>KeyError</strong> – Si la clé « destination » ou « port_dst » est absente
+    alors que « source » est présente dans le paquet.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.obtenirMeilleurPaquetDst">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">obtenirMeilleurPaquetDst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#obtenirMeilleurPaquetDst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.obtenirMeilleurPaquetDst" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Identifie l’adresse IP destination apparaissant le plus souvent
+dans les paquets analysés et calcule son pourcentage de présence.</p>
+<p>Compte les occurrences de chaque IP destination, puis récupère
+celle qui apparaît le plus de fois et calcule son pourcentage
+sur la totalité des paquets, arrondi à 1 décimale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
+extraites du fichier PCAP, avec les EtherTypes
+comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Contenant :</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>float<span class="classifier">pourcentage arrondi à 1 décimale de l’IP</span></dt><dd><p>destination la plus fréquente.</p>
+</dd>
+</dl>
+</li>
+<li><p>str : adresse IP destination apparaissant le plus souvent.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – Si nbPaquet est égal à zéro.</p></li>
+<li><p><strong>ValueError</strong> – Si aucun paquet ne contient de clé « destination »
+    (nbPassageIpDestination vide, max() échoue).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.obtenirMeilleurPaquetSrc">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">obtenirMeilleurPaquetSrc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#obtenirMeilleurPaquetSrc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.obtenirMeilleurPaquetSrc" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Identifie l’adresse IP source apparaissant le plus souvent
+dans les paquets analysés et calcule son pourcentage de présence.</p>
+<p>Compte les occurrences de chaque IP source, puis récupère
+celle qui apparaît le plus de fois et calcule son pourcentage
+sur la totalité des paquets, arrondi à 1 décimale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
+extraites du fichier PCAP, avec les EtherTypes
+comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Contenant :</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>float<span class="classifier">pourcentage arrondi à 1 décimale de l’IP</span></dt><dd><p>source la plus fréquente.</p>
+</dd>
+</dl>
+</li>
+<li><p>str : adresse IP source apparaissant le plus souvent.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – Si nbPaquet est égal à zéro.</p></li>
+<li><p><strong>ValueError</strong> – Si aucun paquet ne contient de clé « source »
+    (nbPassageIpSource vide, max() échoue).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="creationRapportStats.obtenirNbPaquet">
+<span class="sig-prename descclassname"><span class="pre">creationRapportStats.</span></span><span class="sig-name descname"><span class="pre">obtenirNbPaquet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/creationRapportStats.html#obtenirNbPaquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#creationRapportStats.obtenirNbPaquet" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Compte le nombre total de paquets contenus dans le dictionnaire.</p>
+<p>Parcourt toutes les listes de paquets associées à chaque
+EtherType et additionne leurs tailles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>dict</em>) – Dictionnaire contenant toutes les informations
+extraites du fichier PCAP, avec les EtherTypes
+comme clés.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nombre total de paquets dans le dictionnaire.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Si table n’est pas un dictionnaire.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,7 +577,7 @@ avec les EtherTypes comme clés.</p>
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">filtrageDonnee</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">AnalyseFichierPCAP</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="listeFiltre.html">listeFiltre module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="creationCSV.html">creationCSV module</a></li>
@@ -388,7 +596,7 @@ avec les EtherTypes comme clés.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">filtrageDonnee</a><ul>
+  <li><a href="modules.html">AnalyseFichierPCAP</a><ul>
       <li>Previous: <a href="creationGraphiques.html" title="Chapitre précédent">creationGraphiques module</a></li>
   </ul></li>
   </ul></li>

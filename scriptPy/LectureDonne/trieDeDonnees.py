@@ -311,6 +311,24 @@ def Est_protocole_couche_4(proto_num) :
         return True
     else :
         return False
+    
+def decoder_flags(flags) :
+    liste_flag = []
+    mapping = {
+        'FIN':  dpkt.tcp.TH_FIN,
+        'SYN':  dpkt.tcp.TH_SYN,
+        'RST':  dpkt.tcp.TH_RST,
+        'PSH':  dpkt.tcp.TH_PUSH,
+        'ACK':  dpkt.tcp.TH_ACK,
+        'URG':  dpkt.tcp.TH_URG,
+        'ECE':  dpkt.tcp.TH_ECE,
+        'CWR':  dpkt.tcp.TH_CWR,
+    }
+    for name, mask in mapping.items():
+        if flags & mask:
+            liste_flag.append(name)
+    return liste_flag 
+
 
 def extraire_info(paquet,num_paquet,time) : 
     """
@@ -375,6 +393,8 @@ def extraire_info(paquet,num_paquet,time) :
         if isinstance(couche_trois.data, (dpkt.tcp.TCP, dpkt.udp.UDP, dpkt.sctp.SCTP)):
             Infos['port_src'] = get_service_name(couche_trois.data.sport)
             Infos['port_dst'] = get_service_name(couche_trois.data.dport)
+            if isinstance(couche_trois.data, dpkt.tcp.TCP):
+                Infos['flag'] = decoder_flags(couche_trois.data.flags)
     elif isinstance(paquet.data, dpkt.arp.ARP) : 
         if Est_protocole_couche_4(couche_trois.pro) :
             Infos['protocole_4'] = get_proto_name(couche_trois.pro)
@@ -395,6 +415,8 @@ def extraire_info(paquet,num_paquet,time) :
         if isinstance(couche_trois.data, (dpkt.tcp.TCP, dpkt.udp.UDP, dpkt.sctp.SCTP)):
             Infos['port_src'] = get_service_name(couche_trois.data.sport)
             Infos['port_dst'] = get_service_name(couche_trois.data.dport)
+            if isinstance(couche_trois.data, dpkt.tcp.TCP):
+                Infos['flag'] = decoder_flags(couche_trois.data.flags)
     else :
         #Pour repérer les paquets avec des payloads particuliers
         Infos['ni IP ni ARP'] = True
@@ -414,6 +436,8 @@ def extraire_info(paquet,num_paquet,time) :
         if transport is not None:
             Infos['port_src'] = get_service_name(transport.sport)
             Infos['port_dst'] = get_service_name(transport.dport)
+            if isinstance(couche_trois.data, dpkt.tcp.TCP):
+                Infos['flag'] = decoder_flags(couche_trois.data.flags)
     return Infos
 
 

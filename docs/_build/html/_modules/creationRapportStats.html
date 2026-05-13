@@ -60,6 +60,9 @@
     <span class="n">total_paquet</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">listes_paquets</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">total_paquet</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listes_paquets</span><span class="p">)</span>
+    <span class="c1">#si le dico est vide et pour éviter une divison par zéro</span>
+    <span class="k">if</span> <span class="n">total_paquet</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">stats_pourcentage</span><span class="p">[</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_paquet</span>
     <span class="k">for</span> <span class="n">protos</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">stats_pourcentage</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_paquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -99,10 +102,19 @@
                     <span class="n">stats</span><span class="p">[</span><span class="n">proto_couche_3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="k">else</span> <span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="n">proto_couche_3</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;PasDeProto&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDeProto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDeProto&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">stats_pourcentage</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">total_paquet</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">listes_paquets</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">total_paquet</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listes_paquets</span><span class="p">)</span>
+
+    <span class="c1">#si le dico est vide et pour éviter une divison par zéro</span>
+    <span class="k">if</span> <span class="n">total_paquet</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">stats_pourcentage</span><span class="p">[</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_paquet</span>
     <span class="k">for</span> <span class="n">protos</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">stats_pourcentage</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_paquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -142,10 +154,20 @@
                     <span class="n">stats</span><span class="p">[</span><span class="n">proto_couche_4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="k">else</span> <span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="n">proto_couche_4</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;PasDeProto&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDeProto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDeProto&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
     <span class="n">stats_pourcentage</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">total_paquet</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">listes_paquets</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">total_paquet</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listes_paquets</span><span class="p">)</span>
+
+    <span class="c1">#si le dico est vide et pour éviter une divison par zéro</span>
+    <span class="k">if</span> <span class="n">total_paquet</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">stats_pourcentage</span><span class="p">[</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_paquet</span>
     <span class="k">for</span> <span class="n">protos</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">stats_pourcentage</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_paquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -185,10 +207,20 @@
                     <span class="n">stats</span><span class="p">[</span><span class="n">service</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="k">else</span> <span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="n">service</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;PasDePort&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDePort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDePort&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
     <span class="n">stats_pourcentage</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">total_paquet</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">listes_paquets</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">total_paquet</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listes_paquets</span><span class="p">)</span>
+
+    <span class="c1">#si le dico est vide et pour éviter une divison par zéro</span>
+    <span class="k">if</span> <span class="n">total_paquet</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">stats_pourcentage</span><span class="p">[</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_paquet</span>
     <span class="k">for</span> <span class="n">protos</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">stats_pourcentage</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_paquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -227,10 +259,20 @@
                     <span class="n">stats</span><span class="p">[</span><span class="n">service</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="k">else</span> <span class="p">:</span>
                     <span class="n">stats</span><span class="p">[</span><span class="n">service</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;PasDePort&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDePort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span> 
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;PasDePort&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    
     <span class="n">stats_pourcentage</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">total_paquet</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">listes_paquets</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">total_paquet</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listes_paquets</span><span class="p">)</span>
+
+    <span class="c1">#si le dico est vide et pour éviter une divison par zéro</span>
+    <span class="k">if</span> <span class="n">total_paquet</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     <span class="n">stats_pourcentage</span><span class="p">[</span><span class="s2">&quot;total_paquet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_paquet</span>
     <span class="k">for</span> <span class="n">protos</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">stats_pourcentage</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">protos</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_paquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
@@ -240,6 +282,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Crée un dictionnaire répertoriant les couples src-dst avec les</span>
 <span class="sd">    différences de temps entre leurs paquets adjacents pairs.</span>
+
+<span class="sd">    Par &quot;couple src-dst&quot;, on entend un flux chacun composé d&#39;une</span>
+<span class="sd">    ip source, ip destination, port source,port destination et d&#39;un</span>
+<span class="sd">    protocole</span>
 
 <span class="sd">    Pour chaque couple src-dst, les timestamps sont triés puis les</span>
 <span class="sd">    différences de temps entre paquets adjacents pairs (i et i+1)</span>
@@ -274,8 +320,11 @@
     <span class="n">src_dst_diff</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;destination&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
-                <span class="n">src_dst</span><span class="o">.</span><span class="n">setdefault</span><span class="p">((</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]),[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;destination&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>\
+            <span class="ow">and</span> <span class="s2">&quot;port_src&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;port_dst&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;protocole_4&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">src_dst</span><span class="o">.</span><span class="n">setdefault</span><span class="p">((</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">],</span>
+                                    <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_src&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_dst&quot;</span><span class="p">],</span>
+                                    <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;protocole_4&quot;</span><span class="p">]),[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">couple</span> <span class="ow">in</span> <span class="n">src_dst</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
         <span class="n">liste_difference</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">src_dst</span><span class="p">[</span><span class="n">couple</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -292,6 +341,229 @@
         <span class="n">src_dst_diff</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">couple</span><span class="p">,</span><span class="n">liste_difference</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">src_dst_diff</span></div>
+
+
+<div class="viewcode-block" id="liste_différence_src_dst_inter"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.liste_différence_src_dst_inter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">liste_différence_src_dst_inter</span><span class="p">(</span><span class="n">dicoReseau</span><span class="p">,</span><span class="n">plage_temps_graphique</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crée une liste des inter-espacements entre deux flux adjacents</span>
+<span class="sd">    différents.</span>
+
+<span class="sd">    Un flux est identifié par le tuple (src, dst, port_src, port_dst,</span>
+<span class="sd">    protocole_4). Les paquets sont triés par timestamp, puis pour</span>
+<span class="sd">    chaque changement de flux, la différence de temps absolue avec</span>
+<span class="sd">    le paquet précédent est calculée en millisecondes et arrondie</span>
+<span class="sd">    au multiple de plage_temps_graphique le plus proche.</span>
+<span class="sd">    Les paquets appartenant au même flux que le précédent sont ignorés.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dicoReseau (dict): Dictionnaire contenant les informations</span>
+<span class="sd">                           des paquets issus du fichier PCAP,</span>
+<span class="sd">                           avec les EtherTypes comme clés.</span>
+<span class="sd">        plage_temps_graphique (int): Intervalle en millisecondes</span>
+<span class="sd">                                     pour l&#39;arrondi des différences</span>
+<span class="sd">                                     de temps, afin d&#39;épurer</span>
+<span class="sd">                                     les graphiques.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Liste des différences de temps en millisecondes,</span>
+<span class="sd">              arrondies à plage_temps_graphique, entre deux</span>
+<span class="sd">              flux adjacents différents.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ZeroDivisionError: Si plage_temps_graphique est égal à zéro.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">liste_temps_par_flux</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">liste_temps_entre_flux</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">paquet_precedent</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">dicoReseau</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;destination&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>\
+            <span class="ow">and</span> <span class="s2">&quot;port_src&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;port_dst&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;protocole_4&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="p">(</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">],</span>
+                                        <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_src&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_dst&quot;</span><span class="p">],</span>
+                                        <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;protocole_4&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+                <span class="n">liste_temps_par_flux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+    <span class="n">liste_temps_par_flux</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">liste_temps_par_flux</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span> <span class="p">:</span> 
+            <span class="n">paquet_precedent</span> <span class="o">=</span> <span class="n">paquet</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">paquet</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span>  <span class="n">paquet</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">paquet</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="n">paquet</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">paquet</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+            <span class="n">diff_temp</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">paquet_precedent</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">-</span> <span class="n">paquet</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="n">diff_temp_arrondie</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">diff_temp</span><span class="o">/</span><span class="n">plage_temps_graphique</span><span class="p">)</span><span class="o">*</span><span class="n">plage_temps_graphique</span>
+            <span class="n">liste_temps_entre_flux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">diff_temp_arrondie</span><span class="p">)</span>
+            <span class="n">paquet_precedent</span> <span class="o">=</span> <span class="n">paquet</span>
+
+    <span class="k">return</span> <span class="n">liste_temps_entre_flux</span></div>
+
+<div class="viewcode-block" id="obtenirListeFlux"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.obtenirListeFlux">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">obtenirListeFlux</span> <span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Récupère la liste des flux uniques à partir des informations</span>
+<span class="sd">    extraites du fichier PCAP.</span>
+
+<span class="sd">    Chaque flux est identifié par le tuple (src, dst, port_src,</span>
+<span class="sd">    port_dst, protocole_4). Les doublons sont ignorés. Un pourcentage</span>
+<span class="sd">    de présence basé sur le nombre de paquets de l&#39;IP source est</span>
+<span class="sd">    ensuite ajouté à chaque flux, arrondi à 1 décimale. La liste</span>
+<span class="sd">    est enfin triée par pourcentage décroissant.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (dict): Dictionnaire contenant toutes les informations</span>
+<span class="sd">                      extraites du fichier PCAP, avec les EtherTypes</span>
+<span class="sd">                      comme clés.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[tuple]: Liste de tuples triés par pourcentage de présence</span>
+<span class="sd">                     décroissant, chaque tuple contenant :</span>
+<span class="sd">                     (src, dst, port_src, port_dst, protocole_4,</span>
+<span class="sd">                     pourcentage)</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ZeroDivisionError: Si nbPaquet est égal à zéro.</span>
+<span class="sd">        KeyError: Si la clé &quot;destination&quot; ou &quot;port_dst&quot; est absente</span>
+<span class="sd">                  alors que &quot;source&quot; est présente dans le paquet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">liste_flux</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nbPassageIpSource</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">nbPaquet</span> <span class="o">=</span> <span class="n">obtenirNbPaquet</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;port_src&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;protocole_4&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_src&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_dst&quot;</span><span class="p">],</span>
+                    <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;protocole_4&quot;</span><span class="p">])</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">liste_flux</span> <span class="p">:</span>
+                
+                    <span class="n">liste_flux</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">],</span>
+                                       <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_src&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;port_dst&quot;</span><span class="p">],</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;protocole_4&quot;</span><span class="p">]))</span>
+                    
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                <span class="k">if</span> <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">nbPassageIpSource</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                    <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">liste_flux</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">pourcentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">liste_flux</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">/</span> <span class="n">nbPaquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">pourcentage</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">pourcentage</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">liste_flux</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">liste_flux</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">pourcentage</span><span class="p">,)</span>
+    <span class="n">liste_flux</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">liste_flux</span></div>
+
+<div class="viewcode-block" id="obtenirNbPaquet"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.obtenirNbPaquet">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">obtenirNbPaquet</span> <span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compte le nombre total de paquets contenus dans le dictionnaire.</span>
+
+<span class="sd">    Parcourt toutes les listes de paquets associées à chaque</span>
+<span class="sd">    EtherType et additionne leurs tailles.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (dict): Dictionnaire contenant toutes les informations</span>
+<span class="sd">                      extraites du fichier PCAP, avec les EtherTypes</span>
+<span class="sd">                      comme clés.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Nombre total de paquets dans le dictionnaire.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Si table n&#39;est pas un dictionnaire.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nbPaquet</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">nbPaquet</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">nbPaquet</span></div>
+
+<div class="viewcode-block" id="obtenirMeilleurPaquetSrc"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.obtenirMeilleurPaquetSrc">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">obtenirMeilleurPaquetSrc</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="p">:</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifie l&#39;adresse IP source apparaissant le plus souvent</span>
+<span class="sd">    dans les paquets analysés et calcule son pourcentage de présence.</span>
+
+<span class="sd">    Compte les occurrences de chaque IP source, puis récupère</span>
+<span class="sd">    celle qui apparaît le plus de fois et calcule son pourcentage</span>
+<span class="sd">    sur la totalité des paquets, arrondi à 1 décimale.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (dict): Dictionnaire contenant toutes les informations</span>
+<span class="sd">                      extraites du fichier PCAP, avec les EtherTypes</span>
+<span class="sd">                      comme clés.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Contenant :</span>
+<span class="sd">            - float : pourcentage arrondi à 1 décimale de l&#39;IP</span>
+<span class="sd">                      source la plus fréquente.</span>
+<span class="sd">            - str : adresse IP source apparaissant le plus souvent.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ZeroDivisionError: Si nbPaquet est égal à zéro.</span>
+<span class="sd">        ValueError: Si aucun paquet ne contient de clé &quot;source&quot;</span>
+<span class="sd">                    (nbPassageIpSource vide, max() échoue).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nbPassageIpSource</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">nbPaquet</span> <span class="o">=</span> <span class="n">obtenirNbPaquet</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
+
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                <span class="k">if</span> <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">nbPassageIpSource</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                    <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">maxKey</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbPassageIpSource</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="n">maxValeur</span> <span class="o">=</span> <span class="n">nbPassageIpSource</span><span class="p">[</span><span class="n">maxKey</span><span class="p">]</span>
+    <span class="n">maxValeurPourcentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxValeur</span> <span class="o">/</span> <span class="n">nbPaquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">maxValeurPourcentage</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">maxValeurPourcentage</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">maxValeurPourcentage</span><span class="p">,</span><span class="n">maxKey</span></div>
+
+<div class="viewcode-block" id="obtenirMeilleurPaquetDst"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.obtenirMeilleurPaquetDst">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">obtenirMeilleurPaquetDst</span> <span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifie l&#39;adresse IP destination apparaissant le plus souvent</span>
+<span class="sd">    dans les paquets analysés et calcule son pourcentage de présence.</span>
+
+<span class="sd">    Compte les occurrences de chaque IP destination, puis récupère</span>
+<span class="sd">    celle qui apparaît le plus de fois et calcule son pourcentage</span>
+<span class="sd">    sur la totalité des paquets, arrondi à 1 décimale.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (dict): Dictionnaire contenant toutes les informations</span>
+<span class="sd">                      extraites du fichier PCAP, avec les EtherTypes</span>
+<span class="sd">                      comme clés.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: Contenant :</span>
+<span class="sd">            - float : pourcentage arrondi à 1 décimale de l&#39;IP</span>
+<span class="sd">                      destination la plus fréquente.</span>
+<span class="sd">            - str : adresse IP destination apparaissant le plus souvent.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ZeroDivisionError: Si nbPaquet est égal à zéro.</span>
+<span class="sd">        ValueError: Si aucun paquet ne contient de clé &quot;destination&quot;</span>
+<span class="sd">                    (nbPassageIpDestination vide, max() échoue).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nbPassageIpDestination</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">nbPaquet</span> <span class="o">=</span> <span class="n">obtenirNbPaquet</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">paquet</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">:</span>
+
+            <span class="k">if</span> <span class="s2">&quot;destination&quot;</span> <span class="ow">in</span> <span class="n">paquet</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                <span class="k">if</span> <span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">nbPassageIpDestination</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span> 
+                    <span class="n">nbPassageIpDestination</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">nbPassageIpDestination</span><span class="p">[</span><span class="n">paquet</span><span class="p">[</span><span class="s2">&quot;destination&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">maxKey</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nbPassageIpDestination</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">nbPassageIpDestination</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="n">maxValeur</span> <span class="o">=</span> <span class="n">nbPassageIpDestination</span><span class="p">[</span><span class="n">maxKey</span><span class="p">]</span>
+    <span class="n">maxValeurPourcentage</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxValeur</span> <span class="o">/</span> <span class="n">nbPaquet</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">maxValeurPourcentage</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">maxValeurPourcentage</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">maxValeurPourcentage</span><span class="p">,</span><span class="n">maxKey</span></div>
 
 <div class="viewcode-block" id="creationRapport"><a class="viewcode-back" href="../creationRapportStats.html#creationRapportStats.creationRapport">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">creationRapport</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span><span class="n">table</span><span class="p">)</span> <span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -310,20 +582,27 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        mode (str): Mode du rapport à générer. Valeurs acceptées :</span>
-<span class="sd">        </span>
-<span class="sd">                        - &quot;CoucheDeux&quot; : statistiques des EtherTypes</span>
-<span class="sd">                        - &quot;CoucheTrois&quot; : statistiques des protocoles</span>
-<span class="sd">                                          de couche 3</span>
-<span class="sd">                        - &quot;CoucheQuatre&quot; : statistiques des protocoles</span>
-<span class="sd">                                           de couche 4</span>
-<span class="sd">                        - &quot;CoucheServiceSource&quot; : statistiques des</span>
-<span class="sd">                                                  services source</span>
-<span class="sd">                        - &quot;CoucheServiceDestination&quot; : statistiques des</span>
-<span class="sd">                                                       services destination</span>
-<span class="sd">                        - &quot;TempsVoyageMoyen&quot; : temps moyen aller-retour</span>
-<span class="sd">                                               (non recommandé)</span>
+<span class="sd">                    - &quot;CoucheDeux&quot; : statistiques des EtherTypes</span>
+<span class="sd">                    - &quot;CoucheTrois&quot; : statistiques des protocoles</span>
+<span class="sd">                                      de couche 3</span>
+<span class="sd">                    - &quot;CoucheQuatre&quot; : statistiques des protocoles</span>
+<span class="sd">                                       de couche 4</span>
+<span class="sd">                    - &quot;CoucheServiceSource&quot; : statistiques des</span>
+<span class="sd">                                              services source</span>
+<span class="sd">                    - &quot;CoucheServiceDestination&quot; : statistiques des</span>
+<span class="sd">                                                   services destination</span>
+<span class="sd">                    - &quot;TempsVoyageMoyen&quot; : temps moyen aller-retour</span>
+<span class="sd">                                           (non recommandé)</span>
+<span class="sd">                    - &quot;flux&quot; : liste des flux triés par pourcentage</span>
+<span class="sd">                               de présence décroissant</span>
+<span class="sd">                    - &quot;nbPaquet&quot; : nombre total de paquets traités</span>
+<span class="sd">                    - &quot;ipPlusActiveSrc&quot; : IP source ayant envoyé</span>
+<span class="sd">                                          le plus de paquets</span>
+<span class="sd">                    - &quot;ipPlusActiveDst&quot; : IP destination ayant reçu</span>
+<span class="sd">                                          le plus de paquets</span>
 <span class="sd">        table (dict): Dictionnaire contenant toutes les informations</span>
-<span class="sd">                      extraites du fichier PCAP.</span>
+<span class="sd">                      extraites du fichier PCAP, avec les EtherTypes</span>
+<span class="sd">                      comme clés.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Rapport textuel résumant les statistiques du mode</span>
@@ -332,6 +611,9 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        KeyError: Si table ne contient pas les clés attendues</span>
 <span class="sd">                  par la fonction de statistiques appelée.</span>
+<span class="sd">        ValueError: Si aucun paquet ne contient de clé &quot;source&quot;</span>
+<span class="sd">                    ou &quot;destination&quot; pour les modes ipPlusActiveSrc</span>
+<span class="sd">                    et ipPlusActiveDst.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">rapport</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -392,6 +674,30 @@
                     <span class="s2">&quot; : TAR moyen de &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tars_moyens</span><span class="p">[</span><span class="n">conversation</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; secondes, basé sur &quot;</span> <span class="o">+</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">nb_tars</span><span class="p">[</span><span class="n">conversation</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; paires aller-retour</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;flux&quot;</span> <span class="p">:</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">obtenirListeFlux</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">flux</span> <span class="ow">in</span> <span class="n">stats</span> <span class="p">:</span> 
+            <span class="n">rapport</span> <span class="o">+=</span> <span class="p">(</span><span class="n">flux</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; ---&gt; &quot;</span> <span class="o">+</span> <span class="n">flux</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">flux</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot;% </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="n">flux</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;---&gt;&quot;</span> <span class="o">+</span> <span class="n">flux</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="n">flux</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;nbPaquet&quot;</span> <span class="p">:</span>
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="s2">&quot;nombre de paquet traité : &quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">obtenirNbPaquet</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ipPlusActiveSrc&quot;</span> <span class="p">:</span>
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="s2">&quot;L&#39;ip ayant envoyé le plus de paquets est &quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">obtenirMeilleurPaquetSrc</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; à &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ipPlusActiveDst&quot;</span> <span class="p">:</span>
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="s2">&quot;L&#39;ip ayant reçue le plus de paquets est &quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">obtenirMeilleurPaquetDst</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="n">rapport</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; à &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; %&quot;</span>
 
     <span class="k">return</span> <span class="n">rapport</span></div>
 
@@ -495,7 +801,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">filtrageDonnee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">AnalyseFichierPCAP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../main.html">main module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../listeFiltre.html">listeFiltre module</a></li>
 </ul>

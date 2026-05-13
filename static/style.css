@@ -13,6 +13,7 @@ body {
       border: none;
       border-radius: 5px;
       cursor: pointer;
+
     }
     button:hover {
       background-color: #45a049;
@@ -133,6 +134,13 @@ body {
     margin : 20px;
     padding : 5px;
     border : 2px solid #EFBF04
+  }
+
+  #detectionAnomalie{
+    margin : 20px;
+    padding : 5px;
+    border : 2px solid #CD1C18;
+    color : rgb(121, 28, 28)
   }
 
   .cache{

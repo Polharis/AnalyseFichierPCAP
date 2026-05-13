@@ -4,6 +4,7 @@ import  LectureDonne.lectureDonneFichierUnique as recupDico
 import LectureDonne.creationCSV as creationCSV
 import statistiques.creationRapportStats as stats
 import graphiques.creationGraphiques as graphiques
+import LectureDonne.detectionAnomalie as anomalie
 
 
 
@@ -75,6 +76,7 @@ def genererRapportStatistique(mode) :
     elif mode == "flux" :
         return stats.creationRapport(mode, table_par_protocole)
     elif mode == "nbPaquet" :
+        print(identifierLesAnomalies())
         return stats.creationRapport(mode, table_par_protocole)
     elif mode == "ipPlusActiveSrc" :
         return stats.creationRapport(mode, table_par_protocole)
@@ -83,6 +85,10 @@ def genererRapportStatistique(mode) :
     else :
         return None
 
+def identifierLesAnomalies() : 
+    table_par_protocole = recupDico.get_table_par_protocole()
+
+    return anomalie.detectionScanDePort(table_par_protocole)
 
 #liste chemin du fichier PCAP à analyser
 #/home/stagetesa/Downloads/NMAP_PROBE.pcap
