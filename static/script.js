@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
+    alerteAnomalie = document.getElementById('detectionAnomalie');
+    alerteAnomalie.classList.add('cache'); 
     icon.classList.remove('cache');
     texte.classList.remove('cache');
 
@@ -19,6 +21,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     await generer('CoucheServiceSource',"graphiqueServiceSource");
     texte.textContent = "Chargement... du graphique graphiqueServiceDestination"
     await generer('CoucheServiceDestination',"graphiqueServiceDestination");
+    texte.textContent = "Chargement... de la détection d'anomalie (Scan de port)"
+    await genererDetectionAnomalie('scanPort','texteScanPort')
     texte.textContent = "Chargement... de la liste de flux"
     await genererRapportStatistique('flux',"conteneurFlux");
     texte.textContent = "Chargement... de l'ip src la plus active"
@@ -171,6 +175,55 @@ document.addEventListener("DOMContentLoaded", async function() {
       }
     }
 
+    async function genererDetectionAnomalie(typeAnomalie,elementPhp) {
+
+      try {
+        // Affiche le message de chargement
+        document.getElementById('erreur').textContent = '';
+
+        // filtres sur les données 
+        const ip_specifique = document.getElementById('ip_specifique').value;
+        const protocol_specifique = document.getElementById('protocol_specifique').value;
+        const port_specifique = document.getElementById('port_specifique').value;
+        const chemin_fichier = document.getElementById('fichier_pcap').value;
+
+        const filtres = {
+        ip_specifique: ip_specifique,
+        protocol_specifique: protocol_specifique,
+        port_specifique: port_specifique,
+        chemin_fichier: chemin_fichier,
+        typeAnomalie: typeAnomalie
+        };
+        
+
+        const res = await fetch('/genererDetectionAnomalie', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(filtres)
+        });
+
+        const responseText = await res.text();
+        const data = JSON.parse(responseText);
+
+        if (data.success) {
+          if (data.anomalies != "aucune anomalie" ){ 
+            document.getElementById('detectionAnomalie').classList.remove('cache');
+            document.getElementById(elementPhp).textContent = data.anomalies;
+            document.getElementById(elementPhp).style.display = 'block';
+          }else {
+            document.getElementById('detectionAnomalie').classList.add('cache');
+          }
+
+        } else {
+            document.getElementById('erreur').textContent = 'Erreur : ' + data.error;
+        }
+        } catch (error) {
+          console.error('Erreur:', error);
+          document.getElementById('erreur').textContent = 'Erreur: ' + error.message;
+        }
+
+    }
+
     async function genererRapportStatistique(typeStatistique,elementPhp) {
       try {
         // Affiche le message de chargement
@@ -215,12 +268,15 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 
     async function regenererGraphiques(){
+      
         document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
         document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
         document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
 
-        icon = document.getElementById('chargementIcon')
-        texte = document.getElementById('chargementTexte')
+        icon = document.getElementById('chargementIcon');
+        texte = document.getElementById('chargementTexte');
+        alerteAnomalie = document.getElementById('detectionAnomalie');
+        alerteAnomalie.classList.add('cache'); 
         icon.classList.remove('cache');
         texte.classList.remove('cache');
         texte.textContent = "Chargement... du fichier PCAP"
@@ -234,6 +290,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         await generer('CoucheServiceSource',"graphiqueServiceSource");
         texte.textContent = "Chargement... du graphique graphiqueServiceDestination"
         await generer('CoucheServiceDestination',"graphiqueServiceDestination");
+        texte.textContent = "Chargement... de la détection d'anomalie (Scan de port)"
+        await genererDetectionAnomalie('scanPort','texteScanPort')
         texte.textContent = "Chargement... de la liste de flux"
         await genererRapportStatistique('flux',"conteneurFlux");
         texte.textContent = "Chargement... de l'ip src la plus active"
@@ -265,3 +323,30 @@ document.addEventListener('DOMContentLoaded', function (){
     },400)
   });
 });
+
+//pour la pop up des anomalies 
+
+function openAnomaliePopUp(){
+  document.getElementById('overlay').style.display = 'flex';
+}
+
+function closeAnomaliesPopUp(){
+  document.getElementById('overlay').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function (){
+  document.getElementById('overlay').style.display = 'none';
+
+  // Fermer avec Échap
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAnomaliesPopUp();
+  });
+
+  // Fermer au clic sur l'overlay
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeAnomaliesPopUp();
+  });
+});
+
+
+

@@ -138,9 +138,38 @@ body {
 
   #detectionAnomalie{
     margin : 20px;
-    padding : 5px;
     border : 2px solid #CD1C18;
-    color : rgb(121, 28, 28)
+    
+  }
+
+  #bouttonAnomalie{
+    font-size: 16px;
+    background-color: #ffffff;
+    color : rgb(121, 28, 28);
+    border: none;
+    cursor: pointer;
+  }
+
+  #bouttonAnomalie:hover {
+      background-color: #c8c8c8;
+    }
+
+  #overlay {
+  position: fixed;      /* couvre toute la fenêtre */
+  inset: 0;             /* équivaut à top/right/bottom/left: 0 */
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;        /* par-dessus tout le reste */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+
+  #modal {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    width: 360px;
+    max-width: 90vw;      /* responsive mobile */
   }
 
   .cache{

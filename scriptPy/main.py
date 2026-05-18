@@ -55,6 +55,11 @@ def genererRapportCsv() :
     table_par_protocole = recupDico.get_table_par_protocole()
     creationCSV.creationCSVtoutesInfos(table_par_protocole)
 
+def genererDetectionAnomalie(mode) : 
+    table_par_protocole = recupDico.get_table_par_protocole()
+    if mode == "scanPort" :
+        return anomalie.detectionScanDePort(table_par_protocole)
+
 def genererRapportStatistique(mode) :
     """
     Génère un rapport statistique en fonction du mode spécifié.

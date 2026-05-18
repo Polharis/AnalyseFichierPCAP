@@ -395,8 +395,7 @@ def obtenirListeFlux (table) :
     """
 
     liste_flux = []
-    nbPassageIpSource = {}
-    nbPaquet = obtenirNbPaquet(table)
+    
 
     for key in table.keys() :
         for paquet in table[key] :
@@ -406,18 +405,6 @@ def obtenirListeFlux (table) :
                 
                     liste_flux.append((paquet["source"],paquet["destination"],
                                        paquet["port_src"],paquet["port_dst"],paquet["protocole_4"]))
-                    
-            if "source" in paquet.keys() : 
-                if paquet["source"] in nbPassageIpSource.keys() : 
-                    nbPassageIpSource[paquet["source"]] += 1
-                else :
-                    nbPassageIpSource[paquet["source"]] = 1
-
-    for i in range(len(liste_flux)) :
-        pourcentage = (nbPassageIpSource[liste_flux[i][0]] / nbPaquet) * 100
-        pourcentage = round(pourcentage, 1)
-        liste_flux[i] = liste_flux[i] + (pourcentage,)
-    liste_flux.sort(key=lambda x: x[5], reverse=True)
 
     return liste_flux
 
@@ -646,7 +633,7 @@ def creationRapport(mode,table) :
         stats = obtenirListeFlux(table)
 
         for flux in stats : 
-            rapport += (flux[0] + " ---> " + flux[1] + "  " + str(flux[5])+"% \n" +
+            rapport += (flux[0] + " ---> " + flux[1] + "  " +
                         flux[2] + "--->" + flux[3] + " \n" +
                         flux[4] + "\n \n")
 

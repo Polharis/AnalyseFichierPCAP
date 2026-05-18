@@ -1,35 +1,38 @@
 def detectionScanDePort(table):
     rapport_anomalie = ""
     nb_requete_par_ip = {}
-    ip_anormales = []
-    
+    ip_anormales = set()  # set au lieu de list → recherche O(1)
 
-    for cle in table.keys() :
+    for cle in table:
+        for paquet in table[cle]:
 
-        for paquet in table[cle] :
             if "flag" in paquet.keys() :
-                seconde = (int(paquet["time"].timestamp()) // 1) * 1
-                for key in list(nb_requete_par_ip.keys()):
-                    
-                    if (paquet["source"],seconde) == key and \
-                        paquet["port_dst"] not in nb_requete_par_ip[key][1] and paquet["flag"] == ['SYN']: 
-                        nb_requete_par_ip[(paquet["source"],seconde)][0] += 1
-                        nb_requete_par_ip[(paquet["source"],seconde)][1].append(paquet["port_dst"])
+                print(paquet["flag"])
+                
+            if "flag" not in paquet or paquet["flag"] != ["SYN"]:
+                continue  # on ignore directement les paquets non SYN
 
-                if (paquet["source"],seconde) not in nb_requete_par_ip : 
-                    nb_requete_par_ip[(paquet["source"],seconde)] = [1,[paquet["port_dst"]]]
+            
+            seconde = int(paquet["time"].timestamp())
+            cle_ip = (paquet["source"], seconde)
+            port = paquet["port_dst"]
 
-    print (nb_requete_par_ip)
-    for key in nb_requete_par_ip.keys() :
-        if nb_requete_par_ip[key][0] > 10 :
-            if key[0] not in ip_anormales :
-                ip_anormales.append(key[0])
-                print(key[1])
+            if cle_ip not in nb_requete_par_ip:
+                nb_requete_par_ip[cle_ip] = [1, {port}]  # set pour les ports
+            elif port not in nb_requete_par_ip[cle_ip][1]:
+                nb_requete_par_ip[cle_ip][0] += 1
+                nb_requete_par_ip[cle_ip][1].add(port)
 
+    
+    for (ip, _), (count, _) in nb_requete_par_ip.items():
+        if count > 10:
+            ip_anormales.add(ip)
+
+    print("anomalie renconctré : " + str(ip_anormales))
     if len(ip_anormales) == 0 :
         rapport_anomalie = "aucune anomalie"
     else : 
         for ip in ip_anormales :
-            rapport_anomalie = rapport_anomalie + "Il y a une anomalie avec l'ip " + ip + " \n"
+            rapport_anomalie = rapport_anomalie + "Il y a un scan de port probable avec l'ip " + ip + " \n"
 
     return rapport_anomalie

@@ -46,8 +46,8 @@
         <div id="afficherNombrePaquet"></div>
       </div>
 
-      <div id="detectionAnomalie" class ="cache">
-        <span> coucou </span>
+      <div id="detectionAnomalie" class="cache">
+        <button id ="bouttonAnomalie" onclick="openAnomaliePopUp()"> Anomalie détéctée, cliquer pour plus de détails </button> 
       </div>
 
     </div>
@@ -155,6 +155,15 @@
     <div id="afficherGraphiqueHistogrammeIntra" style="width:100%; height:100%;"></div>
     <div id="afficherGraphiqueCumulatifeIntra" style="width:100%; height:100%;"></div>
     <div id="afficherGraphiqueCumulatifeInter" style="width:100%; height:100%;"></div>
+
+    
+  </div>
+
+  <div id="overlay">
+    <div id="modal">
+      <h2>Attention !</h2>
+      <div id="texteScanPort"></div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

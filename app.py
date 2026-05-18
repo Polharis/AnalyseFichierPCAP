@@ -67,6 +67,21 @@ def generer_csv():
     return jsonify({ 'success': True})  
 
 
+@app.route('/genererDetectionAnomalie', methods=['POST'])
+def genererDetectionAnomalie():
+    #Application des flitres
+    params = request.get_json(force=True, silent=True) or {}
+    main.configurerParams(params)
+    #-------------------------------------
+    mode = params.get('typeAnomalie', None)
+
+    fig = main .genererDetectionAnomalie(mode)
+
+    if fig is None:
+        return jsonify({ 'success' : False, 'error': 'Aucune donnée disponible.'})
+    return jsonify({'success' : True, 'anomalies' : fig})
+
+
 @app.route('/genererRapportStatistique', methods=['POST'])
 def genererRapportStatistique():
     #Application des filtres
@@ -82,6 +97,8 @@ def genererRapportStatistique():
         return jsonify({ 'success': False, 'error': 'Aucune donnée disponible.' })
 
     return jsonify({ 'success': True, 'statistique': fig })   
+
+
 
 
 # adresse : http://localhost:5000/
