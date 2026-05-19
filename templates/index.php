@@ -92,8 +92,15 @@
             <label for="graphiqueCumulatifIntra"> Courbe cumultive des intra-espacements </label>
             <input type="checkbox" id="graphiqueCumulatifIntra" name="graphiqueCumulatifIntra"><br>
 
+            <label for = "graphiqueDensiteDeProbaIntra"> Courbe de densité de probabilité des intra-espacements</label>
+            <input type="checkbox" id="graphiqueDensiteDeProbaIntra" name="graphiqueDensiteDeProbaIntra"><br>
+
             <label for="graphiqueCumulatifInter"> Courbe cumultive des inter-espacements </label>
             <input type="checkbox" id="graphiqueCumulatifInter" name="graphiqueCumulatifInter"><br>
+
+            <label for = "graphiqueDensiteDeProbaInter"> Courbe de densité de probabilité des intra-espacements</label>
+            <input type="checkbox" id="graphiqueDensiteDeProbaInter" name="graphiqueDensiteDeProbaInter"><br>
+            
           </form>
         </div>
       </div>
@@ -154,8 +161,9 @@
     <button id="appliquerParams" onclick='appliquerGraphs()'>Appliquer</button>
     <div id="afficherGraphiqueHistogrammeIntra" style="width:100%; height:100%;"></div>
     <div id="afficherGraphiqueCumulatifeIntra" style="width:100%; height:100%;"></div>
+    <div id ="afficherGraphiqueDensiteIntra" style="width:100%; height:100%"></div>
     <div id="afficherGraphiqueCumulatifeInter" style="width:100%; height:100%;"></div>
-
+    <div id ="afficherGraphiqueDensiteInter" style="width:100%; height:100%"></div>
     
   </div>
 

@@ -43,6 +43,10 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
         return graphiques.courbeRepartitionIntraInterEspacement(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"intra")
     elif TypeGraphique == "InterEspacementRepartition" :
         return graphiques.courbeRepartitionIntraInterEspacement(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"inter")
+    elif TypeGraphique == "IntraEspacementDensite" :
+        return graphiques.courbeDensiteDeProbaIntra(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"intra")
+    elif TypeGraphique == "InterEspacementDensite" :
+        return graphiques.courbeDensiteDeProbaIntra(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"inter")
     else :
         return None
 

@@ -192,17 +192,80 @@ def courbeRepartitionIntraInterEspacement(dicoReseau,plage_temps_graphique,inter
         line=dict(color='blue', width=2)
     ))
     
-    fig.update_layout(
-        title="Courbe de répartition cumulative des inter-espacements",
-        xaxis_title="Inter-espacement (millisecondes)",
-        yaxis_title="Pourcentage cumulatif (%)",
-        hovermode='x unified'
-    )
+    if inter_ou_intra == "intra" :
+        fig.update_layout(
+            title="Courbe de répartition cumulative des intra-espacements",
+            xaxis_title="Intra-espacement (millisecondes)",
+            yaxis_title="Pourcentage cumulatif (%)",
+            hovermode='x unified'
+        )
+    else : 
+        fig.update_layout(
+            title="Courbe de répartition cumulative des inter-espacements",
+            xaxis_title="Inter-espacement (millisecondes)",
+            yaxis_title="Pourcentage cumulatif (%)",
+            hovermode='x unified'
+        )
 
     return fig.to_json()
 
 
+def courbeDensiteDeProbaIntra (dicoReseau,plage_temps_graphique,inter_ou_intra) : 
 
+    fig = go.Figure()
+
+    liste_temps = []
+    dico_temps_pourcent = {}
+
+    if inter_ou_intra == "intra" :
+        for valeures in dicoReseau.values():
+            for temps in valeures : 
+                liste_temps.append(temps)
+        liste_temps.sort()
+    else :
+        liste_temps = dicoReseau
+        liste_temps.sort()
+    
+    # Regrouper les temps par plage_temps_graphique et compter les occurrences
+    for temps in liste_temps :
+        temps_arrondi = round(temps / plage_temps_graphique) * plage_temps_graphique
+        dico_temps_pourcent.setdefault(temps_arrondi, 0)
+        dico_temps_pourcent[temps_arrondi] += 1
+    
+    # Calculer les pourcentages
+    total = len(liste_temps)
+    for temps_arrondi in dico_temps_pourcent :
+        dico_temps_pourcent[temps_arrondi] = (dico_temps_pourcent[temps_arrondi] / total) * 100
+    
+    # Trier le dictionnaire par temps
+    temps_tries = sorted(dico_temps_pourcent.keys())
+    pourcentages = [dico_temps_pourcent[t] for t in temps_tries]
+
+    # Ajouter la courbe de densité
+    fig.add_trace(go.Scatter(
+        x=temps_tries,
+        y=pourcentages,
+        mode='lines+markers',
+        name='Répartition de densité',
+        line=dict(color='blue', width=2)
+    ))
+    
+    if inter_ou_intra == "intra" :
+        fig.update_layout(
+            title="Courbe de densité de probabilité des intra-espacements",
+            xaxis_title="Intra-espacement (millisecondes)",
+            yaxis_title="Pourcentage (%)",
+            hovermode='x unified'
+        )
+    else : 
+        fig.update_layout(
+            title="Courbe de densité de probabilité des inter-espacements",
+            xaxis_title="Inter-espacement (millisecondes)",
+            yaxis_title="Pourcentage (%)",
+            hovermode='x unified'
+        )
+
+    return fig.to_json()
 
 
 

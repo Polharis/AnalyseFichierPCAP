@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
     document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
     document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
+    document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
+    document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
@@ -41,7 +43,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         await regenererGraphiques();
         histogrammeIntra = document.getElementById('graphiqueHistogrammeIntra');
         cumulatifIntra = document.getElementById('graphiqueCumulatifIntra');
+        densiteProbaIntra = document.getElementById('graphiqueDensiteDeProbaIntra')
         cumulatifInter = document.getElementById('graphiqueCumulatifInter');
+        densiteProbaInter = document.getElementById('graphiqueDensiteDeProbaInter')
+
 
         icon = document.getElementById('chargementIcon')
         texte = document.getElementById('chargementTexte')
@@ -61,11 +66,24 @@ document.addEventListener("DOMContentLoaded", async function() {
         }else{
             document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
         }
+
+        if(densiteProbaIntra.checked){
+            texte.textContent = "Chargement... du graphique de densité de probbilté intra"
+            await generer('IntraEspacementDensite',"afficherGraphiqueDensiteIntra");
+        }else{
+            document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
+        }
+
         if(cumulatifInter.checked){
             texte.textContent = "Chargement... du graphique répartition cumulative inter"
             await generer('InterEspacementRepartition',"afficherGraphiqueCumulatifeInter");
         }else{
             document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
+        }
+
+        if(densiteProbaInter.checked){
+          texte.texteContent = "Chargement... du graphique de densité de probabilité inter"
+          await generer('InterEspacementDensite','afficherGraphiqueDensiteInter')
         }
 
         icon.classList.add('cache');
@@ -272,6 +290,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
         document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
         document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
+        document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
+        document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
 
         icon = document.getElementById('chargementIcon');
         texte = document.getElementById('chargementTexte');
