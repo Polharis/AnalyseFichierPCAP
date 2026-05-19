@@ -1,10 +1,10 @@
-from filtrageDonnee import listeFiltre as options
 from scapy.all import *
-import  LectureDonne.lectureDonneFichierUnique as recupDico  
-import LectureDonne.creationCSV as creationCSV
-import statistiques.creationRapportStats as stats
-import graphiques.creationGraphiques as graphiques
-import LectureDonne.detectionAnomalie as anomalie
+import  scriptPy.LectureDonne.lectureDonneFichierUnique as recupDico  
+import scriptPy.LectureDonne.creationCSV as creationCSV
+import scriptPy.statistiques.creationRapportStats as stats
+import scriptPy.graphiques.creationGraphiques as graphiques
+import scriptPy.LectureDonne.detectionAnomalie as anomalie
+import scriptPy.filtrageDonnee.listeFiltre as options
 
 
 

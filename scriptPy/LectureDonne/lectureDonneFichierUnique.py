@@ -7,7 +7,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import dpkt
 from scapy.all import *
 from LectureDonne import trieDeDonnees as trieDeDonnees
-from LectureDonne import optionsArgParse as optionsArgParse
 from filtrageDonnee import listeFiltre as filtre  
 
 cache = {'table': None, 'plage_temps': None,'filtres': None,'emplacement_fichier': None, "plage_temps_graph": None,'initialized': False}

@@ -1,11 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import matplotlib
 matplotlib.use('Agg')  # Important : mode sans affichage
-import matplotlib.pyplot as plt
 
-import scriptPy.graphiques.creationGraphiques as graphiques
-from scriptPy.LectureDonne import optionsArgParse as options
-import  scriptPy.LectureDonne.lectureDonneFichierUnique as recupDico  
 import scriptPy.main as main
 
 
@@ -102,7 +98,7 @@ def genererRapportStatistique():
 
 
 # adresse : http://localhost:5000/
-app.run(debug=True, host='127.0.0.1', port=5000)
+app.run(debug=True, host='0.0.0.0', port=5000)
 
 
 #liste chemin du fichier PCAP à analyser

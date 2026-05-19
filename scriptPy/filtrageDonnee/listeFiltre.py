@@ -4,7 +4,6 @@ import os
 # Remonte d'un niveau pour atteindre la racine du projet
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from LectureDonne import optionsArgParse as options
 import ipaddress
 
 # Chemin par défaut relatif à la location de ce fichier

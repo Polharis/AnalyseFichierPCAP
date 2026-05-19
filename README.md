@@ -13,11 +13,15 @@ Pour démarrer le serveur développement Flask :
  - Si dans un environnement virtuel, l'activer (source venv/bin/activate)
  - lancer app.py (python "app.py")
 
+ Si utilisation avec une image docker, rentrer les commandes suivantes :
+ - docker build -t analyse-pcap .
+ - docker run -p 5000:5000 analyse-pcap
 
 ## Utilisation rapide (exemple concret)
 
 Une fois le serveur flask lancé, il suffit d'y accéder depuis un navigateur internet, ici : 
 http://localhost:5000/
+
 
 ## Structure du projet
 
