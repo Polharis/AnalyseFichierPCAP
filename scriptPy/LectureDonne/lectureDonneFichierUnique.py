@@ -36,10 +36,10 @@ def lancer_lecture_donne_fichier_unique():
     
     filtres_actives = filtre.liste_filtre_EstActive()
 
-    plage_temps_graphique = optionsArgParse.get_plage_temps_graphique()
+    plage_temps_graphique = filtres_actives["palge_temps"]
 
     #Récupération de l'emplacement du fichier si il y en a un
-    emplacement_fichier = optionsArgParse.get_emplacement_fichier()
+    emplacement_fichier = filtres_actives["emplacement_fichier"]
 
     #Vérification si les données ont déjà été traitées pour éviter de les retraiter à chaque fois
     if cache['initialized'] and cache['emplacement_fichier'] == emplacement_fichier and cache['filtres'] == filtres_actives and cache['plage_temps_graph'] == plage_temps_graphique:
