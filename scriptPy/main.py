@@ -4,16 +4,21 @@ import scriptPy.LectureDonne.creationCSV as creationCSV
 import scriptPy.statistiques.creationRapportStats as stats
 import scriptPy.graphiques.creationGraphiques as graphiques
 import scriptPy.LectureDonne.detectionAnomalie as anomalie
-import scriptPy.filtrageDonnee.listeFiltre as options
+from scriptPy.filtrageDonnee.gestionnaireFiltre import gestionnaire as options
 
 
-
-
-
-#Cette fonctions doit être postionner ici et non pas dans app
-#Cela est dû au principe identification de module par chemin d'import de python
 def configurerParams (params) : 
-    options.appliquer_filtres(params)
+    """
+    Permet de modifier une classe objet qui stocke les paramètres de filtrage de l'application.
+    Cette classe est utilisée pour stocker les paramètres de filtrage de l'application, et est 
+    accessible depuis n'importe quelle partie de l'application grâce à son import.
+    Args:
+        params (dict): contient toute les informatios sur les paramètres de l'interface web
+    Returns:
+        None
+    """
+
+    options.appliquer(params)
 
 def genererGraphique(TypeGraphique,plage_temps_graphique) :
 
@@ -85,7 +90,6 @@ def genererRapportStatistique(mode) :
     elif mode == "flux" :
         return stats.creationRapport(mode, table_par_protocole)
     elif mode == "nbPaquet" :
-        print(identifierLesAnomalies())
         return stats.creationRapport(mode, table_par_protocole)
     elif mode == "ipPlusActiveSrc" :
         return stats.creationRapport(mode, table_par_protocole)

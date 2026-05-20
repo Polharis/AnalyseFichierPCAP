@@ -5,10 +5,6 @@ def detectionScanDePort(table):
 
     for cle in table:
         for paquet in table[cle]:
-
-            if "flag" in paquet.keys() :
-                print(paquet["flag"])
-                
             if "flag" not in paquet or paquet["flag"] != ["SYN"]:
                 continue  # on ignore directement les paquets non SYN
 

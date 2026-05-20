@@ -67,7 +67,6 @@ def ajouter_a_table_Par_Protocole(table, paquet,numero_paquet,filtres_actives,ti
         
     #Si l'option protocole_specifique est activée, on n'ajoute que les paquets de type IP avec le protocole de couche 4 spécifié
     if filtres_actives["protocol_specifique"] is not None:
-        print(EtherType)
         if EtherType != 'IP' and EtherType != 'IPv6' :
             return table
         if EtherType == 'IP' :

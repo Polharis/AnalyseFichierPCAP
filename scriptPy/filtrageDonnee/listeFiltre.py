@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import ipaddress
+from scriptPy.filtrageDonnee.gestionnaireFiltre import gestionnaire
 
 # Chemin par défaut relatif à la location de ce fichier
 FICHIER_PCAP_DEFAUT = os.path.join(
@@ -14,34 +15,6 @@ FICHIER_PCAP_DEFAUT = os.path.join(
     "exempleCaptureWireshark.pcapng"
 )
 
-filtres_à_appliquer = {}
-
-def appliquer_filtres(params):
-
-    """
-    Stocke les filtres reçus depuis l'application web dans le
-    dictionnaire global filtres_à_appliquer.
-
-    Ce dictionnaire sera ensuite utilisé par les autres fonctions
-    du fichier pour filtrer les paquets à analyser.
-
-    Args:
-        params (dict): Paramètres de filtrage reçus depuis
-                       l'application web.
-
-    Returns:
-        None
-
-    Raises:
-        TypeError: Si params n'est pas un dictionnaire.
-    """
-
-    #Ici on applique les filtres en fonction des paramètres reçus
-    for key, value in params.items():
-        filtres_à_appliquer[key] = value
-
-
-
 
 
 def filtre_Selectionner() :
@@ -50,9 +23,8 @@ def filtre_Selectionner() :
     Returns:
         Un dictionnaire contenant les filtres à appliquer
     """
-
-    filtre = filtres_à_appliquer
-    return filtre
+    config = gestionnaire.get()
+    return config
 
 
 def get_emplacement_fichier():
@@ -73,11 +45,11 @@ def get_emplacement_fichier():
     Raises:
         FileNotFoundError: Si le fichier par défaut est introuvable.
     """
-    if ("chemin_fichier" in filtres_à_appliquer.keys()
-            and filtres_à_appliquer["chemin_fichier"] is not None
-            and filtres_à_appliquer["chemin_fichier"] != ""):
+    if ("chemin_fichier" in filtre_Selectionner().keys()
+            and filtre_Selectionner()["chemin_fichier"] is not None
+            and filtre_Selectionner()["chemin_fichier"] != ""):
 
-        chemin = filtres_à_appliquer["chemin_fichier"]
+        chemin = filtre_Selectionner()["chemin_fichier"]
 
         # Vérification que le fichier existe
         if not os.path.exists(chemin):
@@ -124,8 +96,8 @@ def get_plage_temps_graphique() :
         TypeError: Si la valeur récupérée n'est pas convertible
                    en nombre.
     """
-    if "plage_temps_graphique" in filtres_à_appliquer.keys() and filtres_à_appliquer["plage_temps_graphique"] is not None and filtres_à_appliquer["plage_temps_graphique"] != "" :
-        return filtres_à_appliquer["plage_temps_graphique"]
+    if "plage_temps_graphique" in filtre_Selectionner().keys() and filtre_Selectionner()["plage_temps_graphique"] is not None and filtre_Selectionner()["plage_temps_graphique"] != "" :
+        return filtre_Selectionner()["plage_temps_graphique"]
     else :
         return None
 
@@ -229,4 +201,5 @@ def liste_filtre_EstActive() :
     filtres["emplacement_fichier"] = get_emplacement_fichier()
     filtres["palge_temps"] = get_plage_temps_graphique()
         
+    
     return filtres
