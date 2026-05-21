@@ -267,9 +267,50 @@ def courbeDensiteDeProbaIntra (dicoReseau,plage_temps_graphique,inter_ou_intra) 
 
     return fig.to_json()
 
+def courbeRepartitionInterFull(dicoReseau,plage_temps_graphique) :
+    fig = go.Figure()
 
+    dico_temps = {}
 
+    # Regrouper les temps par plage_temps_graphique et compter les occurrences
+    for temps in dicoReseau :
+        temps_arrondi = round(temps / plage_temps_graphique) * plage_temps_graphique
+        dico_temps.setdefault(temps_arrondi, 0)
+        dico_temps[temps_arrondi] += 1
 
+   # Calculer les pourcentages
+    total = len(dicoReseau)
+    for temps_arrondi in dico_temps :
+        dico_temps[temps_arrondi] = (dico_temps[temps_arrondi] / total) * 100
+    
+    # Trier le dictionnaire par temps
+    temps_tries = sorted(dico_temps.keys())
+    pourcentages = [dico_temps[t] for t in temps_tries]
+    
+    # Calculer les pourcentages cumulatifs
+    cumulative = []
+    cumul = 0
+    for pourcent in pourcentages :
+        cumul += pourcent
+        cumulative.append(cumul)
+    
+    # Ajouter la courbe de répartition cumulative
+    fig.add_trace(go.Scatter(
+        x=temps_tries,
+        y=cumulative,
+        mode='lines+markers',
+        name='Répartition de densité',
+        line=dict(color='blue', width=2)
+    ))
+
+    fig.update_layout(
+            title="Courbe des espacements entre les paquets",
+            xaxis_title="temps en millisecondes",
+            yaxis_title="Pourcentage (%)",
+            hovermode='x unified'
+        )
+    
+    return fig.to_json()
 
 
 

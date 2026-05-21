@@ -104,15 +104,39 @@ def get_plage_temps_graphique() :
 
 
 
-def filtre_ipSpecifique_EstActive() :
+def filtre_ipSpecifique_src_EstActive() :
     """
-    Vérifie si le filtre "ip_specifique" est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
+    Vérifie si le filtre "ip_specifique_src" est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
     Returns:
-        True si le filtre "ip_specifique" est actif et au bon format, False sinon.
+        True si le filtre "ip_specifique_src" est actif et au bon format, False sinon.
     """
 
-    if "ip_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique"] is not None :
-        filtre = filtre_Selectionner()["ip_specifique"]
+    if "ip_specifique_src" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_src"] is not None :
+        filtre = filtre_Selectionner()["ip_specifique_src"]
+        estUneip = True
+        try:
+            #Si on ne peut pas utiliser ip_address, c'est que le filtre n'est pas une adresse IP
+            ipaddress.ip_address(filtre)
+
+        except ValueError:
+
+            estUneip = False
+
+        if filtre is not None and estUneip: #Vérifie que le filtre ressemble à une adresse IP
+            return True
+        return False
+    else : 
+        return False
+    
+def filtre_ipSpecifique_dst_EstActive() :
+    """
+    Vérifie si le filtre "ip_specifique_dst" est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
+    Returns:
+        True si le filtre "ip_specifique_dst" est actif et au bon format, False sinon.
+    """
+
+    if "ip_specifique_dst" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_dst"] is not None :
+        filtre = filtre_Selectionner()["ip_specifique_dst"]
         estUneip = True
         try:
             #Si on ne peut pas utiliser ip_address, c'est que le filtre n'est pas une adresse IP
@@ -128,15 +152,15 @@ def filtre_ipSpecifique_EstActive() :
     else : 
         return False
 
-def filtre_portSpecifique_EstActive() :
+def filtre_portSpecifique_src_EstActive() :
     """" 
-    Vérifie si le filtre "port_specifique" est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
+    Vérifie si le filtre "port_specifique_src" est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
     Returns:
-        True si le filtre "port_specifique" est actif et au bon format, False sinon.
+        True si le filtre "port_specifique_src" est actif et au bon format, False sinon.
     """
 
-    if "port_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique"] is not None :
-        filtre = filtre_Selectionner()["port_specifique"]
+    if "port_specifique_src" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_src"] is not None :
+        filtre = filtre_Selectionner()["port_specifique_src"]
     else :
         return False
     estUnPort = True
@@ -155,6 +179,33 @@ def filtre_portSpecifique_EstActive() :
             return True
     return False
 
+
+def filtre_portSpecifique_dst_EstActive() :
+    """" 
+    Vérifie si le filtre "port_specifique_dst" est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
+    Returns:
+        True si le filtre "port_specifique_dst" est actif et au bon format, False sinon.
+    """
+
+    if "port_specifique_dst" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_dst"] is not None :
+        filtre = filtre_Selectionner()["port_specifique_dst"]
+    else :
+        return False
+    estUnPort = True
+    if filtre is None :
+        return False
+    try:
+        #Si on ne peut pas convertir le filtre en int, ce n'est pas un port
+        filtre = int(filtre)
+
+    except ValueError:
+
+        estUnPort = False
+
+    if estUnPort: #Vérifie que le filtre ressemble à un port
+        if filtre >= 0 and filtre <= 65535 : #Vérifie que le port est dans la plage valide
+            return True
+    return False
 
 
 def filtre_protocoleSpecifique_EstActive() :
@@ -183,15 +234,25 @@ def liste_filtre_EstActive() :
     """
 
     filtres = {}
-    if filtre_ipSpecifique_EstActive() :
-        filtres["ip_specifique"] = filtre_Selectionner()["ip_specifique"]
+    if filtre_ipSpecifique_src_EstActive() :
+        filtres["ip_specifique_src"] = filtre_Selectionner()["ip_specifique_src"]
     else :
-        filtres["ip_specifique"] = None
+        filtres["ip_specifique_src"] = None
 
-    if filtre_portSpecifique_EstActive() :
-        filtres["port_specifique"] = int(filtre_Selectionner()["port_specifique"])
+    if filtre_ipSpecifique_dst_EstActive() :
+        filtres["ip_specifique_dst"] = filtre_Selectionner()["ip_specifique_dst"]
     else :
-        filtres["port_specifique"] = None
+        filtres["ip_specifique_dst"] = None
+
+    if filtre_portSpecifique_src_EstActive() :
+        filtres["port_specifique_src"] = int(filtre_Selectionner()["port_specifique_src"])
+    else :
+        filtres["port_specifique_src"] = None
+
+    if filtre_portSpecifique_dst_EstActive() :
+        filtres["port_specifique_dst"] = int(filtre_Selectionner()["port_specifique_dst"])
+    else :
+        filtres["port_specifique_dst"] = None
 
     if filtre_protocoleSpecifique_EstActive() :
         filtres["protocol_specifique"] = filtre_Selectionner()["protocol_specifique"]

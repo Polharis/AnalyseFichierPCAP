@@ -44,25 +44,44 @@ def ajouter_a_table_Par_Protocole(table, paquet,numero_paquet,filtres_actives,ti
     #On ajoute un dictionnaire par paquet
 
     #--------------- FILTRES ---------------
-    
-    #Si l'option ip_specifique est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
-    if filtres_actives["ip_specifique"] is not None:
+    #Si l'option ip_specifique_src est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
+    if filtres_actives["ip_specifique_src"] is not None:
         if EtherType != 'IP' and EtherType != 'ARP' :
             return table
         if EtherType == 'IP' :
-            if socket.inet_ntoa(paquet.data.src) != filtres_actives["ip_specifique"] and socket.inet_ntoa(paquet.data.dst) != filtres_actives["ip_specifique"]:
+            if socket.inet_ntoa(paquet.data.src) != filtres_actives["ip_specifique_src"] :
                 return table
         elif EtherType == 'ARP' :
-            if  socket.inet_ntoa(paquet.data.spa) != filtres_actives["ip_specifique"] and socket.inet_ntoa(paquet.data.tpa) != filtres_actives["ip_specifique"]:
+            if  socket.inet_ntoa(paquet.data.spa) != filtres_actives["ip_specifique_src"] :
                 return table
             
-    #Si l'option port_specifique est activée, on n'ajoute que les paquets provenant ou étant déstiné au port spécifié
-    if filtres_actives["port_specifique"] is not None:
+    #Si l'option ip_specifique_dst est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
+    if filtres_actives["ip_specifique_dst"] is not None:
+        if EtherType != 'IP' and EtherType != 'ARP' :
+            return table
+        if EtherType == 'IP' :
+            if socket.inet_ntoa(paquet.data.dst) != filtres_actives["ip_specifique_dst"] :
+                return table
+        elif EtherType == 'ARP' :
+            if  socket.inet_ntoa(paquet.data.tpa) != filtres_actives["ip_specifique_dst"] :
+                return table
+            
+    #Si l'option port_specifique_src est activée, on n'ajoute que les paquets provenant ou étant déstiné au port spécifié
+    if filtres_actives["port_specifique_src"] is not None:
         if EtherType != 'IP' :
             return table
         if not (isinstance(paquet.data.data, dpkt.tcp.TCP) or isinstance(paquet.data.data, dpkt.udp.UDP) or isinstance(paquet.data.data, dpkt.sctp.SCTP)) :
             return table
-        if paquet.data.data.sport != filtres_actives["port_specifique"] and paquet.data.data.dport != filtres_actives["port_specifique"]:
+        if paquet.data.data.sport != filtres_actives["port_specifique_src"] :
+            return table
+        
+    #Si l'option port_specifique_dst est activée, on n'ajoute que les paquets provenant ou étant déstiné au port spécifié
+    if filtres_actives["port_specifique_dst"] is not None:
+        if EtherType != 'IP' :
+            return table
+        if not (isinstance(paquet.data.data, dpkt.tcp.TCP) or isinstance(paquet.data.data, dpkt.udp.UDP) or isinstance(paquet.data.data, dpkt.sctp.SCTP)) :
+            return table
+        if paquet.data.data.dport != filtres_actives["port_specifique_dst"] :
             return table
         
     #Si l'option protocole_specifique est activée, on n'ajoute que les paquets de type IP avec le protocole de couche 4 spécifié
@@ -392,6 +411,8 @@ def extraire_info(paquet,num_paquet,time) :
         if isinstance(couche_trois.data, (dpkt.tcp.TCP, dpkt.udp.UDP, dpkt.sctp.SCTP)):
             Infos['port_src'] = get_service_name(couche_trois.data.sport)
             Infos['port_dst'] = get_service_name(couche_trois.data.dport)
+            Infos['port_src_brute'] = couche_trois.data.sport
+            Infos['port_dst_brute'] = couche_trois.data.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
     elif isinstance(paquet.data, dpkt.arp.ARP) : 
@@ -414,6 +435,8 @@ def extraire_info(paquet,num_paquet,time) :
         if isinstance(couche_trois.data, (dpkt.tcp.TCP, dpkt.udp.UDP, dpkt.sctp.SCTP)):
             Infos['port_src'] = get_service_name(couche_trois.data.sport)
             Infos['port_dst'] = get_service_name(couche_trois.data.dport)
+            Infos['port_src_brute'] = couche_trois.data.sport
+            Infos['port_dst_brute'] = couche_trois.data.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
     else :
@@ -435,6 +458,8 @@ def extraire_info(paquet,num_paquet,time) :
         if transport is not None:
             Infos['port_src'] = get_service_name(transport.sport)
             Infos['port_dst'] = get_service_name(transport.dport)
+            Infos['port_src_brute'] = transport.sport
+            Infos['port_dst_brute'] = transport.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
     return Infos

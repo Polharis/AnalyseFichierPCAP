@@ -52,6 +52,8 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
         return graphiques.courbeDensiteDeProbaIntra(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"intra")
     elif TypeGraphique == "InterEspacementDensite" :
         return graphiques.courbeDensiteDeProbaIntra(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"inter")
+    elif TypeGraphique == "interFullEspacementRepartition" :
+        return graphiques.courbeRepartitionInterFull(stats.differenceTempsPaquet(table_par_protocole,plage_temps_graphique),plage_temps_graphique)
     else :
         return None
 

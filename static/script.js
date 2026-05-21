@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
     document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
     document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
+    document.getElementById('afficherGraphiquecumulatifInterFull').style.display = 'none'
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
@@ -45,7 +46,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         cumulatifIntra = document.getElementById('graphiqueCumulatifIntra');
         densiteProbaIntra = document.getElementById('graphiqueDensiteDeProbaIntra')
         cumulatifInter = document.getElementById('graphiqueCumulatifInter');
-        densiteProbaInter = document.getElementById('graphiqueDensiteDeProbaInter')
+        densiteProbaInter = document.getElementById('graphiqueDensiteDeProbaInter');
+        cumulatifInterFull = document.getElementById('graphiqueRepartitionInterFull');
 
 
         icon = document.getElementById('chargementIcon')
@@ -86,6 +88,11 @@ document.addEventListener("DOMContentLoaded", async function() {
           await generer('InterEspacementDensite','afficherGraphiqueDensiteInter')
         }
 
+        if(cumulatifInterFull.checked){
+          texte.texteContent = "Chargement... du graphique de répartition cumulative des full inter-espacement"
+          await generer('interFullEspacementRepartition','afficherGraphiquecumulatifInterFull')
+        }
+
         icon.classList.add('cache');
         texte.classList.add('cache');
     } 
@@ -98,15 +105,19 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique = document.getElementById('ip_specifique').value;
+        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
+        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique = document.getElementById('port_specifique').value;
+        const port_specifique_src = document.getElementById('port_specifique_src').value;
+        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
-        ip_specifique: ip_specifique,
+        ip_specifique_src: ip_specifique_src,
+        ip_specifique_dst: ip_specifique_dst,
         protocol_specifique: protocol_specifique,
-        port_specifique: port_specifique,
+        port_specifique_src: port_specifique_src,
+        port_specifique_dst: port_specifique_dst,
         chemin_fichier: chemin_fichier
         };
         
@@ -145,17 +156,21 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique = document.getElementById('ip_specifique').value;
+        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
+        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique = document.getElementById('port_specifique').value;
+        const port_specifique_src = document.getElementById('port_specifique_src').value;
+        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
         
 
       const filtres = {
-        ip_specifique: ip_specifique,
+        ip_specifique_src: ip_specifique_src,
+        ip_specifique_dst: ip_specifique_dst,
         protocol_specifique: protocol_specifique,
-        port_specifique: port_specifique,
+        port_specifique_src: port_specifique_src,
+        port_specifique_dst: port_specifique_dst,
         typeGraphique: typeGraphique,
         chemin_fichier: chemin_fichier,
         plage_temps_graphique: plage_temps_graphique
@@ -200,15 +215,19 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique = document.getElementById('ip_specifique').value;
+        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
+        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique = document.getElementById('port_specifique').value;
+        const port_specifique_src = document.getElementById('port_specifique_src').value;
+        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
-        ip_specifique: ip_specifique,
+        ip_specifique_src: ip_specifique_src,
+        ip_specifique_dst: ip_specifique_dst,
         protocol_specifique: protocol_specifique,
-        port_specifique: port_specifique,
+        port_specifique_src: port_specifique_src,
+        port_specifique_dst: port_specifique_dst,
         chemin_fichier: chemin_fichier,
         typeAnomalie: typeAnomalie
         };
@@ -224,7 +243,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const data = JSON.parse(responseText);
 
         if (data.success) {
-          if (data.anomalies != "aucune anomalie" ){ 
+          if (data.anomalies != "Aucune anomalie détectée." ){ 
             document.getElementById('detectionAnomalie').classList.remove('cache');
             document.getElementById(elementPhp).textContent = data.anomalies;
             document.getElementById(elementPhp).style.display = 'block';
@@ -248,15 +267,19 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique = document.getElementById('ip_specifique').value;
+        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
+        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
         const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique = document.getElementById('port_specifique').value;
+        const port_specifique_src = document.getElementById('port_specifique_src').value;
+        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
 
         const filtres = {
-        ip_specifique: ip_specifique,
+        ip_specifique_src: ip_specifique_src,
+        ip_specifique_dst: ip_specifique_dst,
         protocol_specifique: protocol_specifique,
-        port_specifique: port_specifique,
+        port_specifique_src: port_specifique_src,
+        port_specifique_dst: port_specifique_dst,
         chemin_fichier: chemin_fichier,
         typeStatistique: typeStatistique
         };
@@ -292,6 +315,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
         document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
         document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
+        document.getElementById('afficherGraphiquecumulatifInterFull').style.display = 'none'
 
         icon = document.getElementById('chargementIcon');
         texte = document.getElementById('chargementTexte');

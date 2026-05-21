@@ -399,12 +399,12 @@ def obtenirListeFlux (table) :
 
     for key in table.keys() :
         for paquet in table[key] :
-            if "source" in paquet.keys() and "port_src" in paquet.keys() and "protocole_4" in paquet.keys():
-                if (paquet["source"],paquet["destination"],paquet["port_src"],paquet["port_dst"],
+            if "source" in paquet.keys() and "port_src_brute" in paquet.keys() and "protocole_4" in paquet.keys():
+                if (paquet["source"],paquet["destination"],paquet["port_src_brute"],paquet["port_dst_brute"],
                     paquet["protocole_4"]) not in liste_flux :
                 
                     liste_flux.append((paquet["source"],paquet["destination"],
-                                       paquet["port_src"],paquet["port_dst"],paquet["protocole_4"]))
+                                       paquet["port_src_brute"],paquet["port_dst_brute"],paquet["protocole_4"]))
 
     return liste_flux
 
@@ -460,6 +460,9 @@ def obtenirMeilleurPaquetSrc(table) :
     nbPassageIpSource = {}
     nbPaquet = obtenirNbPaquet(table)
 
+    if nbPaquet == 0 :
+        return None,None
+
     for key in table.keys() :
         for paquet in table[key] :
 
@@ -504,6 +507,9 @@ def obtenirMeilleurPaquetDst (table) :
     nbPassageIpDestination = {}
     nbPaquet = obtenirNbPaquet(table)
 
+    if nbPaquet == 0 :
+        return None,None
+
     for key in table.keys() :
         for paquet in table[key] :
 
@@ -519,6 +525,35 @@ def obtenirMeilleurPaquetDst (table) :
     maxValeurPourcentage = round(maxValeurPourcentage,1)
 
     return maxValeurPourcentage,maxKey
+
+def differenceTempsPaquet(table,plage_temps_graphique) :
+    """"
+    Calcule les différences d'écart de temps entre paquets voisin du fichier PCAP.
+    Parcourt tous les paquets du dictionnaire, trie les timestamps, puis calcule les différences de temps entre paquets adjacents en millisecondes, arrondies à 1 décimale.
+    Args:
+        table (dict): Dictionnaire contenant toutes les informations extraites du fichier PCAP
+    Returns:
+        list: Liste des différences de temps en millisecondes entre paquets adjacents, arrondies à 1 décimale.
+    Raises:
+        KeyError: Si les paquets ne contiennent pas de clé "time".
+    """
+    liste_temps = []
+    for key in table.keys() :
+        for paquet in table[key] :
+            if "time" in paquet.keys() :
+                liste_temps.append(paquet["time"])
+    #On considère que le time des paquet définis leur ordre
+    liste_temps.sort()
+    liste_diff = []
+    for i in range (len(liste_temps)) :
+        if i == len(liste_temps) -1 :
+            break
+        n = liste_temps[i].timestamp() * 1000 #en millisecondes
+        n_plus_un = liste_temps[i+1].timestamp() * 1000 #en millisecondes
+        diff = n_plus_un - n
+        diff_arrondi = round(diff/plage_temps_graphique)*plage_temps_graphique
+        liste_diff.append(diff_arrondi)
+    return liste_diff
 
 def creationRapport(mode,table) :
     """
@@ -634,7 +669,7 @@ def creationRapport(mode,table) :
 
         for flux in stats : 
             rapport += (flux[0] + " ---> " + flux[1] + "  " +
-                        flux[2] + "--->" + flux[3] + " \n" +
+                        str(flux[2]) + "--->" + str(flux[3]) + " \n" +
                         flux[4] + "\n \n")
 
     if mode == "nbPaquet" :

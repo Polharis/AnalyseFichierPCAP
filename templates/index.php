@@ -47,7 +47,7 @@
       </div>
 
       <div id="detectionAnomalie" class="cache">
-        <button id ="bouttonAnomalie" onclick="openAnomaliePopUp()"> Anomalie détéctée, cliquer pour plus de détails </button> 
+        <button id ="bouttonAnomalie" onclick="openAnomaliePopUp()"> Anomalie détéctée, cliqué pour plus de détails </button> 
       </div>
 
     </div>
@@ -66,11 +66,15 @@
           
             <form id="formulaireFiltre" method = "GET">
 
-              <input type="text" id = "ip_specifique" name = "ip_specifique" placeholder="IP spécifique à analyser"> <br>
+              <input type="text" id = "ip_specifique_src" name = "ip_specifique_src" placeholder="IP source à analyser"> <br>
+
+              <input type="text" id = "ip_specifique_dst" name = "ip_specifique_dst" placeholder="IP destination à analyser"> <br>
+
+              <input type="text" id = "port_specifique_src" name = "port_specifique_src" placeholder="Port source à analyser"> <br>
+
+              <input type="text" id = "port_specifique_dst" name = "port_specifique_dst" placeholder="Port destination à analyser"> <br>
 
               <input type="text" id = "protocol_specifique" name = "protocol_specifique" placeholder="Protocole à analyser"> <br>
-
-              <input type="text" id = "port_specifique" name = "port_specifique" placeholder="Port à analyser"> <br>
 
               <label for="plage_temps_graphique">Plage de temps en millisecondes pour les graphiques de temps :</label>
               <input type="text" id = "plage_temps_graphique" name = "plage_temps_graphique" placeholder=" 30 millisecondes par défaut"> <br>
@@ -100,6 +104,9 @@
 
             <label for = "graphiqueDensiteDeProbaInter"> Courbe de densité de probabilité des intra-espacements</label>
             <input type="checkbox" id="graphiqueDensiteDeProbaInter" name="graphiqueDensiteDeProbaInter"><br>
+
+            <label for = "graphiqueRepartitionInterFull"> Courbe de répartition cumulative des Full inter-espacements</label>
+            <input type="checkbox" id="graphiqueRepartitionInterFull" name="graphiqueRepartitionInterFull"><br>
             
           </form>
         </div>
@@ -164,6 +171,7 @@
     <div id ="afficherGraphiqueDensiteIntra" style="width:100%; height:100%"></div>
     <div id="afficherGraphiqueCumulatifeInter" style="width:100%; height:100%;"></div>
     <div id ="afficherGraphiqueDensiteInter" style="width:100%; height:100%"></div>
+    <div id ="afficherGraphiquecumulatifInterFull" style=width:100%; height:100%"></div>
     
   </div>
 
