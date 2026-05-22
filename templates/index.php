@@ -166,12 +166,39 @@
 
     </div>
     <button id="appliquerParams" onclick='appliquerGraphs()'>Appliquer</button>
-    <div id="afficherGraphiqueHistogrammeIntra" style="width:100%; height:100%;"></div>
-    <div id="afficherGraphiqueCumulatifeIntra" style="width:100%; height:100%;"></div>
-    <div id ="afficherGraphiqueDensiteIntra" style="width:100%; height:100%"></div>
-    <div id="afficherGraphiqueCumulatifeInter" style="width:100%; height:100%;"></div>
-    <div id ="afficherGraphiqueDensiteInter" style="width:100%; height:100%"></div>
-    <div id ="afficherGraphiquecumulatifInterFull" style=width:100%; height:100%"></div>
+
+    <div id ="caseGraphiqueHistogrammeIntra" >
+        <div id="afficherGraphiqueHistogrammeIntra" style="width:1800px; height:500px;"></div>
+        <button id="bouttonHistogrammeIntra" OnClick="genererRapportCsv('intraEspacement')">  extraire suite temporelle </button>
+        <span id="succesCSV" class="cache">Le rapport CSV a été généré avec succès !</span>
+    </div>
+
+    <div id="caseGraphiqueCumulatifIntra" >
+      <button id="bouttonCumulatifeIntra" OnClick="genererRapportCsv('intraEspacement')">  extraire suite temporelle </button>
+      <div id="afficherGraphiqueCumulatifeIntra" style=" height:400px;"></div>
+    </div>
+
+    <div id="caseGraphiqueDensiteIntra" >
+      <button id="bouttonDensiteIntra" OnClick="genererRapportCsv('intraEspacement')">  extraire suite temporelle </button>
+      <div id ="afficherGraphiqueDensiteIntra" style=" height:400px;"></div>
+    </div>
+
+    <div id="caseGraphiqueCumulatifeInter" >
+      <button id="bouttonCumulatifeInter" OnClick="genererRapportCsv('interEspacement')">  extraire suite temporelle </button>
+      <span id="interEspacementRepartitionSuccesCSV" class="cache">Le rapport CSV a été généré avec succès !</span>
+      <div id="afficherGraphiqueCumulatifeInter" style=" height:400px;"></div>
+    </div>
+
+    <div id ="caseGraphiqueDensiteInter" >
+      <button id="bouttonDensiteInter" OnClick="genererRapportCsv('interEspacement')">  extraire suite temporelle </button>
+      <div id ="afficherGraphiqueDensiteInter" style=" height:400px;"></div>
+    </div>
+
+    <div id="caseGraphiqueRepartitionInterFull" >
+      <button id="bouttonRepartitionInterFull" OnClick="genererRapportCsv('interFullEspacement')">  extraire suite temporelle </button>
+      <span id="interFullEspacementRepartitionSuccesCSV" class="cache">Le rapport CSV a été généré avec succès !</span>
+      <div id ="afficherGraphiquecumulatifInterFull" style=" height:400px;"></div>
+    </div>
     
   </div>
 

@@ -299,12 +299,12 @@ def courbeRepartitionInterFull(dicoReseau,plage_temps_graphique) :
         x=temps_tries,
         y=cumulative,
         mode='lines+markers',
-        name='Répartition de densité',
+        name='Répartition cumulative des full inter-espacements',
         line=dict(color='blue', width=2)
     ))
 
     fig.update_layout(
-            title="Courbe des espacements entre les paquets",
+            title="Courbe de répartition cumulative des full inter-espacements",
             xaxis_title="temps en millisecondes",
             yaxis_title="Pourcentage (%)",
             hovermode='x unified'

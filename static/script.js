@@ -1,11 +1,11 @@
 
 document.addEventListener("DOMContentLoaded", async function() {
-    document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
-    document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
-    document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
-    document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
-    document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
-    document.getElementById('afficherGraphiquecumulatifInterFull').style.display = 'none'
+    document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'none'
+    document.getElementById('caseGraphiqueCumulatifIntra').style.display = 'none'
+    document.getElementById('caseGraphiqueDensiteIntra').style.display = 'none'
+    document.getElementById('caseGraphiqueCumulatifeInter').style.display = 'none'
+    document.getElementById('caseGraphiqueDensiteInter').style.display = 'none'
+    document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
@@ -59,38 +59,43 @@ document.addEventListener("DOMContentLoaded", async function() {
         if(histogrammeIntra.checked){
             texte.textContent = "Chargement... du graphique HistogrammeIntra"
             await generer('IntraEspacement',"afficherGraphiqueHistogrammeIntra");
+            document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'block'
         }else{
-            document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
+            document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'none'
         }
         if(cumulatifIntra.checked){
             texte.textContent = "Chargement... du graphique répartition cumulative intra"
-            await generer('IntraEspacementRepartition',"afficherGraphiqueCumulatifeIntra");
+            await generer('IntraEspacementRepartition',"caseGraphiqueCumulatifIntra");
         }else{
-            document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
+            document.getElementById('caseGraphiqueCumulatifIntra').style.display = 'none'
         }
 
         if(densiteProbaIntra.checked){
             texte.textContent = "Chargement... du graphique de densité de probbilté intra"
-            await generer('IntraEspacementDensite',"afficherGraphiqueDensiteIntra");
+            await generer('IntraEspacementDensite',"caseGraphiqueDensiteIntra");
         }else{
-            document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
+            document.getElementById('caseGraphiqueDensiteIntra').style.display = 'none'
         }
 
         if(cumulatifInter.checked){
             texte.textContent = "Chargement... du graphique répartition cumulative inter"
-            await generer('InterEspacementRepartition',"afficherGraphiqueCumulatifeInter");
+            await generer('InterEspacementRepartition',"caseGraphiqueCumulatifeInter");
         }else{
-            document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
+            document.getElementById('caseGraphiqueCumulatifeInter').style.display = 'none'
         }
 
         if(densiteProbaInter.checked){
           texte.texteContent = "Chargement... du graphique de densité de probabilité inter"
-          await generer('InterEspacementDensite','afficherGraphiqueDensiteInter')
+          await generer('InterEspacementDensite','caseGraphiqueDensiteInter')
+        }else{
+          document.getElementById('caseGraphiqueDensiteInter').style.display = 'none'
         }
 
         if(cumulatifInterFull.checked){
           texte.texteContent = "Chargement... du graphique de répartition cumulative des full inter-espacement"
-          await generer('interFullEspacementRepartition','afficherGraphiquecumulatifInterFull')
+          await generer('interFullEspacementRepartition','caseGraphiqueRepartitionInterFull')
+        }else{
+          document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
         }
 
         icon.classList.add('cache');
@@ -98,10 +103,11 @@ document.addEventListener("DOMContentLoaded", async function() {
     } 
 
 
-    async function genererRapportCsv() {
+    async function genererRapportCsv(mode) {
       try {
+
         // Affiche le message de chargement
-        document.getElementById('chargement').style.display = 'block';
+
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
@@ -111,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_src = document.getElementById('port_specifique_src').value;
         const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
         ip_specifique_src: ip_specifique_src,
@@ -118,7 +125,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         protocol_specifique: protocol_specifique,
         port_specifique_src: port_specifique_src,
         port_specifique_dst: port_specifique_dst,
-        chemin_fichier: chemin_fichier
+        chemin_fichier: chemin_fichier,
+        plage_temps_graphique: plage_temps_graphique,
+        mode: mode
         };
         
 
@@ -132,7 +141,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
 
 
-        document.getElementById('chargement').style.display = 'none';
         if (data.success) {
           document.getElementById('succesCSV').style.display = 'block';
         } else {
@@ -143,7 +151,6 @@ document.addEventListener("DOMContentLoaded", async function() {
         } catch (error) {
             console.error('Erreur:', error);
             document.getElementById('erreur').textContent = 'Erreur: ' + error.message;
-            document.getElementById('chargement').style.display = 'none';
       }
     }
 
@@ -221,6 +228,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_src = document.getElementById('port_specifique_src').value;
         const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
+
 
         const filtres = {
         ip_specifique_src: ip_specifique_src,
@@ -229,6 +238,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_src: port_specifique_src,
         port_specifique_dst: port_specifique_dst,
         chemin_fichier: chemin_fichier,
+        plage_temps_graphique: plage_temps_graphique,
         typeAnomalie: typeAnomalie
         };
         
@@ -243,7 +253,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const data = JSON.parse(responseText);
 
         if (data.success) {
-          if (data.anomalies != "Aucune anomalie détectée." ){ 
+          if (data.anomalies != "aucune anomalie" ){ 
             document.getElementById('detectionAnomalie').classList.remove('cache');
             document.getElementById(elementPhp).textContent = data.anomalies;
             document.getElementById(elementPhp).style.display = 'block';
@@ -273,6 +283,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_src = document.getElementById('port_specifique_src').value;
         const port_specifique_dst = document.getElementById('port_specifique_dst').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
         ip_specifique_src: ip_specifique_src,
@@ -281,6 +292,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_src: port_specifique_src,
         port_specifique_dst: port_specifique_dst,
         chemin_fichier: chemin_fichier,
+        plage_temps_graphique: plage_temps_graphique,
         typeStatistique: typeStatistique
         };
         
@@ -310,12 +322,12 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     async function regenererGraphiques(){
       
-        document.getElementById('afficherGraphiqueHistogrammeIntra').style.display = 'none'
-        document.getElementById('afficherGraphiqueCumulatifeIntra').style.display = 'none'
-        document.getElementById('afficherGraphiqueCumulatifeInter').style.display = 'none'
-        document.getElementById('afficherGraphiqueDensiteIntra').style.display = 'none'
-        document.getElementById('afficherGraphiqueDensiteInter').style.display = 'none'
-        document.getElementById('afficherGraphiquecumulatifInterFull').style.display = 'none'
+        document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'none'
+        document.getElementById('caseGraphiqueCumulatifIntra').style.display = 'none'
+        document.getElementById('caseGraphiqueDensiteIntra').style.display = 'none'
+        document.getElementById('caseGraphiqueCumulatifeInter').style.display = 'none'
+        document.getElementById('caseGraphiqueDensiteInter').style.display = 'none'
+        document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
 
         icon = document.getElementById('chargementIcon');
         texte = document.getElementById('chargementTexte');
@@ -353,7 +365,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 // pour recadrer les graphiques dans le carousel 
 document.addEventListener('DOMContentLoaded', function (){
   document.getElementById('carouselGraphiques').addEventListener('click', function (e){
-    console.log("ok");
     const ids = [
       'graphiqueEtherType',
       'graphiqueCoucheTrois',
@@ -363,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function (){
     ];
 
     setTimeout(() => {
-    ids.forEach(id => Plotly.relayout(id, { autosize: true }));
+    ids.forEach(id => Plotly.relayout(id, { autosize: true,autosize: true }));
     },400)
   });
 });

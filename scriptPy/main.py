@@ -57,19 +57,29 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
     else :
         return None
 
-def genererRapportCsv() :
-    """
-    Génère un rapport CSV contenant toutes les informations extraites du fichier PCAP.
-    Returns:
-        Un rapport CSV généré avec toutes les informations extraites du fichier PCAP.
-    """
-    table_par_protocole = recupDico.get_table_par_protocole()
-    creationCSV.creationCSVtoutesInfos(table_par_protocole)
+def genererRapportCsv(mode,plage_temps_graphique) :
+        print(mode)
+        """
+        Génère un rapport CSV contenant toutes les informations extraites du fichier PCAP.
+        Returns:
+            Un rapport CSV généré avec toutes les informations extraites du fichier PCAP.
+        """
+        table_par_protocole = recupDico.get_table_par_protocole()
+        if mode == "toutesInfos" :
+           creationCSV.creationCSVtoutesInfos(table_par_protocole)
+        elif mode == "intraEspacement" :
+            creationCSV.creationCSVSuiteTemporelle(stats.liste_différence_src_dst_adjacente(table_par_protocole,plage_temps_graphique), "intra")
+        elif mode == "interEspacement" :
+            creationCSV.creationCSVSuiteTemporelle(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique), "inter")
+        elif mode == "interFullEspacement" :
+            creationCSV.creationCSVSuiteTemporelle(stats.differenceTempsPaquet(table_par_protocole,plage_temps_graphique), "interFull")
+
 
 def genererDetectionAnomalie(mode) : 
     table_par_protocole = recupDico.get_table_par_protocole()
     if mode == "scanPort" :
         return anomalie.detectionScanDePort(table_par_protocole)
+    
 
 def genererRapportStatistique(mode) :
     """

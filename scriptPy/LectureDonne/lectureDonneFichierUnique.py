@@ -35,7 +35,7 @@ def lancer_lecture_donne_fichier_unique():
     
     filtres_actives = filtre.liste_filtre_EstActive()
 
-    plage_temps_graphique = filtres_actives["palge_temps"]
+    plage_temps_graphique = filtres_actives["plage_temps"]
 
     #Récupération de l'emplacement du fichier si il y en a un
     emplacement_fichier = filtres_actives["emplacement_fichier"]
@@ -44,7 +44,7 @@ def lancer_lecture_donne_fichier_unique():
     if cache['initialized'] and cache['emplacement_fichier'] == emplacement_fichier and cache['filtres'] == filtres_actives and cache['plage_temps_graph'] == plage_temps_graphique:
         print("pas de chargement")
         return cache['table']
-
+    print(filtres_actives)
     # Récupération du fichier pcapng ou pcap
     with open(emplacement_fichier, 'rb') as f:
         magic = f.read(4)

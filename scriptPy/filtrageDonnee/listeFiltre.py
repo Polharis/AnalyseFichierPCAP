@@ -260,7 +260,7 @@ def liste_filtre_EstActive() :
         filtres["protocol_specifique"] = None
 
     filtres["emplacement_fichier"] = get_emplacement_fichier()
-    filtres["palge_temps"] = get_plage_temps_graphique()
+    filtres["plage_temps"] = get_plage_temps_graphique()
         
     
     return filtres

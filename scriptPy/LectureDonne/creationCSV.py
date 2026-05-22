@@ -71,3 +71,40 @@ def creationCSVtoutesInfos(table_par_protocole):
         
     f.close()
 
+def creationCSVSuiteTemporelle(suite_temporelle,typeSuite):
+    """
+    Exporte une suite temporelle dans un fichier CSV.
+
+    Construit une liste à partir de la suite temporelle,
+    puis l'écrit dans scriptPy/DataOutput/suite_temporelle.csv.
+
+    Args:
+        suite_temporelle (list): Liste de tuples (timestamp, valeur) représentant la suite temporelle.
+        typeSuite (str): Type de la suite temporelle (ex: "intra" ou "inter").
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: Si le dossier DataOutput n'existe pas.
+        PermissionError: Si l'écriture dans le dossier est refusée.
+    
+    """
+
+    #Création du fichier csv avec les données extraites du fichier pcapng
+    
+    #Toutes les informations
+    toutesInfos = []
+    
+    for timestamp in suite_temporelle :
+        toutesInfos.append(timestamp)
+
+    # Écrire le CSV
+    with open('scriptPy/DataOutput/suite_temporelle_' + typeSuite + '.csv', 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(typeSuite)
+        for lignes in toutesInfos :
+            writer.writerow(lignes)
+        
+    f.close()
+
