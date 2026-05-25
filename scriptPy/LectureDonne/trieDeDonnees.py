@@ -1,7 +1,8 @@
 from scapy.all import *
 import datetime  
-from datetime import timedelta  
 import dpkt
+import socket
+import os
 
 #Cette fonction permet d'ajouter les informations d'un paquet ARP dans la liste PCAPARP
 
@@ -45,59 +46,92 @@ def ajouter_a_table_Par_Protocole(table, paquet,numero_paquet,filtres_actives,ti
 
     #--------------- FILTRES ---------------
     #Si l'option ip_specifique_src est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
-    if filtres_actives["ip_specifique_src"] is not None:
+    if filtres_actives["ip_specifique_src_un"] is not None or \
+       filtres_actives["ip_specifique_src_deux"] is not None:
+    
         if EtherType != 'IP' and EtherType != 'ARP' :
+            
             return table
         if EtherType == 'IP' :
-            if socket.inet_ntoa(paquet.data.src) != filtres_actives["ip_specifique_src"] :
+            if socket.inet_ntoa(paquet.data.src) != filtres_actives["ip_specifique_src_un"] and\
+               socket.inet_ntoa(paquet.data.src) != filtres_actives["ip_specifique_src_deux"]:
+                
                 return table
         elif EtherType == 'ARP' :
-            if  socket.inet_ntoa(paquet.data.spa) != filtres_actives["ip_specifique_src"] :
+            if  socket.inet_ntoa(paquet.data.spa) != filtres_actives["ip_specifique_src_un"] and \
+                socket.inet_ntoa(paquet.data.spa) != filtres_actives["ip_specifique_src_deux"]:
+                
                 return table
             
     #Si l'option ip_specifique_dst est activée, on n'ajoute que les paquets provenant ou étant déstiné à l'adresse IP spécifiée
-    if filtres_actives["ip_specifique_dst"] is not None:
+    if filtres_actives["ip_specifique_dst_un"] is not None or \
+       filtres_actives["ip_specifique_dst_deux"] is not None:
+        
         if EtherType != 'IP' and EtherType != 'ARP' :
+            
             return table
         if EtherType == 'IP' :
-            if socket.inet_ntoa(paquet.data.dst) != filtres_actives["ip_specifique_dst"] :
+            if socket.inet_ntoa(paquet.data.dst) != filtres_actives["ip_specifique_dst_un"] and \
+               socket.inet_ntoa(paquet.data.dst) != filtres_actives["ip_specifique_dst_deux"]:
+                
                 return table
         elif EtherType == 'ARP' :
-            if  socket.inet_ntoa(paquet.data.tpa) != filtres_actives["ip_specifique_dst"] :
+            if  socket.inet_ntoa(paquet.data.tpa) != filtres_actives["ip_specifique_dst_un"] and \
+                socket.inet_ntoa(paquet.data.tpa) != filtres_actives["ip_specifique_dst_deux"] :
+                
                 return table
             
     #Si l'option port_specifique_src est activée, on n'ajoute que les paquets provenant ou étant déstiné au port spécifié
-    if filtres_actives["port_specifique_src"] is not None:
+    if filtres_actives["port_specifique_src_un"] is not None or \
+       filtres_actives["port_specifique_src_deux"] is not None:
+        
         if EtherType != 'IP' :
+            
             return table
         if not (isinstance(paquet.data.data, dpkt.tcp.TCP) or isinstance(paquet.data.data, dpkt.udp.UDP) or isinstance(paquet.data.data, dpkt.sctp.SCTP)) :
+            
             return table
-        if paquet.data.data.sport != filtres_actives["port_specifique_src"] :
+        if paquet.data.data.sport != filtres_actives["port_specifique_src_un"] and \
+           paquet.data.data.sport != filtres_actives["port_specifique_src_deux"] :
+            
             return table
         
     #Si l'option port_specifique_dst est activée, on n'ajoute que les paquets provenant ou étant déstiné au port spécifié
-    if filtres_actives["port_specifique_dst"] is not None:
+    if filtres_actives["port_specifique_dst_un"] is not None or \
+       filtres_actives["port_specifique_dst_deux"] is not None :
+        
         if EtherType != 'IP' :
+            
             return table
         if not (isinstance(paquet.data.data, dpkt.tcp.TCP) or isinstance(paquet.data.data, dpkt.udp.UDP) or isinstance(paquet.data.data, dpkt.sctp.SCTP)) :
+            
             return table
-        if paquet.data.data.dport != filtres_actives["port_specifique_dst"] :
+        if paquet.data.data.dport != filtres_actives["port_specifique_dst_un"] and \
+           paquet.data.data.dport != filtres_actives["port_specifique_dst_deux"]:
+            
             return table
         
     #Si l'option protocole_specifique est activée, on n'ajoute que les paquets de type IP avec le protocole de couche 4 spécifié
-    if filtres_actives["protocol_specifique"] is not None:
+    if filtres_actives["protocol_specifique_un"] is not None or \
+       filtres_actives["protocol_specifique_deux"] is not None :
+        
         if EtherType != 'IP' and EtherType != 'IPv6' :
+            
             return table
         if EtherType == 'IP' :
             proto_name = get_proto_name(paquet.data.p)
-            if proto_name.lower() != filtres_actives["protocol_specifique"].lower() :
+            if proto_name.lower() != filtres_actives["protocol_specifique_un"].lower() and \
+               proto_name.lower() != filtres_actives["protocol_specifique_deux"].lower() :
+                
                 return table
         elif EtherType == 'IPv6' :
             proto_name = get_proto_name(paquet.data.nxt)
-            if proto_name.lower() != filtres_actives["protocol_specifique"].lower() :
+            if proto_name.lower() != filtres_actives["protocol_specifique_un"].lower() and \
+               proto_name.lower() != filtres_actives["protocol_specifique_deux"].lower() :
+
                 return table
     #---------------- FIN DES FILTRES ---------------
-   
+
     table[EtherType].append(extraire_info(paquet, numero_paquet,time))
     return table
 

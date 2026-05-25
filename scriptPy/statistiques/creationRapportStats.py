@@ -553,6 +553,7 @@ def differenceTempsPaquet(table,plage_temps_graphique) :
         diff = n_plus_un - n
         diff_arrondi = round(diff/plage_temps_graphique)*plage_temps_graphique
         liste_diff.append(diff_arrondi)
+    print (liste_diff)
     return liste_diff
 
 def creationRapport(mode,table) :

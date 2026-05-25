@@ -6,6 +6,9 @@
   <link rel="stylesheet" type="text/css" href="../static/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="../static/script.js"></script>
 </head>
@@ -63,23 +66,71 @@
   
         <div id="casePourFiltre">
           <h2>Paramètres</h2>
+          <div id="carouselParametre" class="carousel slide h-75" data-ride="carousel" data-interval="false">
           
-            <form id="formulaireFiltre" method = "GET">
+            <!-- Indicateurs -->
+            <ol class="carousel-indicators">
+              <li data-target="#carouselParametre" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselParametre" data-slide-to="1"></li>
+              <li data-target="#carouselParametre" data-slide-to="2"></li>
+              <li data-target="#carouselParametre" data-slide-to="3"></li>
+              <li data-target="#carouselParametre" data-slide-to="4"></li>
+            </ol>
 
-              <input type="text" id = "ip_specifique_src" name = "ip_specifique_src" placeholder="IP source à analyser"> <br>
+            <!-- Slides -->
+            <div class="carousel-inner h-100">
+              <div class="carousel-item active h-100">
+                <h3> Premier flux : </h3>
 
-              <input type="text" id = "ip_specifique_dst" name = "ip_specifique_dst" placeholder="IP destination à analyser"> <br>
+                <form id="formulaireFiltreUn" method = "GET">
 
-              <input type="text" id = "port_specifique_src" name = "port_specifique_src" placeholder="Port source à analyser"> <br>
+                  <input type="text" id = "ip_specifique_src_un" name = "ip_specifique_src_un" placeholder="IP source à analyser"> <br>
 
-              <input type="text" id = "port_specifique_dst" name = "port_specifique_dst" placeholder="Port destination à analyser"> <br>
+                  <input type="text" id = "ip_specifique_dst_un" name = "ip_specifique_dst_un" placeholder="IP destination à analyser"> <br>
 
-              <input type="text" id = "protocol_specifique" name = "protocol_specifique" placeholder="Protocole à analyser"> <br>
+                  <input type="text" id = "port_specifique_src_un" name = "port_specifique_src_un" placeholder="Port source à analyser"> <br>
 
-              <label for="plage_temps_graphique">Plage de temps en millisecondes pour les graphiques de temps :</label>
-              <input type="text" id = "plage_temps_graphique" name = "plage_temps_graphique" placeholder=" 30 millisecondes par défaut"> <br>
-  
-              </form>
+                  <input type="text" id = "port_specifique_dst_un" name = "port_specifique_dst_un" placeholder="Port destination à analyser"> <br>
+
+                  <input type="text" id = "protocol_specifique_un" name = "protocol_specifique_un" placeholder="Protocole à analyser"> <br>
+
+                  </form>
+
+                </div>
+              <div class="carousel-item h-100">
+                <h3> Deuxième flux : </h3>
+
+                <form id="formulaireFiltreDeux" method = "GET">
+
+                  <input type="text" id = "ip_specifique_src_deux" name = "ip_specifique_src_deux" placeholder="IP source à analyser"> <br>
+
+                  <input type="text" id = "ip_specifique_dst_deux" name = "ip_specifique_dst_deux" placeholder="IP destination à analyser"> <br>
+
+                  <input type="text" id = "port_specifique_src_deux" name = "port_specifique_src_deux" placeholder="Port source à analyser"> <br>
+
+                  <input type="text" id = "port_specifique_dst_deux" name = "port_specifique_dst_deux" placeholder="Port destination à analyser"> <br>
+
+                  <input type="text" id = "protocol_specifique_deux" name = "protocol_specifique_deux" placeholder="Protocole à analyser"> <br>
+
+                  </form>
+
+              </div>
+            </div>
+
+            <!-- Boutons précédent/suivant -->
+            <a class="carousel-control-prev carousel-parametre-gauche" href="#carouselParametre" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next carousel-parametre-droit" href="#carouselParametre" role="button" data-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </a>
+          </div>
+
+          <form id="filtreGlobal" maethod = "GET">
+            <label for="plage_temps_graphique">Plage de temps en millisecondes pour les graphiques de temps :</label>
+            <input type="text" id = "plage_temps_graphique" name = "plage_temps_graphique" placeholder=" 30 millisecondes par défaut"> <br>
+          </form>
+
         </div>
 
         <div id="listeFlux">

@@ -92,19 +92,28 @@ def creationCSVSuiteTemporelle(suite_temporelle,typeSuite):
     """
 
     #Création du fichier csv avec les données extraites du fichier pcapng
+    liste_temps = []
+
+    if typeSuite == "intra" :
+        for valeures in suite_temporelle.values():
+            for temps in valeures : 
+                liste_temps.append(temps)
+    else :
+        liste_temps = suite_temporelle
     
     #Toutes les informations
     toutesInfos = []
     
-    for timestamp in suite_temporelle :
+    for timestamp in liste_temps :
         toutesInfos.append(timestamp)
 
     # Écrire le CSV
     with open('scriptPy/DataOutput/suite_temporelle_' + typeSuite + '.csv', 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(typeSuite)
-        for lignes in toutesInfos :
-            writer.writerow(lignes)
+        writer.writerow([typeSuite])
+        # Écrire les données tous les 20 éléments par ligne
+        for i in range(0, len(toutesInfos), 20):
+            writer.writerow(toutesInfos[i:i+20])
         
     f.close()
 

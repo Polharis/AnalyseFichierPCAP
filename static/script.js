@@ -111,20 +111,32 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
-        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
-        const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique_src = document.getElementById('port_specifique_src').value;
-        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
+        const ip_specifique_src_un = document.getElementById('ip_specifique_src_un').value;
+        const ip_specifique_dst_un = document.getElementById('ip_specifique_dst_un').value;
+        const protocol_specifique_un = document.getElementById('protocol_specifique_un').value;
+        const port_specifique_src_un = document.getElementById('port_specifique_src_un').value;
+        const port_specifique_dst_un = document.getElementById('port_specifique_dst_un').value;
+        const ip_specifique_src_deux = document.getElementById('ip_specifique_src_deux').value;
+        const ip_specifique_dst_deux = document.getElementById('ip_specifique_dst_deux').value;
+        const protocol_specifique_deux = document.getElementById('protocol_specifique_deux').value;
+        const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
+        const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
+
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
-        ip_specifique_src: ip_specifique_src,
-        ip_specifique_dst: ip_specifique_dst,
-        protocol_specifique: protocol_specifique,
-        port_specifique_src: port_specifique_src,
-        port_specifique_dst: port_specifique_dst,
+        ip_specifique_src_un: ip_specifique_src_un,
+        ip_specifique_dst_un: ip_specifique_dst_un,
+        protocol_specifique_un: protocol_specifique_un,
+        port_specifique_src_un: port_specifique_src_un,
+        port_specifique_dst_un: port_specifique_dst_un,
+        ip_specifique_src_deux: ip_specifique_src_deux,
+        ip_specifique_dst_deux: ip_specifique_dst_deux,
+        protocol_specifique_deux: protocol_specifique_deux,
+        port_specifique_src_deux: port_specifique_src_deux,
+        port_specifique_dst_deux: port_specifique_dst_deux,
+
         chemin_fichier: chemin_fichier,
         plage_temps_graphique: plage_temps_graphique,
         mode: mode
@@ -163,24 +175,35 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
-        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
-        const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique_src = document.getElementById('port_specifique_src').value;
-        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
+        const ip_specifique_src_un = document.getElementById('ip_specifique_src_un').value;
+        const ip_specifique_dst_un = document.getElementById('ip_specifique_dst_un').value;
+        const protocol_specifique_un = document.getElementById('protocol_specifique_un').value;
+        const port_specifique_src_un = document.getElementById('port_specifique_src_un').value;
+        const port_specifique_dst_un = document.getElementById('port_specifique_dst_un').value;
+        const ip_specifique_src_deux = document.getElementById('ip_specifique_src_deux').value;
+        const ip_specifique_dst_deux = document.getElementById('ip_specifique_dst_deux').value;
+        const protocol_specifique_deux = document.getElementById('protocol_specifique_deux').value;
+        const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
+        const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
+
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
-        
 
-      const filtres = {
-        ip_specifique_src: ip_specifique_src,
-        ip_specifique_dst: ip_specifique_dst,
-        protocol_specifique: protocol_specifique,
-        port_specifique_src: port_specifique_src,
-        port_specifique_dst: port_specifique_dst,
-        typeGraphique: typeGraphique,
+        const filtres = {
+        ip_specifique_src_un: ip_specifique_src_un,
+        ip_specifique_dst_un: ip_specifique_dst_un,
+        protocol_specifique_un: protocol_specifique_un,
+        port_specifique_src_un: port_specifique_src_un,
+        port_specifique_dst_un: port_specifique_dst_un,
+        ip_specifique_src_deux: ip_specifique_src_deux,
+        ip_specifique_dst_deux: ip_specifique_dst_deux,
+        protocol_specifique_deux: protocol_specifique_deux,
+        port_specifique_src_deux: port_specifique_src_deux,
+        port_specifique_dst_deux: port_specifique_dst_deux,
+        
         chemin_fichier: chemin_fichier,
-        plage_temps_graphique: plage_temps_graphique
+        plage_temps_graphique: plage_temps_graphique,
+        typeGraphique: typeGraphique,
       };
 
      
@@ -203,6 +226,7 @@ document.addEventListener("DOMContentLoaded", async function() {
           const fig = JSON.parse(data.graphique);
           const div = document.getElementById(elementPhp);
           div.style.display = 'block';  // ← réaffiche le div
+          Plotly.purge(elementPhp);  // Nettoie le graphique précédent
           Plotly.newPlot(elementPhp, fig.data, fig.layout);
           
       } else {
@@ -222,21 +246,32 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('erreur').textContent = '';
 
         // filtres sur les données 
-        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
-        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
-        const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique_src = document.getElementById('port_specifique_src').value;
-        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
+        const ip_specifique_src_un = document.getElementById('ip_specifique_src_un').value;
+        const ip_specifique_dst_un = document.getElementById('ip_specifique_dst_un').value;
+        const protocol_specifique_un = document.getElementById('protocol_specifique_un').value;
+        const port_specifique_src_un = document.getElementById('port_specifique_src_un').value;
+        const port_specifique_dst_un = document.getElementById('port_specifique_dst_un').value;
+        const ip_specifique_src_deux = document.getElementById('ip_specifique_src_deux').value;
+        const ip_specifique_dst_deux = document.getElementById('ip_specifique_dst_deux').value;
+        const protocol_specifique_deux = document.getElementById('protocol_specifique_deux').value;
+        const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
+        const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
+
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
-
         const filtres = {
-        ip_specifique_src: ip_specifique_src,
-        ip_specifique_dst: ip_specifique_dst,
-        protocol_specifique: protocol_specifique,
-        port_specifique_src: port_specifique_src,
-        port_specifique_dst: port_specifique_dst,
+        ip_specifique_src_un: ip_specifique_src_un,
+        ip_specifique_dst_un: ip_specifique_dst_un,
+        protocol_specifique_un: protocol_specifique_un,
+        port_specifique_src_un: port_specifique_src_un,
+        port_specifique_dst_un: port_specifique_dst_un,
+        ip_specifique_src_deux: ip_specifique_src_deux,
+        ip_specifique_dst_deux: ip_specifique_dst_deux,
+        protocol_specifique_deux: protocol_specifique_deux,
+        port_specifique_src_deux: port_specifique_src_deux,
+        port_specifique_dst_deux: port_specifique_dst_deux,
+
         chemin_fichier: chemin_fichier,
         plage_temps_graphique: plage_temps_graphique,
         typeAnomalie: typeAnomalie
@@ -276,21 +311,33 @@ document.addEventListener("DOMContentLoaded", async function() {
         // Affiche le message de chargement
         document.getElementById('erreur').textContent = '';
 
-        // filtres sur les données 
-        const ip_specifique_src = document.getElementById('ip_specifique_src').value;
-        const ip_specifique_dst = document.getElementById('ip_specifique_dst').value;
-        const protocol_specifique = document.getElementById('protocol_specifique').value;
-        const port_specifique_src = document.getElementById('port_specifique_src').value;
-        const port_specifique_dst = document.getElementById('port_specifique_dst').value;
+        /// filtres sur les données 
+        const ip_specifique_src_un = document.getElementById('ip_specifique_src_un').value;
+        const ip_specifique_dst_un = document.getElementById('ip_specifique_dst_un').value;
+        const protocol_specifique_un = document.getElementById('protocol_specifique_un').value;
+        const port_specifique_src_un = document.getElementById('port_specifique_src_un').value;
+        const port_specifique_dst_un = document.getElementById('port_specifique_dst_un').value;
+        const ip_specifique_src_deux = document.getElementById('ip_specifique_src_deux').value;
+        const ip_specifique_dst_deux = document.getElementById('ip_specifique_dst_deux').value;
+        const protocol_specifique_deux = document.getElementById('protocol_specifique_deux').value;
+        const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
+        const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
+
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
-        ip_specifique_src: ip_specifique_src,
-        ip_specifique_dst: ip_specifique_dst,
-        protocol_specifique: protocol_specifique,
-        port_specifique_src: port_specifique_src,
-        port_specifique_dst: port_specifique_dst,
+        ip_specifique_src_un: ip_specifique_src_un,
+        ip_specifique_dst_un: ip_specifique_dst_un,
+        protocol_specifique_un: protocol_specifique_un,
+        port_specifique_src_un: port_specifique_src_un,
+        port_specifique_dst_un: port_specifique_dst_un,
+        ip_specifique_src_deux: ip_specifique_src_deux,
+        ip_specifique_dst_deux: ip_specifique_dst_deux,
+        protocol_specifique_deux: protocol_specifique_deux,
+        port_specifique_src_deux: port_specifique_src_deux,
+        port_specifique_dst_deux: port_specifique_dst_deux,
+
         chemin_fichier: chemin_fichier,
         plage_temps_graphique: plage_temps_graphique,
         typeStatistique: typeStatistique
@@ -402,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function (){
     if (e.target === overlay) closeAnomaliesPopUp();
   });
 });
+
 
 
 

@@ -18,6 +18,11 @@ body {
     button:hover {
       background-color: #45a049;
     }
+
+    button:active {
+      background-color: #6e8878;
+    }
+
     #graphique {
       display: none;
       margin-top: 30px;
@@ -190,4 +195,12 @@ body {
   .carousel-control-prev-icon,
   .carousel-control-next-icon {
   filter: invert(1);
+  }
+
+  .carousel-parametre-droit {
+    margin : 0 -10px;
+  }
+
+  .carousel-parametre-gauche {
+    margin : 0 -40px;
   }

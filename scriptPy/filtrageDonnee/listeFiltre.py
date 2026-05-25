@@ -104,40 +104,59 @@ def get_plage_temps_graphique() :
 
 
 
-def filtre_ipSpecifique_src_EstActive() :
+def filtre_ipSpecifique_src_EstActive(flux) :
     """
     Vérifie si le filtre "ip_specifique_src" est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
     Returns:
         True si le filtre "ip_specifique_src" est actif et au bon format, False sinon.
     """
 
-    if "ip_specifique_src" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_src"] is not None :
-        filtre = filtre_Selectionner()["ip_specifique_src"]
-        estUneip = True
-        try:
-            #Si on ne peut pas utiliser ip_address, c'est que le filtre n'est pas une adresse IP
-            ipaddress.ip_address(filtre)
+    if flux == "un" : 
 
-        except ValueError:
-
-            estUneip = False
-
-        if filtre is not None and estUneip: #Vérifie que le filtre ressemble à une adresse IP
-            return True
-        return False
+        if "ip_specifique_src_un" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_src_un"] is not None :
+            filtre = filtre_Selectionner()["ip_specifique_src_un"]
+            estUneip = True
+        else : 
+            return False
     else : 
-        return False
+        if "ip_specifique_src_deux" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_src_deux"] is not None :
+            filtre = filtre_Selectionner()["ip_specifique_src_deux"]
+            estUneip = True
+        else : 
+            return False
+
+    try:
+        #Si on ne peut pas utiliser ip_address, c'est que le filtre n'est pas une adresse IP
+        ipaddress.ip_address(filtre)
+
+    except ValueError:
+
+        estUneip = False
+
+    if filtre is not None and estUneip: #Vérifie que le filtre ressemble à une adresse IP
+        return True
+    return False
     
-def filtre_ipSpecifique_dst_EstActive() :
+    
+def filtre_ipSpecifique_dst_EstActive(flux) :
     """
     Vérifie si le filtre "ip_specifique_dst" est actif. Et vérifie si le filtre est au bon format (une adresse ip, ex : 192.168.1.1).
     Returns:
         True si le filtre "ip_specifique_dst" est actif et au bon format, False sinon.
     """
-
-    if "ip_specifique_dst" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_dst"] is not None :
-        filtre = filtre_Selectionner()["ip_specifique_dst"]
-        estUneip = True
+    if flux == "un":
+        if "ip_specifique_dst_un" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_dst_un"] is not None :
+            filtre = filtre_Selectionner()["ip_specifique_dst_un"]
+            estUneip = True
+        else : 
+            return False
+    else :
+        if "ip_specifique_dst_deux" in filtre_Selectionner().keys() and filtre_Selectionner()["ip_specifique_dst_deux"] is not None :
+            filtre = filtre_Selectionner()["ip_specifique_dst_deux"]
+            estUneip = True
+        else : 
+            return False
+        
         try:
             #Si on ne peut pas utiliser ip_address, c'est que le filtre n'est pas une adresse IP
             ipaddress.ip_address(filtre)
@@ -149,20 +168,26 @@ def filtre_ipSpecifique_dst_EstActive() :
         if filtre is not None and estUneip: #Vérifie que le filtre ressemble à une adresse IP
             return True
         return False
-    else : 
-        return False
+    
 
-def filtre_portSpecifique_src_EstActive() :
+def filtre_portSpecifique_src_EstActive(flux) :
     """" 
     Vérifie si le filtre "port_specifique_src" est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
     Returns:
         True si le filtre "port_specifique_src" est actif et au bon format, False sinon.
     """
 
-    if "port_specifique_src" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_src"] is not None :
-        filtre = filtre_Selectionner()["port_specifique_src"]
-    else :
-        return False
+    if flux == "un" :
+        if "port_specifique_src_un" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_src_un"] is not None :
+            filtre = filtre_Selectionner()["port_specifique_src_un"]
+        else :
+            return False
+    else : 
+        if "port_specifique_src_deux" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_src_deux"] is not None :
+            filtre = filtre_Selectionner()["port_specifique_src_deux"]
+        else :
+            return False
+        
     estUnPort = True
     if filtre is None :
         return False
@@ -180,17 +205,24 @@ def filtre_portSpecifique_src_EstActive() :
     return False
 
 
-def filtre_portSpecifique_dst_EstActive() :
+def filtre_portSpecifique_dst_EstActive(flux) :
     """" 
     Vérifie si le filtre "port_specifique_dst" est actif. Et vérifie si le filtre est au bon format (un port, un entier entre 0 et 65535).
     Returns:
         True si le filtre "port_specifique_dst" est actif et au bon format, False sinon.
     """
 
-    if "port_specifique_dst" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_dst"] is not None :
-        filtre = filtre_Selectionner()["port_specifique_dst"]
+    if flux == "un" :
+        if "port_specifique_dst_un" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_dst_un"] is not None :
+            filtre = filtre_Selectionner()["port_specifique_dst_un"]
+        else :
+            return False
     else :
-        return False
+        if "port_specifique_dst_deux" in filtre_Selectionner().keys() and filtre_Selectionner()["port_specifique_dst_deux"] is not None :
+            filtre = filtre_Selectionner()["port_specifique_dst_deux"]
+        else :
+            return False
+
     estUnPort = True
     if filtre is None :
         return False
@@ -208,19 +240,27 @@ def filtre_portSpecifique_dst_EstActive() :
     return False
 
 
-def filtre_protocoleSpecifique_EstActive() :
+def filtre_protocoleSpecifique_EstActive(flux) :
     """
     Vérifie si le filtre "protocole_specifique" est actif. Et vérifie si le filtre est au bon format (un protocole valide 
     parmis la liste ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']).
     Returns:
         True si le filtre "protocole_specifique" est actif et au bon format, False sinon.
     """
-    if "protocol_specifique" in filtre_Selectionner().keys() and filtre_Selectionner()["protocol_specifique"] is not None :
-        filtre = filtre_Selectionner()["protocol_specifique"]
-        protocoles_ip = ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']
-        if filtre.lower() in protocoles_ip :
-            return True
-    return False
+    if flux == "un" : 
+        if "protocol_specifique_un" in filtre_Selectionner().keys() and filtre_Selectionner()["protocol_specifique_un"] is not None :
+            filtre = filtre_Selectionner()["protocol_specifique_un"]
+            protocoles_ip = ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']
+            if filtre.lower() in protocoles_ip :
+                return True
+        return False
+    else : 
+        if "protocol_specifique_deux" in filtre_Selectionner().keys() and filtre_Selectionner()["protocol_specifique_deux"] is not None :
+            filtre = filtre_Selectionner()["protocol_specifique_deux"]
+            protocoles_ip = ['tcp', 'udp', 'sctp', 'icmp', 'icmpv6']
+            if filtre.lower() in protocoles_ip :
+                return True
+        return False
 
 
 
@@ -234,30 +274,50 @@ def liste_filtre_EstActive() :
     """
 
     filtres = {}
-    if filtre_ipSpecifique_src_EstActive() :
-        filtres["ip_specifique_src"] = filtre_Selectionner()["ip_specifique_src"]
+    if filtre_ipSpecifique_src_EstActive("un") :
+        filtres["ip_specifique_src_un"] = filtre_Selectionner()["ip_specifique_src_un"]
     else :
-        filtres["ip_specifique_src"] = None
+        filtres["ip_specifique_src_un"] = None
+    if filtre_ipSpecifique_src_EstActive("deux") :
+        filtres["ip_specifique_src_deux"] = filtre_Selectionner()["ip_specifique_src_deux"]
+    else :
+        filtres["ip_specifique_src_deux"] = None
 
-    if filtre_ipSpecifique_dst_EstActive() :
-        filtres["ip_specifique_dst"] = filtre_Selectionner()["ip_specifique_dst"]
+    if filtre_ipSpecifique_dst_EstActive("un") :
+        filtres["ip_specifique_dst_un"] = filtre_Selectionner()["ip_specifique_dst_un"]
     else :
-        filtres["ip_specifique_dst"] = None
+        filtres["ip_specifique_dst_un"] = None
+    if filtre_ipSpecifique_dst_EstActive("deux") :
+        filtres["ip_specifique_dst_deux"] = filtre_Selectionner()["ip_specifique_dst_deux"]
+    else :
+        filtres["ip_specifique_dst_deux"] = None
 
-    if filtre_portSpecifique_src_EstActive() :
-        filtres["port_specifique_src"] = int(filtre_Selectionner()["port_specifique_src"])
+    if filtre_portSpecifique_src_EstActive("un") :
+        filtres["port_specifique_src_un"] = int(filtre_Selectionner()["port_specifique_src_un"])
     else :
-        filtres["port_specifique_src"] = None
+        filtres["port_specifique_src_un"] = None
+    if filtre_portSpecifique_src_EstActive("deux") :
+        filtres["port_specifique_src_deux"] = int(filtre_Selectionner()["port_specifique_src_deux"])
+    else :
+        filtres["port_specifique_src_deux"] = None
 
-    if filtre_portSpecifique_dst_EstActive() :
-        filtres["port_specifique_dst"] = int(filtre_Selectionner()["port_specifique_dst"])
+    if filtre_portSpecifique_dst_EstActive("un") :
+        filtres["port_specifique_dst_un"] = int(filtre_Selectionner()["port_specifique_dst_un"])
     else :
-        filtres["port_specifique_dst"] = None
+        filtres["port_specifique_dst_un"] = None
+    if filtre_portSpecifique_dst_EstActive("deux") :
+        filtres["port_specifique_dst_deux"] = int(filtre_Selectionner()["port_specifique_dst_deux"])
+    else :
+        filtres["port_specifique_dst_deux"] = None
 
-    if filtre_protocoleSpecifique_EstActive() :
-        filtres["protocol_specifique"] = filtre_Selectionner()["protocol_specifique"]
+    if filtre_protocoleSpecifique_EstActive("un") :
+        filtres["protocol_specifique_un"] = filtre_Selectionner()["protocol_specifique_un"]
     else :
-        filtres["protocol_specifique"] = None
+        filtres["protocol_specifique_un"] = None
+    if filtre_protocoleSpecifique_EstActive("deux") :
+        filtres["protocol_specifique_deux"] = filtre_Selectionner()["protocol_specifique_deux"]
+    else :
+        filtres["protocol_specifique_deux"] = None
 
     filtres["emplacement_fichier"] = get_emplacement_fichier()
     filtres["plage_temps"] = get_plage_temps_graphique()
