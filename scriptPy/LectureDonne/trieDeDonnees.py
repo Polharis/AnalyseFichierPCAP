@@ -428,7 +428,8 @@ def extraire_info(paquet,num_paquet,time) :
         'type_payload': type(couche_trois).__name__,
         'time': datetime.datetime.fromtimestamp(float(time)),
         'mac_src': dpkt.ethernet.mac_to_str(paquet.src),
-        'mac_dst': dpkt.ethernet.mac_to_str(paquet.dst)
+        'mac_dst': dpkt.ethernet.mac_to_str(paquet.dst),
+        'taille' : len(paquet)
     }
 
     #Dans cette section on va avoir des types d'informations différents selon le type de payload du paquet Ethernet
@@ -449,6 +450,8 @@ def extraire_info(paquet,num_paquet,time) :
             Infos['port_dst_brute'] = couche_trois.data.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
+                Infos["taille_tcp"] = len(couche_trois.data.data)
+                Infos['seq'] = couche_trois.data.seq
     elif isinstance(paquet.data, dpkt.arp.ARP) : 
         if Est_protocole_couche_4(couche_trois.pro) :
             Infos['protocole_4'] = get_proto_name(couche_trois.pro)
@@ -473,6 +476,8 @@ def extraire_info(paquet,num_paquet,time) :
             Infos['port_dst_brute'] = couche_trois.data.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
+                Infos["taille_tcp"] = len(couche_trois.data.data)
+                Infos['seq'] = couche_trois.data.seq
     else :
         #Pour repérer les paquets avec des payloads particuliers
         Infos['ni IP ni ARP'] = True
@@ -496,6 +501,8 @@ def extraire_info(paquet,num_paquet,time) :
             Infos['port_dst_brute'] = transport.dport
             if isinstance(couche_trois.data, dpkt.tcp.TCP):
                 Infos['flag'] = decoder_flags(couche_trois.data.flags)
+                Infos["taille_tcp"] = len(couche_trois.data.data)
+                Infos['seq'] = couche_trois.data.seq
     return Infos
 
 

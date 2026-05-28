@@ -1,19 +1,30 @@
 
 document.addEventListener("DOMContentLoaded", async function() {
+    
     document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'none'
     document.getElementById('caseGraphiqueCumulatifIntra').style.display = 'none'
     document.getElementById('caseGraphiqueDensiteIntra').style.display = 'none'
     document.getElementById('caseGraphiqueCumulatifeInter').style.display = 'none'
     document.getElementById('caseGraphiqueDensiteInter').style.display = 'none'
     document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
+    document.getElementById('caseHistogrammeDensiteTaille').style.display = 'none'
+    document.getElementById('caseDebitTaille').style.display = 'none'
+    document.getElementById("texteScanPort").textContent = ""
+    document.getElementById("texteReemissionPaquet").textContent = ""
 
     icon = document.getElementById('chargementIcon')
     texte = document.getElementById('chargementTexte')
     alerteAnomalie = document.getElementById('detectionAnomalie');
+    seconde_fichier_pcap = document.getElementById('fichier_pcap_deux').value;
     alerteAnomalie.classList.add('cache'); 
     icon.classList.remove('cache');
     texte.classList.remove('cache');
-
+    
+    if (seconde_fichier_pcap != null && seconde_fichier_pcap !== "") {
+          await genererRapportAvecDeuxFichiers()
+          texte.textContent = "Chargement... des fichiers PCAP"
+        }
+    
     texte.textContent = "Chargement... du fichier PCAP"
     await generer('CoucheDeux',"graphiqueEtherType");
     texte.textContent = "Chargement... du graphique CoucheTrois"
@@ -26,6 +37,8 @@ document.addEventListener("DOMContentLoaded", async function() {
     await generer('CoucheServiceDestination',"graphiqueServiceDestination");
     texte.textContent = "Chargement... de la détection d'anomalie (Scan de port)"
     await genererDetectionAnomalie('scanPort','texteScanPort')
+    texte.textContent = "Chargement... de la détection d'anomalie (Réemission TCP)"
+    await genererDetectionAnomalie('reemissionTcp','texteReemissionPaquet')
     texte.textContent = "Chargement... de la liste de flux"
     await genererRapportStatistique('flux',"conteneurFlux");
     texte.textContent = "Chargement... de l'ip src la plus active"
@@ -48,6 +61,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         cumulatifInter = document.getElementById('graphiqueCumulatifInter');
         densiteProbaInter = document.getElementById('graphiqueDensiteDeProbaInter');
         cumulatifInterFull = document.getElementById('graphiqueRepartitionInterFull');
+        histogrammeDensiteTaille = document.getElementById('histogrammeDensiteTaille');
+        courbeDebitTaille = document.getElementById('courbeDebitTaille');
 
 
         icon = document.getElementById('chargementIcon')
@@ -98,6 +113,20 @@ document.addEventListener("DOMContentLoaded", async function() {
           document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
         }
 
+        if(histogrammeDensiteTaille.checked){
+          texte.texteContent = "Chargement... du graphique de répartition cumulative des full inter-espacement"
+          await generer('histogrammeDensiteTaille','caseHistogrammeDensiteTaille')
+        }else{
+          document.getElementById('caseHistogrammeDensiteTaille').style.display = 'none'
+        }
+
+        if(courbeDebitTaille.checked){
+          texte.texteContent = "Chargement... du graphique de débit en fonction de la taille des paquets"
+          await generer('debit_taille','caseDebitTaille')
+        }else{
+          document.getElementById('caseDebitTaille').style.display = 'none'
+        }
+
         icon.classList.add('cache');
         texte.classList.add('cache');
     } 
@@ -123,6 +152,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
 
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const chemin_fichier_deux = document.getElementById('fichier_pcap_deux').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
@@ -138,6 +168,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_dst_deux: port_specifique_dst_deux,
 
         chemin_fichier: chemin_fichier,
+        chemin_fichier_deux: chemin_fichier_deux,
         plage_temps_graphique: plage_temps_graphique,
         mode: mode
         };
@@ -187,6 +218,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
 
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const chemin_fichier_deux = document.getElementById('fichier_pcap_deux').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
@@ -202,6 +234,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_dst_deux: port_specifique_dst_deux,
         
         chemin_fichier: chemin_fichier,
+        chemin_fichier_deux : chemin_fichier_deux,
         plage_temps_graphique: plage_temps_graphique,
         typeGraphique: typeGraphique,
       };
@@ -240,7 +273,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 
     async function genererDetectionAnomalie(typeAnomalie,elementPhp) {
-
+      console.log(typeAnomalie);
       try {
         // Affiche le message de chargement
         document.getElementById('erreur').textContent = '';
@@ -258,6 +291,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
 
         const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const chemin_fichier_deux = document.getElementById('fichier_pcap_deux').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
         const filtres = {
@@ -273,6 +307,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_dst_deux: port_specifique_dst_deux,
 
         chemin_fichier: chemin_fichier,
+        chemin_fichier_deux: chemin_fichier_deux,
         plage_temps_graphique: plage_temps_graphique,
         typeAnomalie: typeAnomalie
         };
@@ -323,6 +358,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
         const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
 
+        const chemin_fichier_deux = document.getElementById('fichier_pcap_deux').value;
         const chemin_fichier = document.getElementById('fichier_pcap').value;
         const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
 
@@ -339,6 +375,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         port_specifique_dst_deux: port_specifique_dst_deux,
 
         chemin_fichier: chemin_fichier,
+        chemin_fichier_deux: chemin_fichier_deux,
         plage_temps_graphique: plage_temps_graphique,
         typeStatistique: typeStatistique
         };
@@ -367,6 +404,67 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
     }
 
+    async function genererRapportAvecDeuxFichiers(){
+      try {
+        // Affiche le message de chargement
+        document.getElementById('erreur').textContent = '';
+
+        // filtres sur les données 
+        const ip_specifique_src_un = document.getElementById('ip_specifique_src_un').value;
+        const ip_specifique_dst_un = document.getElementById('ip_specifique_dst_un').value;
+        const protocol_specifique_un = document.getElementById('protocol_specifique_un').value;
+        const port_specifique_src_un = document.getElementById('port_specifique_src_un').value;
+        const port_specifique_dst_un = document.getElementById('port_specifique_dst_un').value;
+        const ip_specifique_src_deux = document.getElementById('ip_specifique_src_deux').value;
+        const ip_specifique_dst_deux = document.getElementById('ip_specifique_dst_deux').value;
+        const protocol_specifique_deux = document.getElementById('protocol_specifique_deux').value;
+        const port_specifique_src_deux = document.getElementById('port_specifique_src_deux').value;
+        const port_specifique_dst_deux = document.getElementById('port_specifique_dst_deux').value;
+
+        const chemin_fichier = document.getElementById('fichier_pcap').value;
+        const chemin_fichier_deux = document.getElementById('fichier_pcap_deux').value;
+        const plage_temps_graphique = document.getElementById('plage_temps_graphique').value;
+
+        const filtres = {
+          ip_specifique_src_un: ip_specifique_src_un,
+          ip_specifique_dst_un: ip_specifique_dst_un,
+          protocol_specifique_un: protocol_specifique_un,
+          port_specifique_src_un: port_specifique_src_un,
+          port_specifique_dst_un: port_specifique_dst_un,
+          ip_specifique_src_deux: ip_specifique_src_deux,
+          ip_specifique_dst_deux: ip_specifique_dst_deux,
+          protocol_specifique_deux: protocol_specifique_deux,
+          port_specifique_src_deux: port_specifique_src_deux,
+          port_specifique_dst_deux: port_specifique_dst_deux,
+
+          chemin_fichier: chemin_fichier,
+          chemin_fichier_deux: chemin_fichier_deux,
+          plage_temps_graphique: plage_temps_graphique,
+        };
+
+        const res = await fetch('/genererRapportAvecDeuxFichiers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(filtres)
+        });
+
+        const responseText = await res.text();
+        const data = JSON.parse(responseText);
+
+        if (data.success) {
+          // Traitez les données renvoyées par le serveur
+          console.log(data.rapport);
+        } else {
+            document.getElementById('erreur').textContent = 'Erreur : ' + data.error;
+        }
+        } catch (error) {
+          console.error('Erreur:', error);
+          document.getElementById('erreur').textContent = 'Erreur: ' + error.message;
+        }
+
+
+    }
+
     async function regenererGraphiques(){
       
         document.getElementById('caseGraphiqueHistogrammeIntra').style.display = 'none'
@@ -375,14 +473,24 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('caseGraphiqueCumulatifeInter').style.display = 'none'
         document.getElementById('caseGraphiqueDensiteInter').style.display = 'none'
         document.getElementById('caseGraphiqueRepartitionInterFull').style.display = 'none'
+        document.getElementById('caseHistogrammeDensiteTaille').style.display = 'none'
+        document.getElementById('caseDebitTaille').style.display = 'none'
+        document.getElementById("texteScanPort").textContent = ""
+        document.getElementById("texteReemissionPaquet").textContent = ""
 
         icon = document.getElementById('chargementIcon');
         texte = document.getElementById('chargementTexte');
         alerteAnomalie = document.getElementById('detectionAnomalie');
+        seconde_fichier_pcap = document.getElementById('fichier_pcap_deux').value;
         alerteAnomalie.classList.add('cache'); 
         icon.classList.remove('cache');
         texte.classList.remove('cache');
         texte.textContent = "Chargement... du fichier PCAP"
+
+        if (seconde_fichier_pcap != null && seconde_fichier_pcap !== "") {
+          await genererRapportAvecDeuxFichiers()
+          texte.textContent = "Chargement... des fichiers PCAP"
+        }
 
         await generer('CoucheDeux',"graphiqueEtherType");
         texte.textContent = "Chargement... du graphique CoucheTrois"
@@ -395,6 +503,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         await generer('CoucheServiceDestination',"graphiqueServiceDestination");
         texte.textContent = "Chargement... de la détection d'anomalie (Scan de port)"
         await genererDetectionAnomalie('scanPort','texteScanPort')
+        texte.textContent = "Chargement... de la détection d'anomalie (Réemission TCP)"
+        await genererDetectionAnomalie('reemissionTcp','texteReemissionPaquet')
         texte.textContent = "Chargement... de la liste de flux"
         await genererRapportStatistique('flux',"conteneurFlux");
         texte.textContent = "Chargement... de l'ip src la plus active"

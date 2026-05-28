@@ -2,6 +2,23 @@ body {
       font-family: Arial, sans-serif;
       background-color: #f5f5f5;
     }
+    
+    /* Alignement des formulaires */
+    #formulaireFichier {
+      margin: 0 auto;
+    }
+    
+    #formulaireFichier_deux {
+      position: absolute;
+      right: 20px;
+    }
+
+    #formulaireFichier_deux {
+      border : dotted 2px #666;
+      padding : 20px;
+      padding-bottom : 100px;
+    }
+    
     h1 {
       color: #333;
     }

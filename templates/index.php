@@ -15,20 +15,29 @@
 
 <body>
 
-  <div id="caseCheminFichier" class="text-center d-flex flex-column align-items-center" >
+  <div id="caseCheminFichier" class="text-center d-flex flex-column" >
     <h1>Dashboard Analyse Réseau </h1>
 
-      <form id="formulaireFichier" method="GET" enctype="multipart/form-data">
-        <label for="fichier_pcap">Fichier pcap à analyser : </label>
-        <input type="text" id="fichier_pcap" name="fichier_pcap" placeholder="Ex: /home/user/fichier.pcap">
-      </form>
-
-      <div style="padding: 20px;">
-        <button id="appliquerChemin" onclick="regenererGraphiques()">Appliquer</button>
-        <div id="chargementIcon" class="cache spinner-border" role="status"></div>
-        <span id = "chargementTexte" class="cache">Chargement... du fichier PCAP</span>
+    <div class="d-flex" style="position: relative;">
+      <div class="flex-grow-1 d-flex justify-content-center">
+        <form id="formulaireFichier" method="GET" enctype="multipart/form-data">
+          <label for="fichier_pcap">Fichier pcap à analyser : </label>
+          <input type="text" id="fichier_pcap" name="fichier_pcap" placeholder="Ex: /home/user/fichier.pcap">
+        </form>
       </div>
+      <div id = "caseDeuxiemeFormulaire">
+        <form id="formulaireFichier_deux"  method="GET" enctype="multipart/form-data">
+          <label for="fichier_pcap_deux">Deuxième fichier pcap à analyser (optionnel) : </label> <br>
+          <input type="text" id="fichier_pcap_deux" name="fichier_pcap_deux" placeholder="Ex: /home/user/fichier2.pcap">
+        </form>
+      </div>
+    </div>
 
+    <div style="padding: 20px;" class="d-flex justify-content-center">
+      <button id="appliquerChemin" onclick="regenererGraphiques()">Appliquer</button>
+      <div id="chargementIcon" class="cache spinner-border" role="status"></div>
+      <span id = "chargementTexte" class="cache">Chargement... du fichier PCAP</span>
+    </div>
     <p id="erreur"></p>
   </div>
 
@@ -159,6 +168,11 @@
             <label for = "graphiqueRepartitionInterFull"> Courbe de répartition cumulative des Full inter-espacements</label>
             <input type="checkbox" id="graphiqueRepartitionInterFull" name="graphiqueRepartitionInterFull"><br>
             
+            <label for = "histogrammeDensiteTaille"> Histogramme de la densité de taille des paquets</label>
+            <input type="checkbox" id="histogrammeDensiteTaille" name="histogrammeDensiteTaille"><br>
+
+            <label for = "courbeDebitTaille"> Courbe du débit en fonction de la taille des paquets</label>
+            <input type="checkbox" id="courbeDebitTaille" name="courbeDebitTaille"><br>
           </form>
         </div>
       </div>
@@ -250,13 +264,22 @@
       <span id="interFullEspacementRepartitionSuccesCSV" class="cache">Le rapport CSV a été généré avec succès !</span>
       <div id ="afficherGraphiquecumulatifInterFull" style=" height:400px;"></div>
     </div>
+
+    <div id ="caseHistogrammeDensiteTaille" >
+      <div id ="afficherHistogrammeDensiteTaille" style=" height:400px;"></div>
+    </div>
+
+    <div id = "caseDebitTaille" >
+      <div id ="afficherCourbeDebitTaille" style=" height:400px;"></div>
+    </div>
     
   </div>
 
   <div id="overlay">
     <div id="modal">
       <h2>Attention !</h2>
-      <div id="texteScanPort"></div>
+      <div id="texteScanPort"></div><br>
+      <div id ="texteReemissionPaquet"></div>
     </div>
   </div>
 

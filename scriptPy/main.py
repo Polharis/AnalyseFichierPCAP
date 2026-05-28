@@ -54,6 +54,10 @@ def genererGraphique(TypeGraphique,plage_temps_graphique) :
         return graphiques.courbeDensiteDeProbaIntra(stats.liste_différence_src_dst_inter(table_par_protocole,plage_temps_graphique),plage_temps_graphique,"inter")
     elif TypeGraphique == "interFullEspacementRepartition" :
         return graphiques.courbeRepartitionInterFull(stats.differenceTempsPaquet(table_par_protocole,plage_temps_graphique),plage_temps_graphique)
+    elif TypeGraphique == "histogrammeDensiteTaille" :
+        return graphiques.histogrammeDensiteTaille(stats.listeTaillePaquet(table_par_protocole))
+    elif TypeGraphique == "debit_taille" :
+        return graphiques.courbeDebitTaille(stats.listeTaillePaquetPatTemps(table_par_protocole,plage_temps_graphique),plage_temps_graphique)
     else :
         return None
 
@@ -79,6 +83,8 @@ def genererDetectionAnomalie(mode) :
     table_par_protocole = recupDico.get_table_par_protocole()
     if mode == "scanPort" :
         return anomalie.detectionScanDePort(table_par_protocole)
+    elif mode == "reemissionTcp" :
+        return anomalie.detectionReemissionTcp(table_par_protocole)
     
 
 def genererRapportStatistique(mode) :
@@ -110,10 +116,20 @@ def genererRapportStatistique(mode) :
     else :
         return None
 
-def identifierLesAnomalies() : 
-    table_par_protocole = recupDico.get_table_par_protocole()
 
-    return anomalie.detectionScanDePort(table_par_protocole)
+def genererRapportAvecDeuxFichiers(chemin_fichier_un, chemin_fichier_deux) :
+    """
+    Génère un rapport comparatif entre deux fichiers PCAP.
+    Args:
+        chemin_fichier_un (str): Le chemin du premier fichier PCAP à analyser.
+        chemin_fichier_deux (str): Le chemin du second fichier PCAP à analyser.
+    Returns:
+        Un rapport comparatif entre les deux fichiers PCAP analysés.
+    """
+    table_par_protocole = recupDico.get_table_fusionne(chemin_fichier_un,chemin_fichier_deux)
+
+
+    return table_par_protocole
 
 #liste chemin du fichier PCAP à analyser
 #/home/stagetesa/Downloads/NMAP_PROBE.pcap

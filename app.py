@@ -106,8 +106,21 @@ def genererRapportStatistique():
 
     return jsonify({ 'success': True, 'statistique': fig })   
 
+@app.route('/genererRapportAvecDeuxFichiers', methods=['POST'])
+def genererRapportAvecDeuxFichiers():
+    #Application des filtres
+    params = request.get_json(force=True, silent=True) or {}
+    main.configurerParams(params)
+    #-------------------------------------
+    chemin_fichier_un = params.get('chemin_fichier_un', None)
+    chemin_fichier_deux = params.get('chemin_fichier_deux', None)
 
+    rapport = main.genererRapportAvecDeuxFichiers(chemin_fichier_un, chemin_fichier_deux)
 
+    if rapport is None:
+        return jsonify({ 'success': False, 'error': 'Aucune donnée disponible.' })
+
+    return jsonify({ 'success': True, 'rapport': rapport })   
 
 # adresse : http://localhost:5000/
 app.run(debug=True, host='0.0.0.0', port=5000)

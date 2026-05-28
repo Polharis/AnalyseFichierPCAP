@@ -78,6 +78,13 @@ def get_emplacement_fichier():
 
     return FICHIER_PCAP_DEFAUT
 
+def get_emplacement_deuxieme_fichier():
+    if ("chemin_fichier_deux" in filtre_Selectionner().keys()
+            and filtre_Selectionner()["chemin_fichier_deux"] is not None
+            and filtre_Selectionner()["chemin_fichier_deux"] != ""):
+        return True
+    else : 
+        return False
 
 def get_plage_temps_graphique() :
     """
@@ -318,6 +325,11 @@ def liste_filtre_EstActive() :
         filtres["protocol_specifique_deux"] = filtre_Selectionner()["protocol_specifique_deux"]
     else :
         filtres["protocol_specifique_deux"] = None
+
+    if get_emplacement_deuxieme_fichier() : 
+        filtres["chemin_fichier_deux"] = filtre_Selectionner()["chemin_fichier_deux"]
+    else : 
+        filtres["chemin_fichier_deux"] = None
 
     filtres["emplacement_fichier"] = get_emplacement_fichier()
     filtres["plage_temps"] = get_plage_temps_graphique()

@@ -249,7 +249,7 @@ def courbeDensiteDeProbaIntra (dicoReseau,plage_temps_graphique,inter_ou_intra) 
         name='Répartition de densité',
         line=dict(color='blue', width=2)
     ))
-    
+    print(temps_tries)
     if inter_ou_intra == "intra" :
         fig.update_layout(
             title="Courbe de densité de probabilité des intra-espacements",
@@ -302,6 +302,7 @@ def courbeRepartitionInterFull(dicoReseau,plage_temps_graphique) :
         name='Répartition cumulative des full inter-espacements',
         line=dict(color='blue', width=2)
     ))
+    
 
     fig.update_layout(
             title="Courbe de répartition cumulative des full inter-espacements",
@@ -312,6 +313,78 @@ def courbeRepartitionInterFull(dicoReseau,plage_temps_graphique) :
     
     return fig.to_json()
 
+def histogrammeDensiteTaille(liste_taille) :
+    fig = go.Figure()
+
+    # Regrouper les tailles par intervalle de 50 et compter les occurrences
+    dico_tailles = {}
+    for taille in liste_taille:
+        taille_arrondie = round(taille / 50) * 50
+        #conversion en octet
+        taille_arrondie = taille_arrondie / 50
+        dico_tailles.setdefault(taille_arrondie, 0)
+        dico_tailles[taille_arrondie] += 1
+    
+    # Calculer les pourcentages
+    total = len(liste_taille)
+    for taille_arrondie in dico_tailles:
+        dico_tailles[taille_arrondie] = (dico_tailles[taille_arrondie] / total) * 100
+    
+    # Trier par taille
+    tailles_triees = sorted(dico_tailles.keys())
+    pourcentages = [dico_tailles[t] for t in tailles_triees]
+    
+    fig.add_trace(go.Bar(
+        x=tailles_triees,
+        y=pourcentages,
+        name="Histogramme de densité de taille de paquets",
+        opacity=0.6
+    ))
+
+    fig.update_layout(
+        title="Histogramme de densité de taille de paquets",
+        xaxis_title="Taille du paquet (octets)",
+        yaxis_title="Pourcentage (%)",
+        barmode='overlay'
+    )
+
+    return fig.to_json()
+
+def courbeDebitTaille(liste_taille_temps,plage_temps_graphique) :
+    fig = go.Figure()
+
+    taille_par_temps = {}
+
+    for taille, temps in liste_taille_temps:
+        temps_arrondi = round(temps / plage_temps_graphique) * plage_temps_graphique
+        
+        taille_par_temps.setdefault(temps_arrondi, 0)
+        taille_par_temps[temps_arrondi] += taille
+    # Trier par temps
+    temps_finaux = []
+    temps_tries = sorted(taille_par_temps.keys())
+    taille_triee = []
+    for temps in temps_tries : 
+        taille_triee.append(taille_par_temps[temps] / 50)
+    for temps in temps_tries :
+        temps_finaux.append(temps - temps_tries[0])
+    
+    fig.add_trace(go.Scatter(
+        x=temps_finaux,
+        y=taille_triee,
+        mode='lines+markers',
+        name="Courbe de débit en fonction de la taille des paquets",
+        line=dict(color='blue', width=2)
+    ))
+
+    fig.update_layout(
+        title="Courbe de débit en fonction de la taille des paquets",
+        xaxis_title="Temps (millisecondes)",
+        yaxis_title="Débit (octets)",
+        hovermode='x unified'
+    )
+
+    return fig.to_json()
 
 
 #----------------------------------------------------------------------------------------------------

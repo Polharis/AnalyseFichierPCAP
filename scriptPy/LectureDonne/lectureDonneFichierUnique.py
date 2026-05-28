@@ -10,6 +10,9 @@ from scriptPy.LectureDonne import trieDeDonnees as trieDeDonnees
 from scriptPy.filtrageDonnee import listeFiltre as filtre  
 
 cache = {'table': None, 'plage_temps': None,'filtres': None,'emplacement_fichier': None, "plage_temps_graph": None,'initialized': False}
+second_fichier_pcap_infos = ["",{}]
+
+
 
 def lancer_lecture_donne_fichier_unique():
    
@@ -30,54 +33,101 @@ def lancer_lecture_donne_fichier_unique():
         FileNotFoundError: Si le fichier PCAP n'existe pas.
         Exception: Si le fichier n'est pas un format PCAP/PCAPng valide.
     """
-
-    #Récupération de la plage de temps entrée en paramètre par l'utilisateur
     
-    filtres_actives = filtre.liste_filtre_EstActive()
+    if second_fichier_pcap_infos[0] == "" :
+        #Récupération de la plage de temps entrée en paramètre par l'utilisateur
+        filtres_actives = filtre.liste_filtre_EstActive()
 
-    plage_temps_graphique = filtres_actives["plage_temps"]
+        plage_temps_graphique = filtres_actives["plage_temps"]
 
-    #Récupération de l'emplacement du fichier si il y en a un
-    emplacement_fichier = filtres_actives["emplacement_fichier"]
+        #Récupération de l'emplacement du fichier si il y en a un
+        emplacement_fichier = filtres_actives["emplacement_fichier"]
 
-    #Vérification si les données ont déjà été traitées pour éviter de les retraiter à chaque fois
-    if cache['initialized'] and cache['emplacement_fichier'] == emplacement_fichier and cache['filtres'] == filtres_actives and cache['plage_temps_graph'] == plage_temps_graphique:
-        print("pas de chargement")
-        return cache['table']
-    print(filtres_actives)
-    # Récupération du fichier pcapng ou pcap
-    with open(emplacement_fichier, 'rb') as f:
-        magic = f.read(4)
-        f.seek(0)  # rewind
+        #Vérification si les données ont déjà été traitées pour éviter de les retraiter à chaque fois
+        if cache['initialized'] and cache['emplacement_fichier'] == emplacement_fichier and cache['filtres'] == filtres_actives and cache['plage_temps_graph'] == plage_temps_graphique:
+            print("pas de chargement")
+            return cache['table']
+        # Récupération du fichier pcapng ou pcap
+        with open(emplacement_fichier, 'rb') as f:
+            magic = f.read(4)
+            f.seek(0)  # rewind
 
-        # Détection automatique du format
-        if magic == b'\x0a\x0d\x0d\x0a':
-            reader = dpkt.pcapng.Reader(f)
-        else:
-            reader = dpkt.pcap.Reader(f)
+            # Détection automatique du format
+            if magic == b'\x0a\x0d\x0d\x0a':
+                reader = dpkt.pcapng.Reader(f)
+            else:
+                reader = dpkt.pcap.Reader(f)
 
-        #Table contenant tous les paquets
-        table_par_protocole = {}
-        i = 0
+            #Table contenant tous les paquets
+            table_par_protocole = {}
 
-        for ts, buf in reader:
-            if i % 1000 == 0:  
-                print("chargement " + str(i) + " paquets lus")
+            i = 0
+
+            for ts, buf in reader:
+                if i % 1000 == 0:  
+                    print("chargement " + str(i) + " paquets lus")
+                    
+                # Vérifier que c'est bien une couche Ethernet valide
+                try:
+                    eth = dpkt.ethernet.Ethernet(buf)
+                    if isinstance(eth, dpkt.ethernet.Ethernet):
+                        ip = eth.data
+                        #print(datetime.datetime.fromtimestamp(float(ts)))
+                        #print(type(eth.data))
+                        table_par_protocole = trieDeDonnees.ajouter_a_table_Par_Protocole(table_par_protocole, eth, i + 1, filtres_actives,ts)
+                except:
+                    # Ignorer les paquets qui ne peuvent pas être parsés
+                    
+                    pass
+                    
+                i += 1
+    else :
+        # Récupérer paramètres 
+        #Récupération de la plage de temps entrée en paramètre par l'utilisateur
+        filtres_actives = filtre.liste_filtre_EstActive()
+
+        plage_temps_graphique = filtres_actives["plage_temps"]
+
+        #Récupération de l'emplacement du fichier si il y en a un
+        emplacement_fichier = filtres_actives["emplacement_fichier"]
+
+        # Récupération du fichier pcapng ou pcap
+        with open(second_fichier_pcap_infos[0], 'rb') as f:
+            magic = f.read(4)
+            f.seek(0)  # rewind
+
+            # Détection automatique du format
+            if magic == b'\x0a\x0d\x0d\x0a':
+                reader = dpkt.pcapng.Reader(f)
+            else:
+                reader = dpkt.pcap.Reader(f)
+
+            #Table contenant tous les paquets
             
-            # Vérifier que c'est bien une couche Ethernet valide
-            try:
-                eth = dpkt.ethernet.Ethernet(buf)
-                if isinstance(eth, dpkt.ethernet.Ethernet):
-                    ip = eth.data
-                    #print(datetime.datetime.fromtimestamp(float(ts)))
-                    #print(type(eth.data))
-                    table_par_protocole = trieDeDonnees.ajouter_a_table_Par_Protocole(table_par_protocole, eth, i + 1, filtres_actives,ts)
-            except:
-                # Ignorer les paquets qui ne peuvent pas être parsés
-            
-                pass
-            
-            i += 1
+            table_par_protocole = second_fichier_pcap_infos[1]
+
+            i = 0
+
+            for ts, buf in reader:
+                if i % 1000 == 0:  
+                    print("chargement " + str(i) + " paquets lus")
+                    
+                # Vérifier que c'est bien une couche Ethernet valide
+                try:
+                    eth = dpkt.ethernet.Ethernet(buf)
+                    if isinstance(eth, dpkt.ethernet.Ethernet):
+                        ip = eth.data
+                        #print(datetime.datetime.fromtimestamp(float(ts)))
+                        #print(type(eth.data))
+                        table_par_protocole = trieDeDonnees.ajouter_a_table_Par_Protocole(table_par_protocole, eth, i + 1, filtres_actives,ts)
+                except:
+                    # Ignorer les paquets qui ne peuvent pas être parsés
+                    
+                    pass
+                    
+                i += 1
+            second_fichier_pcap_infos[0] = ""
+            second_fichier_pcap_infos[1] = {}
 
     cache['table'] = table_par_protocole
     cache['initialized'] = True
@@ -94,8 +144,19 @@ def get_table_par_protocole() :
     
     return infos_PCAP
 
+def get_table_fusionne(chemin_fichier_un, chemin_fichier_deux) :
+    table = {}
+    table = lancer_lecture_donne_fichier_unique()
+    second_fichier_pcap_infos[0] = chemin_fichier_deux
+    second_fichier_pcap_infos[1] = table
+    table = lancer_lecture_donne_fichier_unique()
+    return table
+
+
 #Print de test
 #print(tableParProtocole.values())
+
+
 
 
 

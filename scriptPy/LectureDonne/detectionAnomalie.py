@@ -57,3 +57,57 @@ def detectionScanDePort(table):
             rapport_anomalie = rapport_anomalie + "Il y a un scan de port probable avec l'ip " + ip + " \n"
 
     return rapport_anomalie
+
+def detectionReemissionTcp(table):
+    rapport_anomalie = ""
+    nb_reemission = 0
+    nb_paquet_total = 0
+    pourcentage_reemission = 0
+    i = 0
+    # Structure: {(src, dst, port_src, port_dst): set(seq_numbers)}
+    flux_seq = {}
+
+    for cle in table:
+        for paquet in table[cle]:
+            nb_paquet_total += 1
+            i += 1
+            
+            if "seq" in paquet.keys():
+                # Créer la clé du flux (src, dst, port_src, port_dst)
+                flux_key = (
+                    paquet.get("source"),
+                    paquet.get("destination"),
+                    paquet.get("port_src"),
+                    paquet.get("port_dst")
+                )
+                
+                # Initialiser le set pour ce flux s'il n'existe pas
+                if flux_key not in flux_seq:
+                    flux_seq[flux_key] = set()
+                
+                # Vérifier si le numéro de séquence existe déjà pour ce flux
+                seq = paquet["seq"]
+                if seq in flux_seq[flux_key]:
+                    if paquet["taille_tcp"] != 0 :
+                        nb_reemission += 1
+                else:
+                    flux_seq[flux_key].add(seq)
+
+    if nb_paquet_total < 1 :
+        return None
+    
+    pourcentage_reemission = (nb_reemission / nb_paquet_total) * 100
+    
+    if pourcentage_reemission < 3 :
+        rapport_anomalie = "aucune anomalie"
+    elif pourcentage_reemission >= 3 and pourcentage_reemission <= 5:
+        rapport_anomalie = "dégradation notable avec" + str(nb_reemission) \
+                            + " (" + str(pourcentage_reemission) + "%) paquets réémission"
+    elif pourcentage_reemission > 5 and pourcentage_reemission <= 10 :
+        rapport_anomalie = "comportement anormal avec" + str(nb_reemission) \
+                            + " (" + str(pourcentage_reemission) + "%) paquets réémission , problème réseau"
+    else :
+        rapport_anomalie = "Critique, le réseau est sérieusement congestionné avec " + str(nb_reemission) \
+                            + " (" + str(pourcentage_reemission) + "%) paquets réémission , problème réseau majeur"
+        
+    return rapport_anomalie

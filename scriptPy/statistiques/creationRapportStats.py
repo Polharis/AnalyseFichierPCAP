@@ -435,7 +435,7 @@ def obtenirNbPaquet (table) :
 def obtenirMeilleurPaquetSrc(table) : 
     """
     Identifie l'adresse IP source apparaissant le plus souvent
-    dans les paquets analysés et calcule son pourcentage de présence.
+    dans les paquets analysés etplage_temps_graphique calcule son pourcentage de présence.
 
     Compte les occurrences de chaque IP source, puis récupère
     celle qui apparaît le plus de fois et calcule son pourcentage
@@ -553,11 +553,30 @@ def differenceTempsPaquet(table,plage_temps_graphique) :
         diff = n_plus_un - n
         diff_arrondi = round(diff/plage_temps_graphique)*plage_temps_graphique
         liste_diff.append(diff_arrondi)
-    print (liste_diff)
+
     return liste_diff
 
+def listeTaillePaquet(table) :
+    liste_taille = []
+    for key in table.keys() :
+        for paquet in table[key] :
+            if "taille" in paquet.keys() :
+                liste_taille.append(paquet["taille"])
+    return liste_taille
+
+def listeTaillePaquetPatTemps(table,plage_temps_graphique) :
+    liste_taille_temps = []
+    for key in table.keys() :
+        for paquet in table[key] :
+            if "taille" in paquet.keys() :
+                print(paquet["time"])
+                temps = paquet["time"].timestamp() * 1000 
+                temps_arrondit = round(temps/plage_temps_graphique)*plage_temps_graphique
+                liste_taille_temps.append((paquet["taille"],temps_arrondit))
+    return liste_taille_temps
+
 def creationRapport(mode,table) :
-    """
+    """plage_temps_graphique
     Génère un rapport textuel des statistiques du dictionnaire
     de paquets selon le mode sélectionné.
 
@@ -691,6 +710,8 @@ def creationRapport(mode,table) :
         rapport += str(stats[1]) + " à " + str(stats[0]) + " %"
 
     return rapport
+
+
 
 
 
