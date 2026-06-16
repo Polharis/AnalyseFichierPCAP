@@ -1,0 +1,13 @@
+Utilisateur
+    |
+    +--> Charger un fichier PCAP
+    +--> Consulter les statistiques
+    +--> Consulter les anomalies
+    |       \--> Afficher le rapport d'anomalies
+    +--> Configurer les filtres
+    |       \--> Filtrer un flux spécifique
+    +--> Consulter les flux détectés
+    +--> Sélectionner des graphiques
+    +--> Consulter les graphiques
+    |       \--> Interagir avec les graphiques
+    +--> Exporter les données au format CSV

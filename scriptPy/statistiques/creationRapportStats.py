@@ -601,8 +601,6 @@ def creationRapport(mode,table) :
                                               services source
                     - "CoucheServiceDestination" : statistiques des
                                                    services destination
-                    - "TempsVoyageMoyen" : temps moyen aller-retour
-                                           (non recommandé)
                     - "flux" : liste des flux triés par pourcentage
                                de présence décroissant
                     - "nbPaquet" : nombre total de paquets traités
@@ -667,23 +665,6 @@ def creationRapport(mode,table) :
                 rapport += "Nombre total de paquets traités : " + str(stats[stat]) + "\n"
             else :
                 rapport += " service : " + stat + " présents à " + str(stats[stat]) + " %\n"
-
-    # Ce mode n'est pas pertinant, a ne pas  utiliser pour le moment, mais je le laisse au cas où je voudrais faire des analyses plus poussées sur les temps de voyage des paquets
-    if mode == "TempsVoyageMoyen" :
-        rapport += "Statistque sur le temps de voyage des paquets\n"
-        stats = statsTempsVoyageMoyen(table)
-        tars_moyens = stats[0]
-        nb_tars = stats[1]
-        if not tars_moyens :
-            rapport += "Aucune paire de paquets aller-retour n'a été trouvée pour calculer les temps de voyage moyens.\n"
-        else : 
-            for conversation in tars_moyens.keys() :
-                
-                rapport += (
-                    "Conversation entre " + conversation[0] + " et " + conversation[1] +
-                    " : TAR moyen de " + str(tars_moyens[conversation]) + " secondes, basé sur " +
-                    str(nb_tars[conversation]) + " paires aller-retour\n"
-                )
     if mode == "flux" :
         stats = obtenirListeFlux(table)
 
@@ -720,77 +701,5 @@ def creationRapport(mode,table) :
 
 
 
-#----------------------------------------------------------------------------------------------------
-# ----------------------- A mettre entre parenthèse car je n'ai pas tout les outils -----------------
-
-
-#Liste des temps de voyage pour chaque conversation (src, dst) 
-# pour de futures analyses plus poussées sur les temps de voyage (ex : distribution des temps de voyage, etc...)
-def dicoTempsParConversation(dicoReseau) :
-    # Collecte des temps par conversation (src, dst)
-    conversations = {}  # clé: (src, dst), valeur: liste des temps
-    for protocoles_couches_1 in dicoReseau.keys() : 
-        for paquet in dicoReseau[protocoles_couches_1] : 
-            if "source" in paquet.keys() and "destination" in paquet.keys() : 
-                key = (paquet["source"], paquet["destination"])
-                # setDefault très pratique car évite de devoir vérifier si la clé existe déjà ou pas
-                conversations.setdefault(key, []).append(paquet["time"])
-    return conversations
-
-#fait la moyenne du temps mis par chaque packet pout voyager entre la source et la destination
-#Permet aussi d'obtenir le nombre de paires aller-retour pour chaque conversation (src, dst) 
-# pour pouvoir faire des statistiques plus précises sur les temps de voyage moyens
-
-def statsTempsVoyageMoyen(dicoReseau) :
-
-    #Liste des conversations (src, dst) avec les temps de chaque paquet pour chaque conversation
-    conversations = dicoTempsParConversation(dicoReseau)
-
-    # Calcule des TAR (temps aller retour)moyens pour chaque paire
-    tars_moyens = {}
-    nb_tars = {}
-    for (src, dst), times_out in conversations.items():
-        #On récupère le temps du couple inverse (dst, src) pour trouver les temps de retour
-        times_back = conversations.get((dst, src), [])
-        if times_back:
-            # Trie les temps
-            times_out.sort()
-            times_back.sort()
-            # Calcule les différences pour les paires (aller-retour)
-            num_pairs = min(len(times_out), len(times_back))
-            diffs = []
-            for i in range(num_pairs):
-                diff = times_back[i] - times_out[i]
-                if diff.total_seconds() > 0:
-                    diffs.append(diff.total_seconds())
-                    nb_tars[(src, dst)] = i +1
-            if diffs:
-                avg_rtt = sum(diffs) / len(diffs)
-                tars_moyens[(src, dst)] = avg_rtt
-                
-
-    return [tars_moyens,nb_tars,conversations]
-
-def statsTempsVoyageUnitaire(dicoReseau) : 
-
-    #Liste des conversations (src, dst) avec les temps de chaque paquet pour chaque conversation
-    conversations = dicoTempsParConversation(dicoReseau)
-
-    tars_unitaires = {}
-    for (src, dst), times_out in conversations.items():
-        #On récupère le temps du couple inverse (dst, src) pour trouver les temps de retour
-        times_back = conversations.get((dst, src), [])
-        if times_back:
-            # Trie les temps
-            times_out.sort()
-            times_back.sort()
-            # Calcule les différences pour les paires (aller-retour)
-            num_pairs = min(len(times_out), len(times_back))
-            for i in range(num_pairs):
-                diff = times_back[i] - times_out[i]
-                if diff.total_seconds() > 0:
-                    tars_unitaires.setdefault((src,dst),[]).append(diff.total_seconds())
-
-    return tars_unitaires
 
 
